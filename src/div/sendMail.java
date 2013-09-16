@@ -1,4 +1,4 @@
-package works;
+package div;
 
 import java.util.Properties;
 
