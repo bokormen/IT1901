@@ -7,6 +7,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -30,7 +31,7 @@ public class LoginFrame extends JFrame {
 	private int mode = 0;
 
 	private Listener listener;
-	private TimerListener timerListener;
+	private TimerListener tListener;
 	private Timer timer;
 
 	private JButton loginButton;
@@ -71,7 +72,7 @@ public class LoginFrame extends JFrame {
 	private ArrayList<Component> forgotComps;
 
 	public LoginFrame() {
-		super("Sheep Manager");
+		super("Tittel");
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		width = 1200;
 		height = 600;
@@ -80,8 +81,9 @@ public class LoginFrame extends JFrame {
 		// setBackground(Color.BLUE);
 
 		listener = new Listener();
-		timerListener = new TimerListener();
-		timer = new Timer(1, timerListener);
+		tListener = new TimerListener();
+		timer = new Timer(100, tListener);
+		timer.start();
 
 		JLayeredPane lp = getLayeredPane();
 
@@ -97,6 +99,13 @@ public class LoginFrame extends JFrame {
 
 	}
 
+	// for tull SLETT
+	private Color randomColor() {
+		Random r = new Random();
+		return new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255));
+	}
+
+	// Lager to paneler fordelt på: left; width/3 & right; 2*width/3
 	private void createPanels(JLayeredPane lp) {
 		/*
 		 * ImageIcon rightImage = new ImageIcon(this.getClass().getClassLoader()
@@ -116,6 +125,7 @@ public class LoginFrame extends JFrame {
 		lp.add(leftPanel);
 	}
 
+	// Lager alle knappene og plasserer de der de skal være
 	private void createButtons(JLayeredPane lp) {
 		int bw = width / 6;
 		int bh = height / 10;
@@ -129,7 +139,8 @@ public class LoginFrame extends JFrame {
 		registerButton.addActionListener(listener);
 
 		forgotButton = new JButton("Forgot");
-		forgotButton.setBounds(width / 12, 12 * height / 20, bw, bh);
+		forgotButton.setBounds(3 * width / 24, /* 130 * height / 200 */
+				21 * height / 25, bw / 2, 3 * bh / 4);
 		forgotButton.addActionListener(listener);
 		forgotButton.setVisible(false);
 
@@ -139,7 +150,7 @@ public class LoginFrame extends JFrame {
 		sendButton.setVisible(false);
 
 		backButton = new JButton("Back");
-		backButton.setBounds(2 * width / 9, 21 * height / 25, bw / 2,
+		backButton.setBounds(11 * width / 48, 21 * height / 25, bw / 2,
 				3 * bh / 4);
 		backButton.addActionListener(listener);
 		backButton.setVisible(false);
@@ -156,6 +167,7 @@ public class LoginFrame extends JFrame {
 		lp.add(exitButton);
 	}
 
+	// Lager alle komponenene til login interfacen.
 	private void createLoginInterfaceComponents(JLayeredPane lp) {
 		int cw = 4 * width / 30;
 		int ch = 3 * height / 40;
@@ -170,10 +182,14 @@ public class LoginFrame extends JFrame {
 
 		unField = new JTextField();
 		unField.setBounds(width / 10, 65 * height / 200, 3 * cw / 2, ch);
+		unField.addActionListener(listener);
+		unField.setName("unField");
 		unField.setVisible(false);
 
 		pwField = new JPasswordField();
 		pwField.setBounds(width / 10, 80 * height / 200, 3 * cw / 2, ch);
+		pwField.addActionListener(listener);
+		pwField.setName("pwField");
 		pwField.setVisible(false);
 
 		lp.add(unLabel);
@@ -182,9 +198,13 @@ public class LoginFrame extends JFrame {
 		lp.add(pwField);
 	}
 
+	// Lager alle komponenene til register interfacen.
 	private void createRegisterInterfaceComponents(JLayeredPane lp) {
+		// Tenkte å lage en for løkke og gjøre alt litt mindre, men før jeg
+		// finner en BRA måte å gjøre det på, så blir det sånn som det ernå.
 		int cw = 4 * width / 30;
 		int ch = 3 * height / 40;
+		// lister med alle verdiene til komponentene under. STEMMER IKKE
 		/*
 		 * int[] type = { 0, 0, 0, 0, 0, 1, 1, 1, 1, 1 }; String[] texts = {
 		 * "Name:", "Email:", "Phone:", "Password:", "Password:", null, null,
@@ -218,25 +238,34 @@ public class LoginFrame extends JFrame {
 
 		regNameField = new JTextField();
 		regNameField.setBounds(width / 10, 40 * height / 200, 3 * cw / 2, ch);
+		regNameField.addActionListener(listener);
+		regNameField.setBackground(Color.ORANGE);
 		regNameField.setVisible(false);
 
 		regEmailField = new JTextField();
 		regEmailField.setBounds(width / 10, 55 * height / 200, 3 * cw / 2, ch);
+		regEmailField.addActionListener(listener);
+		regEmailField.setBackground(Color.GREEN);
 		regEmailField.setVisible(false);
 
 		regPhoneField = new JTextField();
 		regPhoneField.setBounds(width / 10, 70 * height / 200, 3 * cw / 2, ch);
+		regPhoneField.addActionListener(listener);
 		regPhoneField.setBackground(Color.RED);
 		regPhoneField.setVisible(false);
 
 		regPasswordField = new JTextField();
 		regPasswordField.setBounds(width / 10, 85 * height / 200, 3 * cw / 2,
 				ch);
+		regPasswordField.addActionListener(listener);
+		regPasswordField.setBackground(Color.YELLOW);
 		regPasswordField.setVisible(false);
 
 		regPasswordField2 = new JTextField();
 		regPasswordField2.setBounds(width / 10, 100 * height / 200, 3 * cw / 2,
 				ch);
+		regPasswordField2.setBackground(Color.BLUE);
+		regPasswordField2.addActionListener(listener);
 		regPasswordField2.setVisible(false);
 
 		lp.add(regNameLabel);
@@ -263,6 +292,7 @@ public class LoginFrame extends JFrame {
 
 	}
 
+	// Lager alle komponenene til forgot interfacen.
 	private void createForgotInterfaceComponents(JLayeredPane lp) {
 		int cWidth = 4 * width / 30;
 		int cHeight = 3 * height / 40;
@@ -274,13 +304,16 @@ public class LoginFrame extends JFrame {
 		emailField = new JTextField();
 		emailField.setBounds(cWidth / 2 + width / 30, 90 * height / 200,
 				cWidth, cHeight);
+		emailField.addActionListener(listener);
+		emailField.setName("emailField");
 		emailField.setVisible(false);
 
 		lp.add(emailLabel);
 		lp.add(emailField);
 	}
 
-	// setter sammen listene med de ulike kompoentene
+	// setter sammen listene med de ulike kompoentene for å da gå igjennom
+	// løkker for å sette de riktige komponentene synlige og usynlige.
 	private void createComponentArrays() {
 		startComps = new ArrayList<Component>();
 		startComps.clear();
@@ -325,9 +358,8 @@ public class LoginFrame extends JFrame {
 
 	}
 
+	// Setter alle start komponenter synlige
 	private void changeToStartInterface(Boolean bool) {
-		// if (mode != 0) {
-
 		loginButton.setLocation(width / 12, 6 * height / 20);
 		registerButton.setLocation(width / 12, 9 * height / 20);
 
@@ -335,13 +367,12 @@ public class LoginFrame extends JFrame {
 			c.setVisible(bool);
 		}
 		mode = 0;
-		// }
 	}
 
+	// Setter alle login komponenter synlige
 	private void changeToLoginInterface(boolean bool) {
-		// if (mode != 1) {
-		loginButton.setLocation(width / 12, 3 * height / 20);
-		forgotButton.setLocation(width / 12, 11 * height / 20);
+		loginButton.setLocation(width / 12, 105 * height / 200);
+		// forgotButton.setLocation(width / 12, 11 * height / 20);
 
 		if (bool) {
 			registerButton.setVisible(!bool);
@@ -350,9 +381,9 @@ public class LoginFrame extends JFrame {
 			c.setVisible(bool);
 		}
 		mode = 1;
-		// }
 	}
 
+	// Setter alle register komponenter synlige
 	private void changeToRegisterInterface(boolean bool) {
 		registerButton.setLocation(width / 12, height / 20);
 
@@ -362,6 +393,7 @@ public class LoginFrame extends JFrame {
 		mode = 2;
 	}
 
+	// Setter alle forgot komponenter synlige
 	private void changeToForgotInterface(boolean bool) {
 		if (bool) {
 			registerButton.setVisible(!bool);
@@ -374,59 +406,87 @@ public class LoginFrame extends JFrame {
 		mode = 3;
 	}
 
+	// Lytteren til knappene, finner riktig handling til hver knapp
 	private class Listener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg) {
-			JButton pressed = (JButton) arg.getSource();
-			String text = pressed.getText();
-			// System.out.println(text);
+			// rightPanel.setBackground(randomColor());
+			if (arg.getSource() instanceof JButton) {
+				JButton pressed = (JButton) arg.getSource();
+				String text = pressed.getText();
 
-			if (text.equals("Register")) {
-				changeToLoginInterface(false);
-				changeToRegisterInterface(true);
-			} else if (text.equals("Login")) {
-				changeToLoginInterface(true);
-				if (mode == 1) {
-					System.out.println(unField.getText());
-					char[] pwch = pwField.getPassword();
-					for (int i = 0; i < pwch.length; i++) {
-						System.out.print(pwch[i]);
+				if (text.equals("Register")) {
+					changeToLoginInterface(false);
+					changeToRegisterInterface(true);
+				} else if (text.equals("Login")) {
+					changeToLoginInterface(true);
+					// sjekker: hvis man er i login interface og trykker login
+					// ->
+					if (mode == 1) {
+						// metode for å sjekke om brukernavn og passord stemmer
+						System.out.println(unField.getText());
+						char[] pwch = pwField.getPassword();
+						for (int i = 0; i < pwch.length; i++) {
+							System.out.print(pwch[i]);
+						}
+					}
+				} else if (text.equals("Exit")) {
+					System.exit(0);
+				} else if (text.equals("Back")) {
+					// mode holder styr på hvor man er, så programet vet hvor en
+					// skal sendes tilbake til
+					if (mode == 1) {
+						changeToLoginInterface(false);
+						changeToStartInterface(true);
+					} else if (mode == 2) {
+						changeToRegisterInterface(false);
+						changeToStartInterface(true);
+					} else if (mode == 3) {
+						changeToForgotInterface(false);
+						changeToLoginInterface(true);
+					}
+				} else if (text.equals("Forgot")) {
+					changeToLoginInterface(false);
+					changeToForgotInterface(true);
+				} else if (text.equals("Send")) {
+					// sjekker: er i forgot interface og trykker send ->
+					if (mode == 3) {
+						// metode for å sjekke om email er i systemet, evt.
+						// sende ut
+						// nytt passord til mail?
+						String email = emailField.getText();
+						System.out.println(email);
+						// sendMail(email);
+						changeToForgotInterface(false);
+						changeToLoginInterface(true);
 					}
 				}
-			} else if (text.equals("Exit")) {
-				System.exit(0);
-			} else if (text.equals("Back")) {
-				if (mode == 1) {
-					changeToLoginInterface(false);
-					changeToStartInterface(true);
-				} else if (mode == 2) {
-					changeToRegisterInterface(false);
-					changeToStartInterface(true);
-				} else if (mode == 3) {
-					changeToForgotInterface(false);
-					changeToLoginInterface(true);
-				}
-			} else if (text.equals("Forgot")) {
-				changeToLoginInterface(false);
-				changeToForgotInterface(true);
-			} else if (text.equals("Send")) {
-				if (mode == 3) {
-					String email = emailField.getText();
-					System.out.println(email);
-					// sendMail(email);
-					changeToForgotInterface(false);
-					changeToLoginInterface(true);
-				}
+			} else if (arg.getSource() instanceof JPasswordField) {
+				((JPasswordField) arg.getSource()).getPassword();
+			} else if (arg.getSource() instanceof JTextField) {
+				System.out.println(((JTextField) arg.getSource()).getName());
+
 			}
 		}
 	}
 
-	private class TimerListener implements ActionListener {
+	private class TextListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 
+		}
+
+	}
+
+	// Lytter for å håndtere tid. Til komponenter som skal flyttes over tid.
+	// Animasjoner!
+	private class TimerListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			rightPanel.setBackground(randomColor());
 		}
 	}
 }
