@@ -71,7 +71,7 @@ public class LoginFrame extends JFrame {
 	private ArrayList<Component> forgotComps;
 
 	public LoginFrame() {
-		super("Tittel");
+		super("Sheep Manager");
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		width = 1200;
 		height = 600;
