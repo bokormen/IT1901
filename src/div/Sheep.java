@@ -1,5 +1,6 @@
 package div;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class Sheep {
@@ -8,9 +9,10 @@ public class Sheep {
 	private int age;
 	private int weight;
 	private int healthStatus;
-	private ArrayList<String> locations;
+	private ArrayList<SheepLocation> locations; 
 	
 	public Sheep(String id) {
+		locations = new ArrayList<SheepLocation>();
 		this.id = id;
 	}
 	
@@ -23,7 +25,11 @@ public class Sheep {
 	}
 
 	public void setAge(int age) {
-		this.age = age;
+		if(age > 0 && age < 40) {
+			this.age = age;			
+		} else {
+			System.out.println("Age is not valid");
+		}
 	}
 
 	public int getWeight() {
@@ -39,23 +45,21 @@ public class Sheep {
 	}
 
 	public void setHealthStatus(int healthStatus) {
-		this.healthStatus = healthStatus;
-	}
-
-	public String getLocation() {
-		return locations.get(locations.size());
-	}
-	public void newLocation(String location) {
-		if(locationIsValid(location)) {
-			locations.add(location);
+		if(healthStatus > 0 && healthStatus <= 100) {
+			this.healthStatus = healthStatus;			
 		} else {
-			System.out.println("Location is not valid");
+			System.out.println("Health status not valid");
 		}
 	}
 
-	private boolean locationIsValid(String location) {
-		return true;
+	public SheepLocation getLocation() {
+		return locations.get(locations.size());
 	}
+	
+	public void newLocation(long latitude, long longitude, Date date) {
+		locations.add(new SheepLocation(latitude, longitude, date));
+	}
+
 	
 	
 }
