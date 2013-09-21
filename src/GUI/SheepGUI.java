@@ -3,12 +3,20 @@ package GUI;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -16,17 +24,20 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
-public class LoginFrame extends JFrame {
+public class SheepGUI extends JFrame {
 	public static void main(String args[]) {
-		LoginFrame f = new LoginFrame();
+		SheepGUI f = new SheepGUI();
 		f.setVisible(true);
 	}
 
 	private int width;
 	private int height;
 
+	private String url;
+	private BufferedImage mapImg;
 	// 0 = main, 1 = login, 2 = register, 3 = forgot?
 	private int mode = 0;
 
@@ -71,19 +82,44 @@ public class LoginFrame extends JFrame {
 	private ArrayList<Component> registerComps;
 	private ArrayList<Component> forgotComps;
 
-	public LoginFrame() {
+	public SheepGUI() {
 		super("Tittel");
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		width = 1200;
 		height = 600;
-		setBounds(0, 0, width, height);
+		setBounds(0, 0, width, height + 20); // +20 for tittel bar'en
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// setBackground(Color.BLUE);
 
 		listener = new Listener();
 		tListener = new TimerListener();
 		timer = new Timer(100, tListener);
-		timer.start();
+		// timer.start();
+
+		/**
+		 * <p>
+		 * Kan fikse på url linken: <br>
+		 * center={latitude},{longitude} <br>
+		 * zoom={ja..hvor mye zoom :D fra 0 til 21 (tror jeg)} <br>
+		 * size={størrelsen på kartet, noen begrensninger for gratis versjonen}
+		 * </p>
+		 * 
+		 * <p>
+		 * mer info: <br>
+		 * https://developers.google.com/maps/documentation/staticmaps/
+		 * </p>
+		 **/
+		url = "http://maps.googleapis.com/maps/api/staticmap?center=63.4305149,10.3950528000000300008&zoom=12&size="
+				+ (width / 3) * 10 / 10 // bredden setter bildet 10% fra sidene
+				+ "x" + (height / 2) * 10 / 10 // høyden
+				+ "&scale=2&sensor=false"; //
+		try {
+			mapImg = ImageIO.read(new URL(url));
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		JLayeredPane lp = getLayeredPane();
 
@@ -114,12 +150,18 @@ public class LoginFrame extends JFrame {
 		 * .getResource("minion.jpg"));
 		 */
 
-		rightPanel = new JPanel(/* rightImage */);
+		ImageIcon rightImage = new ImageIcon(mapImg);
+		rightPanel = new JPanel();
 		rightPanel.setBounds(width / 3, 0, 2 * width / 3, height);
-		rightPanel.setBackground(Color.RED);
+		JLabel label = new JLabel(rightImage);
+		label.setHorizontalAlignment(JLabel.CENTER);
+		label.setVerticalAlignment(JLabel.CENTER);
+		label.setBounds(width / 3, 0, 2 * width / 3, height);
+		rightPanel.add(label);
+		// rightPanel.setBackground(Color.RED);
 		lp.add(rightPanel);
 
-		leftPanel = new JPanel(/* leftImage */);
+		leftPanel = new JPanel();
 		leftPanel.setBounds(0, 0, width / 3, height);
 		leftPanel.setBackground(Color.ORANGE);
 		lp.add(leftPanel);
@@ -139,25 +181,29 @@ public class LoginFrame extends JFrame {
 		registerButton.addActionListener(listener);
 
 		forgotButton = new JButton("Forgot");
-		forgotButton.setBounds(3 * width / 24, /* 130 * height / 200 */
-				21 * height / 25, bw / 2, 3 * bh / 4);
+		forgotButton.setBounds(width / 12, 125 * height / 200, bw, 3 * bh / 4);
 		forgotButton.addActionListener(listener);
 		forgotButton.setVisible(false);
 
 		sendButton = new JButton("Send");
-		sendButton.setBounds(width / 12, 6 * height / 20, bw, bh);
+		sendButton.setBounds(width / 12, 6 * height / 20, bw, 3 * bh / 4);
 		sendButton.addActionListener(listener);
 		sendButton.setVisible(false);
 
-		backButton = new JButton("Back");
-		backButton.setBounds(11 * width / 48, 21 * height / 25, bw / 2,
-				3 * bh / 4);
+		backButton = new JButton("          Back", new ImageIcon(this
+				.getClass().getClassLoader().getResource("sheep.png")));
+		backButton.setBounds(11 * width / 48, 19 * height / 25, bw / 2, bw / 2);
 		backButton.addActionListener(listener);
+		backButton.setBorder(BorderFactory.createEmptyBorder());
+		backButton.setHorizontalTextPosition(SwingConstants.CENTER);
 		backButton.setVisible(false);
 
-		exitButton = new JButton("Exit");
-		exitButton.setBounds(width / 48, 21 * height / 25, bw / 2, 3 * bh / 4);
+		exitButton = new JButton("          Exit", new ImageIcon(this
+				.getClass().getClassLoader().getResource("sheep.png")));
+		exitButton.setBounds(width / 48, 19 * height / 25, bw / 2, bw / 2);
 		exitButton.addActionListener(listener);
+		exitButton.setBorder(BorderFactory.createEmptyBorder());
+		exitButton.setHorizontalTextPosition(SwingConstants.CENTER);
 
 		lp.add(loginButton);
 		lp.add(registerButton);
@@ -173,23 +219,26 @@ public class LoginFrame extends JFrame {
 		int ch = 3 * height / 40;
 
 		unLabel = new JLabel("Email: ");
-		unLabel.setBounds(width / 30, 65 * height / 200, cw, ch);
+		unLabel.setBounds(width / 60, 40 * height / 200, cw, ch);
 		unLabel.setVisible(false);
 
 		pwLabel = new JLabel("Password: ");
-		pwLabel.setBounds(width / 30, 80 * height / 200, cw, ch);
+		pwLabel.setBounds(width / 60, 55 * height / 200, cw, ch);
 		pwLabel.setVisible(false);
 
 		unField = new JTextField();
-		unField.setBounds(width / 10, 65 * height / 200, 3 * cw / 2, ch);
+		unField.setBounds(width / 12, 40 * height / 200, width / 6, ch);
 		unField.addActionListener(listener);
 		unField.setName("unField");
+		// unField.setHorizontalAlignment(JTextField.CENTER);
 		unField.setVisible(false);
 
 		pwField = new JPasswordField();
-		pwField.setBounds(width / 10, 80 * height / 200, 3 * cw / 2, ch);
+		// mask formatter!
+		pwField.setBounds(width / 12, 55 * height / 200, width / 6, ch);
 		pwField.addActionListener(listener);
 		pwField.setName("pwField");
+		// pwField.setHorizontalAlignment(JTextField.RIGHT);
 		pwField.setVisible(false);
 
 		lp.add(unLabel);
@@ -202,8 +251,9 @@ public class LoginFrame extends JFrame {
 	private void createRegisterInterfaceComponents(JLayeredPane lp) {
 		// Tenkte å lage en for løkke og gjøre alt litt mindre, men før jeg
 		// finner en BRA måte å gjøre det på, så blir det sånn som det ernå.
-		int cw = 4 * width / 30;
+		int cw = width / 9 /* 4 * width / 30 */;
 		int ch = 3 * height / 40;
+		int hReg = 15 * height / 200;
 		// lister med alle verdiene til komponentene under. STEMMER IKKE
 		/*
 		 * int[] type = { 0, 0, 0, 0, 0, 1, 1, 1, 1, 1 }; String[] texts = {
@@ -217,54 +267,60 @@ public class LoginFrame extends JFrame {
 		 */
 
 		regNameLabel = new JLabel("Name:");
-		regNameLabel.setBounds(width / 30, 40 * height / 200, cw, ch);
+		regNameLabel.setBounds(width / 60, 40 * height / 200 - hReg, cw, ch);
 		regNameLabel.setVisible(false);
 
 		regEmailLabel = new JLabel("Email:");
-		regEmailLabel.setBounds(width / 30, 55 * height / 200, cw, ch);
+		regEmailLabel.setBounds(width / 60, 55 * height / 200 - hReg, cw, ch);
 		regEmailLabel.setVisible(false);
 
 		regPhoneLabel = new JLabel("Phone:");
-		regPhoneLabel.setBounds(width / 30, 70 * height / 200, cw, ch);
+		regPhoneLabel.setBounds(width / 60, 70 * height / 200 - hReg, cw, ch);
 		regPhoneLabel.setVisible(false);
 
 		regPasswordLabel = new JLabel("Password:");
-		regPasswordLabel.setBounds(width / 30, 85 * height / 200, cw, ch);
+		regPasswordLabel
+				.setBounds(width / 60, 85 * height / 200 - hReg, cw, ch);
 		regPasswordLabel.setVisible(false);
 
 		regPasswordLabel2 = new JLabel("Password:");
-		regPasswordLabel2.setBounds(width / 30, 100 * height / 200, cw, ch);
+		regPasswordLabel2.setBounds(width / 60, 100 * height / 200 - hReg, cw,
+				ch);
 		regPasswordLabel2.setVisible(false);
 
 		regNameField = new JTextField();
-		regNameField.setBounds(width / 10, 40 * height / 200, 3 * cw / 2, ch);
+		regNameField.setBounds(width / 12, 40 * height / 200 - hReg,
+				3 * cw / 2, ch);
 		regNameField.addActionListener(listener);
-		regNameField.setBackground(Color.ORANGE);
+		regNameField.setName("regNameField");
 		regNameField.setVisible(false);
 
 		regEmailField = new JTextField();
-		regEmailField.setBounds(width / 10, 55 * height / 200, 3 * cw / 2, ch);
+		regEmailField.setBounds(width / 12, 55 * height / 200 - hReg,
+				3 * cw / 2, ch);
 		regEmailField.addActionListener(listener);
-		regEmailField.setBackground(Color.GREEN);
+		regEmailField.setName("regEmailField");
 		regEmailField.setVisible(false);
 
 		regPhoneField = new JTextField();
-		regPhoneField.setBounds(width / 10, 70 * height / 200, 3 * cw / 2, ch);
+		regPhoneField.setBounds(width / 12, 70 * height / 200 - hReg,
+				3 * cw / 2, ch);
 		regPhoneField.addActionListener(listener);
-		regPhoneField.setBackground(Color.RED);
+		regPhoneField.setName("regPhoneField");
 		regPhoneField.setVisible(false);
 
+		// JPasswordField isteden? ******
 		regPasswordField = new JTextField();
-		regPasswordField.setBounds(width / 10, 85 * height / 200, 3 * cw / 2,
-				ch);
+		regPasswordField.setBounds(width / 12, 85 * height / 200 - hReg,
+				3 * cw / 2, ch);
 		regPasswordField.addActionListener(listener);
-		regPasswordField.setBackground(Color.YELLOW);
+		regPasswordField.setName("regPasswordField");
 		regPasswordField.setVisible(false);
 
 		regPasswordField2 = new JTextField();
-		regPasswordField2.setBounds(width / 10, 100 * height / 200, 3 * cw / 2,
-				ch);
-		regPasswordField2.setBackground(Color.BLUE);
+		regPasswordField2.setBounds(width / 12, 100 * height / 200 - hReg,
+				3 * cw / 2, ch);
+		regPasswordField2.setName("regPasswordField2");
 		regPasswordField2.addActionListener(listener);
 		regPasswordField2.setVisible(false);
 
@@ -294,16 +350,15 @@ public class LoginFrame extends JFrame {
 
 	// Lager alle komponenene til forgot interfacen.
 	private void createForgotInterfaceComponents(JLayeredPane lp) {
-		int cWidth = 4 * width / 30;
+		int cWidth = width / 6/* 4 * width / 30 */;
 		int cHeight = 3 * height / 40;
 
 		emailLabel = new JLabel("Email: ");
-		emailLabel.setBounds(width / 30, 90 * height / 200, cWidth, cHeight);
+		emailLabel.setBounds(width / 60, 90 * height / 200, cWidth, cHeight);
 		emailLabel.setVisible(false);
 
 		emailField = new JTextField();
-		emailField.setBounds(cWidth / 2 + width / 30, 90 * height / 200,
-				cWidth, cHeight);
+		emailField.setBounds(width / 12, 90 * height / 200, cWidth, cHeight);
 		emailField.addActionListener(listener);
 		emailField.setName("emailField");
 		emailField.setVisible(false);
@@ -360,8 +415,10 @@ public class LoginFrame extends JFrame {
 
 	// Setter alle start komponenter synlige
 	private void changeToStartInterface(Boolean bool) {
-		loginButton.setLocation(width / 12, 6 * height / 20);
-		registerButton.setLocation(width / 12, 9 * height / 20);
+		loginButton.setBounds(width / 12, 6 * height / 20, width / 6,
+				height / 10);
+		registerButton.setBounds(width / 12, 9 * height / 20, width / 6,
+				height / 10);
 
 		for (Component c : startComps) {
 			c.setVisible(bool);
@@ -371,8 +428,10 @@ public class LoginFrame extends JFrame {
 
 	// Setter alle login komponenter synlige
 	private void changeToLoginInterface(boolean bool) {
-		loginButton.setLocation(width / 12, 105 * height / 200);
-		// forgotButton.setLocation(width / 12, 11 * height / 20);
+		loginButton.setBounds(width / 12, 80 * height / 200, width / 6,
+				3 * height / 40);
+		forgotButton.setBounds(width / 12, 95 * height / 200, width / 6,
+				3 * height / 40);
 
 		if (bool) {
 			registerButton.setVisible(!bool);
@@ -385,7 +444,8 @@ public class LoginFrame extends JFrame {
 
 	// Setter alle register komponenter synlige
 	private void changeToRegisterInterface(boolean bool) {
-		registerButton.setLocation(width / 12, height / 20);
+		registerButton.setBounds(width / 12, 105 * height / 200, width / 6,
+				3 * height / 40);
 
 		for (Component c : registerComps) {
 			c.setVisible(bool);
@@ -395,15 +455,43 @@ public class LoginFrame extends JFrame {
 
 	// Setter alle forgot komponenter synlige
 	private void changeToForgotInterface(boolean bool) {
-		if (bool) {
-			registerButton.setVisible(!bool);
-			loginButton.setVisible(!bool);
-		}
-
+		sendButton.setBounds(width / 12, 6 * height / 20, width / 6,
+				3 * height / 40);
 		for (Component c : forgotComps) {
 			c.setVisible(bool);
 		}
 		mode = 3;
+	}
+
+	// Henter informasjon fra tekst boksene og skriver dem ut.
+	private void registerUser() {
+		String out = "Register user: \n";
+		out += regNameField.getText() + "\n";
+		out += regEmailField.getText() + "\n";
+		out += regPhoneField.getText() + "\n";
+		if (regPasswordField.getText().equals(regPasswordField2.getText())) {
+			out += regPasswordField.getText() + "\n";
+		} else {
+			out += "passwords do not match!";
+		}
+		System.out.println(out);
+	}
+
+	private void login() {
+		String out = "Login information: \n";
+		out += unField.getText() + "\n";
+		char[] c = pwField.getPassword();
+		for (int i = 0; i < c.length; i++) {
+			out += c[i];
+		}
+		out += "\n";
+		System.out.println(out);
+	}
+
+	private void sendEmail() {
+		String out = "Email sendt to: \n";
+		out += emailField.getText() + "\n";
+		System.out.println(out);
 	}
 
 	// Lytteren til knappene, finner riktig handling til hver knapp
@@ -417,23 +505,22 @@ public class LoginFrame extends JFrame {
 				String text = pressed.getText();
 
 				if (text.equals("Register")) {
+					if (mode == 2) {
+						registerUser();
+					}
 					changeToLoginInterface(false);
 					changeToRegisterInterface(true);
 				} else if (text.equals("Login")) {
-					changeToLoginInterface(true);
 					// sjekker: hvis man er i login interface og trykker login
 					// ->
 					if (mode == 1) {
 						// metode for å sjekke om brukernavn og passord stemmer
-						System.out.println(unField.getText());
-						char[] pwch = pwField.getPassword();
-						for (int i = 0; i < pwch.length; i++) {
-							System.out.print(pwch[i]);
-						}
+						login();
 					}
-				} else if (text.equals("Exit")) {
+					changeToLoginInterface(true);
+				} else if (text.equals("          Exit")) {
 					System.exit(0);
-				} else if (text.equals("Back")) {
+				} else if (text.equals("          Back")) {
 					// mode holder styr på hvor man er, så programet vet hvor en
 					// skal sendes tilbake til
 					if (mode == 1) {
@@ -465,19 +552,39 @@ public class LoginFrame extends JFrame {
 			} else if (arg.getSource() instanceof JPasswordField) {
 				((JPasswordField) arg.getSource()).getPassword();
 			} else if (arg.getSource() instanceof JTextField) {
-				System.out.println(((JTextField) arg.getSource()).getName());
-
+				// System.out.println(((JTextField) arg.getSource()).getName());
+				JTextField pressed = (JTextField) arg.getSource();
+				String text = pressed.getName();
+				// Register user
+				System.out.println(mode);
+				if (mode == 1) {
+					if (text.equals("unField")) {
+						pwField.requestFocus();
+					} else if (text.equals("pwField")) {
+						// LOG IN!
+						login();
+					}
+				} else if (mode == 2) {
+					if (text.equals("regNameField")) {
+						regEmailField.requestFocus();
+					} else if (text.equals("regEmailField")) {
+						regPhoneField.requestFocus();
+					} else if (text.equals("regPhoneField")) {
+						regPasswordField.requestFocus();
+					} else if (text.equals("regPasswordField")) {
+						regPasswordField2.requestFocus();
+					} else if (text.equals("regPasswordField2")) {
+						// REGISTER USER!
+						registerUser();
+					}
+				} else if (mode == 3) {
+					if (text.equals("emailField")) {
+						// SEND EMAIL!
+						sendEmail();
+					}
+				}
 			}
 		}
-	}
-
-	private class TextListener implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-
-		}
-
 	}
 
 	// Lytter for å håndtere tid. Til komponenter som skal flyttes over tid.
