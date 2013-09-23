@@ -12,12 +12,12 @@ public class User {
 	private String phoneNr;
 	
 	public User(String firstName, String lastName, String email,
-			String password, String phoneNr) {
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-		this.password = password;
-		this.phoneNr = phoneNr;
+			String password, String phoneNr) throws Exception {
+		setFirstName(firstName);
+		setLastName(lastName);
+		setEmail(email);
+		setPassword(password);
+		setPhoneNr(phoneNr);
 	}
 	public String getFirstName() {
 		return firstName;

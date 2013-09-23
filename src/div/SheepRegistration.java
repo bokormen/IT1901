@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class SheepRegistration {
 	private ArrayList<Sheep> sheep;
 
-	public void registerSheep(String id, int age, int weight) {
+	public void registerSheep(String id, int age, int weight) throws Exception {
 		Sheep s = new Sheep(id, age, weight);
 		sheep.add(s);
 		

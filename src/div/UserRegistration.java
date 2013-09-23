@@ -6,7 +6,7 @@ public class UserRegistration {
 	
 	private ArrayList<User> users;
 
-	public void registerUser(String firstName, String lastName, String email, String password, String phoneNr) {
+	public void registerUser(String firstName, String lastName, String email, String password, String phoneNr) throws Exception {
 		User user = new User(firstName, lastName, email, password, phoneNr);
 		users.add(user);
 	}

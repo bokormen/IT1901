@@ -12,9 +12,9 @@ public class Sheep {
 	private int heartrate;
 	private ArrayList<SheepLocation> locations; 
 	
-	public Sheep(String id, int age, int weight) {
-		this.age = age;
-		this.weight = weight;
+	public Sheep(String id, int age, int weight) throws Exception {
+		setAge(age);
+		setWeight(weight);
 		locations = new ArrayList<SheepLocation>();
 		this.id = id;
 	}
