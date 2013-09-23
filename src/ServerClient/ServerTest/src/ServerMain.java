@@ -7,7 +7,7 @@ import java.net.Socket;
 public class ServerMain {
 
     private static final int USERS = 256;
-    private static final ServerLog sLog = new ServerLog();
+    public static final ServerLog sLog = new ServerLog();
     private static final ServerConsole sConsole = new ServerConsole();
     private static ServerSocket serverSocket = null;
     private static ServerClientThread[] user = new ServerClientThread[USERS];
@@ -56,6 +56,7 @@ public class ServerMain {
             i += 1;
         }
         new Socket(InetAddress.getLocalHost(), 58339).close(); //breaks the loop
+        sLog.addEntry("Server Shut-Down");
     }
 
     public static void close() {

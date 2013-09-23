@@ -6,7 +6,6 @@ import java.util.Date;
 
 public class ServerLog {
 
-    private BufferedReader in = null;
     private PrintWriter out = null;
     private static final int bufferLimit = 5;
     private int bufferCount = 0;
@@ -31,14 +30,36 @@ public class ServerLog {
         System.out.print(str);
     }
 
+
+    public void clearLog() {
+
+        try {
+            out.close();
+            PrintWriter pw = new PrintWriter(logFile);
+            pw.write("");
+            pw.close();
+            out = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)));
+            addEntry("Cleared Log.");
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+    }
     public void printLog() {
         try {
-            in.mark(52428800);
+            out.close();
+            out = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)));
+
+            BufferedReader in = new BufferedReader(new FileReader(logFile));
             String str;
             while ((str = in.readLine()) != null) {
                 System.out.println(str);
             }
-            in.reset();
+
+            in.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -46,12 +67,7 @@ public class ServerLog {
 
 
     public void close() {
-        try {
-            in.close();
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+        out.close();
     }
 
     // constructor
@@ -65,7 +81,6 @@ public class ServerLog {
 
             //out = new PrintWriter(new BufferedWriter(new FileWriter("log.txt", true)));
             out = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)));
-            in = new BufferedReader(new FileReader("log.txt"));
 
         } catch (FileNotFoundException e) {
             System.err.println("Could not open log file");

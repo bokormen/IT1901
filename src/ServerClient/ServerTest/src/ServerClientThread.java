@@ -25,7 +25,7 @@ public class ServerClientThread extends Thread {
             String inputLine, outputLine;
             ComProtocol com = new ComProtocol();
 
-            log.addEntry(getClientAddress() + " connected.");
+            log.addEntry(getClientAddress() + " connected."); //log
 
             //read input from client and process
             while ((inputLine = in.readLine()) != null) {
@@ -47,6 +47,7 @@ public class ServerClientThread extends Thread {
         }
     }
 
+    //gets the client ip
     public String getClientAddress() {
         return socket.getInetAddress().toString();
     }

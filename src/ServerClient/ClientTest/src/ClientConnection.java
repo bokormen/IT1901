@@ -8,6 +8,23 @@ public class ClientConnection {
     PrintWriter out = null;
     BufferedReader in = null;
 
+
+    //close all streams
+    public void close() throws IOException {
+        out.close();
+        in.close();
+        kkSocket.close();
+    }
+
+
+    //send a query to the server and get the response
+    public String getDataFromServer(String query) throws IOException {
+        out.println(query);
+        return in.readLine();
+    }
+
+
+    //constructor
     public ClientConnection() throws IOException {
 
 
@@ -23,24 +40,5 @@ public class ClientConnection {
             System.exit(1);
         }
 
-    }
-
-    public String getServerMessage() throws IOException {
-        return in.readLine();
-    }
-
-    public void close() throws IOException {
-        out.close();
-        in.close();
-        kkSocket.close();
-    }
-
-    public void sendClientMessage(String fromUser) {
-        out.println(fromUser);
-    }
-
-    public String getDataFromServer(String query) throws IOException {
-        out.println(query);
-        return in.readLine();
     }
 }

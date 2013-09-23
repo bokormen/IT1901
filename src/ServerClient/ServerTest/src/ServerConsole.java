@@ -9,10 +9,13 @@ import java.io.InputStreamReader;
  * Time: 23:03
  * To change this template use File | Settings | File Templates.
  */
+
+//Server consol for å administrere server
 public class ServerConsole extends Thread {
 
     BufferedReader stdIn = null;
 
+    //start en ny tråd
     public void run() {
         String fromConsole;
 
@@ -31,13 +34,21 @@ public class ServerConsole extends Thread {
     }
 
     private void processCommand(String fromConsole) {
-        if (fromConsole.equals("quit")) {
+        if (fromConsole.equalsIgnoreCase("quit")) {
             try {
                 System.out.println("Quitting...");
                 ServerMain.quit();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+        } else if (fromConsole.equalsIgnoreCase("printlog")) {
+            ServerMain.sLog.printLog();
+        } else if (fromConsole.equalsIgnoreCase("help")) {
+            String str = "Commands:\nprintlog\nquit";
+            System.out.println(str);
+        } else if (fromConsole.equalsIgnoreCase("clearlog")) {
+            ServerMain.sLog.clearLog();
         } else {
             System.out.println("Unknown Command.");
         }
