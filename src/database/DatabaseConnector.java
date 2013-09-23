@@ -8,11 +8,13 @@ import java.sql.Statement;
 import java.sql.DriverManager;
 import com.mysql.jdbc.PreparedStatement;
 
+import java.lang.String;
+
 public class DatabaseConnector {
 	public static Connection con;
 	
 	/**
-	 * @author Oeyvind Klungland Lund
+	 * @author Oeyvind
 	 * Denne koden åpner en tilkobling til databasen vi bruker i gruppe 10, hoesten 2013i faget IT1901 ved NTNU
 	 */
 	public static void open() {
@@ -34,6 +36,52 @@ public class DatabaseConnector {
 			if (con != null) con.close();
 		} catch (SQLException e) {
 			System.out.println("Error " + e.getMessage());
+		}
+	}
+	
+	/**
+	 * Denne koden oppretter en ny bruker
+	 * @param email
+	 * @param name
+	 * @param phoneNumber
+	 * @param password
+	 * @author Oeyvind
+	 */
+	public static void newUser(String email, String name, String phoneNumber, String password) {
+		try {
+			Statement st = con.createStatement();
+			
+			String linje = "INSERT INTO `oyvilund_sheep`.`User` (`Email`, `Name`, `Tlf`, `Password`) VALUES"+
+			String.format("(\"%s\", \"%s\", \"%s\", \"%s\"", email,name,phoneNumber,password);
+			
+			st.executeUpdate(linje);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Denne koden oppretteren en sau i databasen
+	 * @param name
+	 * @param owner
+	 * @param shepherd
+	 * @param weight
+	 * @param heartrate
+	 * @param temperature
+	 * @param age
+	 */
+	public static void newSheep(String name, String owner, String shepherd, int weight, int heartrate, int temperature, int age) {
+		try {
+			Statement st = con.createStatement();
+			
+			String linje ="INSERT INTO `oyvilund_sheep`.`Sheep` (`Name`, `Owner`, `Shepherd`, `Weight`,`Heartrate`,`Temperature`,`Age`) VALUES"+
+			String.format("(\"%s\", \"%s\", \"%s\",%s,%s,%s,%s)", name,owner,shepherd,weight,heartrate,temperature,age);
+			
+			st.executeUpdate(linje);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }
