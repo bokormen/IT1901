@@ -8,11 +8,13 @@ public class Sheep {
 	private final String id;
 	private int age;
 	private int weight;
-	private long temperature;
+	private double temperature;
 	private int heartrate;
 	private ArrayList<SheepLocation> locations; 
 	
-	public Sheep(String id) {
+	public Sheep(String id, int age, int weight) {
+		this.age = age;
+		this.weight = weight;
 		locations = new ArrayList<SheepLocation>();
 		this.id = id;
 	}
@@ -61,11 +63,11 @@ public class Sheep {
 		return locations;
 	}
 
-	public long getTemperature() {
+	public double getTemperature() {
 		return temperature;
 	}
 
-	public void setTemperature(long temperature) {
+	public void setTemperature(double temperature) {
 		this.temperature = temperature;
 	}
 
