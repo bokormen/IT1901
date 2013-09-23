@@ -8,7 +8,8 @@ public class Sheep {
 	private final String id;
 	private int age;
 	private int weight;
-	private int healthStatus;
+	private long temperature;
+	private int heartrate;
 	private ArrayList<SheepLocation> locations; 
 	
 	public Sheep(String id) {
@@ -24,11 +25,15 @@ public class Sheep {
 		return age;
 	}
 
-	public void setAge(int age) {
+	/**
+	 * Setter alderen til en sau. Kan være fra 0 til 40. 
+	 * @throws Exception 
+	 */
+	public void setAge(int age) throws Exception {
 		if(age > 0 && age < 40) {
 			this.age = age;			
 		} else {
-			System.out.println("Age is not valid");
+			throw new Exception("Age not valid");
 		}
 	}
 
@@ -36,19 +41,11 @@ public class Sheep {
 		return weight;
 	}
 
-	public void setWeight(int weight) {
-		this.weight = weight;
-	}
-
-	public int getHealthStatus() {
-		return healthStatus;
-	}
-
-	public void setHealthStatus(int healthStatus) {
-		if(healthStatus > 0 && healthStatus <= 100) {
-			this.healthStatus = healthStatus;			
+	public void setWeight(int weight) throws Exception {
+		if(weight > 0) {
+			this.weight = weight;			
 		} else {
-			System.out.println("Health status not valid");
+			throw new Exception("Weight not valid");
 		}
 	}
 
@@ -58,6 +55,30 @@ public class Sheep {
 	
 	public void newLocation(long latitude, long longitude, Date date) {
 		locations.add(new SheepLocation(latitude, longitude, date));
+	}
+	
+	public ArrayList<SheepLocation> getLocationLog() {
+		return locations;
+	}
+
+	public long getTemperature() {
+		return temperature;
+	}
+
+	public void setTemperature(long temperature) {
+		this.temperature = temperature;
+	}
+
+	public int getHeartrate() {
+		return heartrate;
+	}
+
+	public void setHeartrate(int heartrate) throws Exception {
+		if(heartrate > 0) {
+			this.heartrate = heartrate;			
+		} else {
+			throw new Exception("Heartrate not valid");
+		}
 	}
 
 	
