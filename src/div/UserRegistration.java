@@ -2,13 +2,21 @@ package div;
 
 import java.util.ArrayList;
 
+import database.DatabaseConnector;
+
+/**
+ * Klassen håndterer registrering, sletting og innlogging av brukere. 
+ * @author Ragnhild
+ *
+ */
 public class UserRegistration {
 	
-	private ArrayList<User> users;
+	private ArrayList<User> users = new ArrayList<User>();
 
 	public void registerUser(String firstName, String lastName, String email, String password, String phoneNr) throws Exception {
 		User user = new User(firstName, lastName, email, password, phoneNr);
 		users.add(user);
+		//DatabaseConnector.newUser(email, firstName + lastName, phoneNr, password);
 	}
 	
 	public void deleteUser(User user) {

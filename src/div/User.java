@@ -1,8 +1,11 @@
 package div;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-
+/**
+ * User-klassen representerer en brukers profil. 
+ * Lagrer og validerer generell info om brukeren, inkludert email og passord som er nødvendig for innlogging. 
+ * @author Ragnhild
+ *
+ */
 public class User {
 
 	private String firstName;
@@ -64,11 +67,11 @@ public class User {
 	public String getPhoneNr() {
 		return phoneNr;
 	}
-	public void setPhoneNr(String phoneNr) {
+	public void setPhoneNr(String phoneNr) throws Exception {
 		if(PhoneNumberIsValid(phoneNr)) {
 			this.phoneNr = phoneNr;
 		} else {
-			System.out.println("Phone number not valid");
+			throw new Exception("Phone number not valid");
 		}
 		
 	}
@@ -81,6 +84,9 @@ public class User {
 	}
 	
 	private boolean PhoneNumberIsValid(String phoneNr) {
+		if(phoneNr.length() < 8) {
+			return false;
+		}
 		for (int i = 0; i < phoneNr.length(); i++) {
 			Character c = phoneNr.charAt(i);
 			if(!Character.isDigit(c)) {
@@ -93,9 +99,8 @@ public class User {
 	public boolean emailAddressIsValid(String email) {
 		String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
 				+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-		Pattern pattern = Pattern.compile(emailPattern);
-		Matcher matcher = pattern.matcher(email);
-		return matcher.matches();
+		return email.matches(emailPattern);
+		
 	}
 	
 	private boolean passwordIsValid(String pass) {
@@ -105,8 +110,7 @@ public class User {
 		return false;
 	}
 	
-	public static void main (String[] args) {
 
-	}
+
 
 }

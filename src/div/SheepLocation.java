@@ -1,24 +1,28 @@
 package div;
 import java.util.Date;
 
-
+/**
+ * SheepLocation representerer en sau sin posisjon på et gitt tidspunkt. 
+ * @author Ragnhild
+ *
+ */
 public class SheepLocation {
 
-	private long latitude;
-	private long longitude;
+	private final double latitude;
+	private final double longitude;
 	private Date date;
 	
-	public SheepLocation(long latitude, long longitude, Date date) {
+	public SheepLocation(double latitude, double longitude, Date date) {
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.date = date;
 	}
 
-	public long getLatitude() {
+	public double getLatitude() {
 		return latitude;
 	}
 
-	public long getLongitude() {
+	public double getLongitude() {
 		return longitude;
 	}
 	

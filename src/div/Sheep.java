@@ -2,21 +2,31 @@ package div;
 import java.util.ArrayList;
 import java.util.Date;
 
-
+/**
+ * Sheep-klassen representerer en sau i systemet og lagrer og validerer generell informasjon om den. 
+ * @author Ragnhild
+ *
+ */
 public class Sheep {
 
 	private final String id;
 	private int age;
 	private int weight;
+	private char gender;
 	private double temperature;
 	private int heartrate;
 	private ArrayList<SheepLocation> locations; 
 	
-	public Sheep(String id, int age, int weight) throws Exception {
+	public Sheep(String id, int age, int weight, char gender) throws Exception {
 		setAge(age);
 		setWeight(weight);
 		locations = new ArrayList<SheepLocation>();
 		this.id = id;
+		if(gender == 'f' || gender == 'm') {
+			this.gender = gender;
+		} else {
+			throw new Exception("Gender not valid");			
+		}
 	}
 	
 	public String getId() {
@@ -35,7 +45,7 @@ public class Sheep {
 		if(age > 0 && age < 40) {
 			this.age = age;			
 		} else {
-			throw new Exception("Age not valid");
+			throw new Exception("Age is not valid");
 		}
 	}
 
@@ -47,7 +57,7 @@ public class Sheep {
 		if(weight > 0) {
 			this.weight = weight;			
 		} else {
-			throw new Exception("Weight not valid");
+			throw new Exception("Weight is not valid");
 		}
 	}
 
@@ -55,7 +65,7 @@ public class Sheep {
 		return locations.get(locations.size());
 	}
 	
-	public void newLocation(long latitude, long longitude, Date date) {
+	public void newLocation(double latitude, double longitude, Date date) {
 		locations.add(new SheepLocation(latitude, longitude, date));
 	}
 	
@@ -82,6 +92,11 @@ public class Sheep {
 			throw new Exception("Heartrate not valid");
 		}
 	}
+
+	public char getGender() {
+		return gender;
+	}
+
 
 	
 	

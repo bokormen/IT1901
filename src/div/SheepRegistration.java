@@ -2,12 +2,20 @@ package div;
 
 import java.util.ArrayList;
 
-public class SheepRegistration {
-	private ArrayList<Sheep> sheep;
+import database.DatabaseConnector;
 
-	public void registerSheep(String id, int age, int weight) throws Exception {
-		Sheep s = new Sheep(id, age, weight);
+/**
+ * Klassen håndterer registrering, sletting og søk av sauer. 
+ * @author Ragnhild
+ *
+ */
+public class SheepRegistration {
+	private ArrayList<Sheep> sheep = new ArrayList<Sheep>();
+
+	public void registerSheep(String id, int age, int weight, char gender) throws Exception {
+		Sheep s = new Sheep(id, age, weight, gender);
 		sheep.add(s);
+		//DatabaseConnector.newSheep(id, null, null, weight, 0, 0, age);
 		
 	}
 	
