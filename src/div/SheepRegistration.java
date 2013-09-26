@@ -12,7 +12,7 @@ import database.DatabaseConnector;
 public class SheepRegistration {
 	private ArrayList<Sheep> sheep = new ArrayList<Sheep>();
 
-	public void registerSheep(long id, int age, int weight, char gender, String shepherd) throws Exception {
+	public void registerSheep(int id, int age, int weight, char gender, String shepherd) throws Exception {
 		Sheep s = new Sheep(id, age, weight, gender, shepherd);
 		sheep.add(s);
 		//DatabaseConnector.newSheep(id, null, shepherd, weight, 0, 0, age);

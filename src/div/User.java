@@ -72,7 +72,7 @@ public class User {
 		return phoneNr;
 	}
 	public void setPhoneNr(String phoneNr) throws Exception {
-		if(PhoneNumberIsValid(phoneNr)) {
+		if(phoneNumberIsValid(phoneNr)) {
 			this.phoneNr = phoneNr;
 		} else {
 			throw new Exception("Phone number not valid");
@@ -87,7 +87,7 @@ public class User {
 		return false;
 	}
 	
-	private boolean PhoneNumberIsValid(String phoneNr) {
+	private boolean phoneNumberIsValid(String phoneNr) {
 		if(phoneNr.length() < 8) {
 			return false;
 		}
