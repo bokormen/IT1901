@@ -7,8 +7,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.DriverManager;
 
+import com.mysql.jdbc.PreparedStatement;
+
 import java.lang.String;
 import div.*;
+
 import java.util.*;
 
 public class DatabaseConnector {
@@ -97,7 +100,7 @@ public class DatabaseConnector {
 	 */
 	public static ArrayList<Sheep> getAllSheepsToOwner(String owner) {
 		
-		ArrayList<Sheep> Sheeps = new ArrayList( );
+		ArrayList<Sheep> Sheeps = new ArrayList<Sheep>( );
 		
 		try {
 			Statement st = con.createStatement();
