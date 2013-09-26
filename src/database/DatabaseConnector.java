@@ -105,13 +105,13 @@ public class DatabaseConnector {
 		try {
 			Statement st = con.createStatement();
 			
-			String query = "Select S.ID, S.Gender, S.Shepherd, S.Weight, S.Heartrate, S.Temperature, S.Age From Sheep as S WHERE S.Owner="+owner+";"; //spoer etter all informasjonen om sauen med untak av eier(Owner) og gjeter(Shepherd)
+			String query = "Select S.ID, S.Gender, S.Shepherd, S.Weight, S.Heartrate, S.Temperature, S.Age, S.Shepherd From Sheep as S WHERE S.Owner="+owner+";"; //spoer etter all informasjonen om sauen med untak av eier(Owner) og gjeter(Shepherd)
 			
 			ResultSet rs = st.executeQuery(query);
 			
 			while(rs.next()) {
 				
-				Sheeps.add(new Sheep(rs.getInt(0)),rs.getInt(6),rs.getArray(3),rs.getString(1)); //Maa sansynligvis endres litt da constructoren ikke ser ut til � ta hensyn til all infoen
+				Sheeps.add(new Sheep(rs.getInt(0),rs.getInt(6),rs.getInt(3),rs.getString(1))); //Maa sansynligvis endres litt da constructoren ikke ser ut til � ta hensyn til all infoen
 				Statement st2 = con.createStatement();
 				String query2 = "Select Date, Position From Location as L INNER JOIN Sheep as S ON (S.ID="+rs.getInt(1)+");";
 				ResultSet rs2 = st.executeQuery(query2);
