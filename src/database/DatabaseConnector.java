@@ -9,13 +9,15 @@ import java.sql.DriverManager;
 import com.mysql.jdbc.PreparedStatement;
 
 import java.lang.String;
+import div.*;
+import java.util.*;
 
 public class DatabaseConnector {
 	public static Connection con;
 	
 	/**
 	 * @author Oeyvind
-	 * Denne koden åpner en tilkobling til databasen vi bruker i gruppe 10, hoesten 2013i faget IT1901 ved NTNU
+	 * Denne koden aapner en tilkobling til databasen vi bruker i gruppe 10, hoesten 2013i faget IT1901 ved NTNU
 	 */
 	public static void open() {
 		try {
@@ -70,6 +72,7 @@ public class DatabaseConnector {
 	 * @param heartrate
 	 * @param temperature
 	 * @param age
+	 * @author Oeyvind
 	 */
 	public static void newSheep(String name, String owner, String shepherd, int weight, int heartrate, int temperature, int age) {
 		try {
@@ -83,5 +86,41 @@ public class DatabaseConnector {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Returnerer en ArrayList med Sheep elementer som inneholder alle sauene til oppgitt eier 
+	 * @param owner
+	 * @return
+	 * @author OEyvind
+	 */
+	public static ArrayList<Sheep> getAllSheepsToOwner(String owner) {
+		
+		ArrayList<Sheep> Sheeps = new ArrayList( );
+		
+		try {
+			Statement st = con.createStatement();
+			
+			String query = "Select S.ID, S.Gender, S.Shepherd, S.Weight, S.Heartrate, S.Temperature, S.Age From Sheep as S WHERE S.Owner="+owner+";"; //spoer etter all informasjonen om sauen med untak av eier(Owner) og gjeter(Shepherd)
+			
+			ResultSet rs = st.executeQuery(query);
+			
+			while(rs.next()) {
+				
+				Sheeps.add(new Sheep(rs.getInt(0)),rs.getInt(6),rs.getArray(3),rs.getString(1)); //Maa sansynligvis endres litt da constructoren ikke ser ut til å ta hensyn til all infoen
+				Statement st2 = con.createStatement();
+				String query2 = "Select Date, Position From Location as L INNER JOIN Sheep as S ON (S.ID="+rs.getInt(1)+");";
+				ResultSet rs2 = st.executeQuery(query2);
+				while(rs2.next()) {
+					Sheeps.get(0).newLocation(rs2.getString(0), rs2.getString(1));
+				}
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return Sheeps;
 	}
 }
