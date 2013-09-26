@@ -93,7 +93,7 @@ public class DatabaseConnector {
 	 * Returnerer en ArrayList med Sheep elementer som inneholder alle sauene til oppgitt eier 
 	 * @param owner
 	 * @return
-	 * @author OEyvind
+	 * @author Oeyvind
 	 */
 	public static ArrayList<Sheep> getAllSheepsToOwner(String owner) {
 		
