@@ -35,4 +35,8 @@ public class UserRegistration {
 		}
 		return null;
 	}
+	
+	public ArrayList<User> getUsers() {
+		return users;
+	}
 }
