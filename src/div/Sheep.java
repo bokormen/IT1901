@@ -15,11 +15,13 @@ public class Sheep {
 	private char gender;
 	private double temperature;
 	private int heartrate;
+	private String shepherd;
 	private ArrayList<SheepLocation> locations; 
 	
-	public Sheep(String id, int age, int weight, char gender) throws Exception {
+	public Sheep(String id, int age, int weight, char gender, String shepherd) throws Exception {
 		setAge(age);
 		setWeight(weight);
+		setShepherd(shepherd);
 		locations = new ArrayList<SheepLocation>();
 		this.id = id;
 		if(gender == 'f' || gender == 'm') {
@@ -62,10 +64,10 @@ public class Sheep {
 	}
 
 	public SheepLocation getLocation() {
-		return locations.get(locations.size());
+		return locations.get(locations.size()-1);
 	}
 	
-	public void newLocation(double latitude, double longitude, Date date) {
+	public void newLocation(double latitude, double longitude, String date) throws Exception {
 		locations.add(new SheepLocation(latitude, longitude, date));
 	}
 	
@@ -95,6 +97,20 @@ public class Sheep {
 
 	public char getGender() {
 		return gender;
+	}
+
+	public String getShepherd() {
+		return shepherd;
+	}
+
+	public void setShepherd(String shepherd) throws Exception {
+		String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+				+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+		if (shepherd.matches(emailPattern)) {
+			this.shepherd = shepherd;
+		} else {
+			throw new Exception("Email not valid");
+		}
 	}
 
 
