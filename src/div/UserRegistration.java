@@ -21,12 +21,7 @@ public class UserRegistration {
 	
 	public void deleteUser(User user) {
 		users.remove(user);
-	}
-	
-	public void sendInfoToDatabase() {
-		
-	}
-	
+	}	
 
 	public User login(String email, String password) {
 		for(User user : users) {
