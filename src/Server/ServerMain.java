@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import database.DatabaseConnector;
 
+
+//server applikasjon
 public class ServerMain {
 
     private static final int USERS = 256;
@@ -21,7 +24,7 @@ public class ServerMain {
 
         //open a server socket
         try {
-            database.DatabaseConnector.open();
+            DatabaseConnector.open();
 
             sLog.addEntry("Server Start-Up");
             serverSocket = new ServerSocket(58339);
