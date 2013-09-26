@@ -109,7 +109,7 @@ public class DatabaseConnector {
 			String query = "Select S.ID, S.Gender, S.Shepherd, S.Weight, S.Heartrate, S.Temperature, S.Age, S.Shepherd From Sheep as S WHERE S.Owner="+owner+";"; //spoer etter all informasjonen om sauen med untak av eier(Owner) og gjeter(Shepherd)
 			
 			ResultSet rs = st.executeQuery(query);
-			
+			int i=0;
 			while(rs.next()) {
 				
 				Sheep sau = new Sheep(rs.getInt(0),rs.getInt(6),rs.getInt(3),rs.getString(1).charAt(0), rs.getString(7));
@@ -118,9 +118,12 @@ public class DatabaseConnector {
 				Statement st2 = con.createStatement();
 				String query2 = "Select Date, Position From Location as L INNER JOIN Sheep as S ON (S.ID="+rs.getInt(1)+");";
 				ResultSet rs2 = st2.executeQuery(query2);
+				Sheeps.get(i).setHeartrate(rs.getInt(4));
+				Sheeps.get(i).setTemperature(rs.getInt(5));
 				while(rs2.next()) {
 					Sheeps.get(0).newLocation(rs2.getString(0), rs2.getString(1));
 				}
+				i++;
 			}
 			
 		} catch (SQLException e) {
