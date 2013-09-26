@@ -18,7 +18,7 @@ public class DatabaseConnector {
 	 * @author Oeyvind
 	/**
 	 * @author Oeyvind
-	 * Denne koden ï¿½pner en tilkobling til databasen vi bruker i gruppe 10, hoesten 2013i faget IT1901 ved NTNU
+	 * Denne koden aapner en tilkobling til databasen vi bruker i gruppe 10, hoesten 2013i faget IT1901 ved NTNU
 	 */
 	public static void open() {
 		try {
@@ -108,7 +108,7 @@ public class DatabaseConnector {
 			
 			while(rs.next()) {
 				
-				Sheeps.add(new Sheep(rs.getInt(0)),rs.getInt(6),rs.getArray(3),rs.getString(1)); //Maa sansynligvis endres litt da constructoren ikke ser ut til å ta hensyn til all infoen
+				Sheeps.add(new Sheep(rs.getInt(0)),rs.getInt(6),rs.getArray(3),rs.getString(1)); //Maa sansynligvis endres litt da constructoren ikke ser ut til ï¿½ ta hensyn til all infoen
 				Statement st2 = con.createStatement();
 				String query2 = "Select Date, Position From Location as L INNER JOIN Sheep as S ON (S.ID="+rs.getInt(1)+");";
 				ResultSet rs2 = st.executeQuery(query2);
