@@ -111,12 +111,12 @@ public class DatabaseConnector {
 			
 			while(rs.next()) {
 				
-				Sheeps.add(new Sheep(rs.getInt(0),rs.getInt(6),rs.getInt(3),rs.getString(1))); //Maa sansynligvis endres litt da constructoren ikke ser ut til � ta hensyn til all infoen
+				//Sheeps.add(new Sheep(rs.getInt(0),rs.getInt(6),rs.getInt(3),rs.getString(1).charAt(0), rs.getString(7)),rs.getString(7)); //Maa sansynligvis endres litt da constructoren ikke ser ut til � ta hensyn til all infoen
 				Statement st2 = con.createStatement();
 				String query2 = "Select Date, Position From Location as L INNER JOIN Sheep as S ON (S.ID="+rs.getInt(1)+");";
 				ResultSet rs2 = st.executeQuery(query2);
 				while(rs2.next()) {
-					Sheeps.get(0).newLocation(rs2.getString(0), rs2.getString(1));
+					//Sheeps.get(0).newLocation(rs2.getString(0), rs2.getString(1));
 				}
 			}
 			
