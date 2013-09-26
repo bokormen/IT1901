@@ -21,6 +21,8 @@ public class ServerMain {
 
         //open a server socket
         try {
+            database.DatabaseConnector.open();
+
             sLog.addEntry("Server Start-Up");
             serverSocket = new ServerSocket(58339);
             sConsole.start();
