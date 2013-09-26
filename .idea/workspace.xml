@@ -9,14 +9,14 @@
     <file path="$PROJECT_DIR$/../ClientTest/src/ClientMain.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1379936869436" ignored="false" />
     <file path="$PROJECT_DIR$/../ClientTest/src/KnockKnockClient.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1379840322386" ignored="false" />
     <file path="/KnockKnockClient.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1379840322386" ignored="false" />
-    <file path="/ClientMain.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1380181070818" ignored="false" />
+    <file path="/ClientMain.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1380185083841" ignored="false" />
     <file path="/KKMultiServer.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1379844116720" ignored="false" />
     <file path="/KKMultiServerThread.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1379844107338" ignored="false" />
     <file path="/KnockKnockProtocol.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1379843825611" ignored="false" />
     <file path="$PROJECT_DIR$/../ClientTest/src/SheepGUI.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1379840128528" ignored="false" />
     <file path="$PROJECT_DIR$/../ClientTest/src/ClientConnection.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1379936884258" ignored="false" />
-    <file path="/ClientConnection.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1380181055417" ignored="false" />
-    <file path="/ServerMain.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1380179577486" ignored="false" />
+    <file path="/ClientConnection.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1380185267328" ignored="false" />
+    <file path="/ServerMain.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1380184307059" ignored="false" />
     <file path="/ServerClientThread.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1380178842543" ignored="false" />
     <file path="/ComProtocol.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1380179204945" ignored="false" />
     <file path="/ServerLog.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1380178817957" ignored="false" />
@@ -81,11 +81,64 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="DatabaseConnector.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="DatabaseConnector.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/database/DatabaseConnector.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="26" selection-start="171" selection-end="171" vertical-scroll-proportion="0.030035336">
+            <state line="6" column="26" selection-start="171" selection-end="171" vertical-scroll-proportion="0.0">
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sendMail.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/div/sendMail.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="20" column="44" selection-start="535" selection-end="535" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SheepGUI.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/GUI/SheepGUI.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="43" column="30" selection-start="1089" selection-end="1089" vertical-scroll-proportion="0.53968257">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ClientConnection.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/div/ClientConnection.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="28" column="9" selection-start="650" selection-end="658" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ClientMain.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/example/ClientTest/ClientMain.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="5" column="28" selection-start="150" selection-end="150" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ServerMain.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Server/ServerMain.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="24" column="0" selection-start="722" selection-end="722" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -100,7 +153,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/KKMultiServer.java" />
         <option value="$PROJECT_DIR$/src/KKMultiServerThread.java" />
         <option value="$PROJECT_DIR$/log.txt" />
         <option value="$PROJECT_DIR$/src/ComProtocol.java" />
@@ -112,10 +164,11 @@
         <option value="$PROJECT_DIR$/src/Server/Utils/ServerLog.java" />
         <option value="$PROJECT_DIR$/src/Server/ComProtocol.java" />
         <option value="$PROJECT_DIR$/src/Database/DatabaseConnector.java" />
+        <option value="$PROJECT_DIR$/src/database/DatabaseConnector.java" />
         <option value="$PROJECT_DIR$/src/Server/ServerMain.java" />
         <option value="$PROJECT_DIR$/src/example/ClientTest/ClientConnection.java" />
         <option value="$PROJECT_DIR$/src/example/ClientTest/ClientMain.java" />
-        <option value="$PROJECT_DIR$/src/database/DatabaseConnector.java" />
+        <option value="$PROJECT_DIR$/src/div/ClientConnection.java" />
       </list>
     </option>
   </component>
@@ -151,7 +204,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -185,8 +237,63 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="IT1901" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="IT1901" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="GUI" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="IT1901" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="IT1901" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ClientTest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="IT1901" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="IT1901" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="div" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -195,7 +302,7 @@
     <property name="project.structure.proportion" value="0.15" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="recentsLimit" value="5" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../Modules/javax.mail.jar!/" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
@@ -297,8 +404,8 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="false" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -313,8 +420,8 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2497332" sideWeight="0.65850943" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.34149054" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2497332" sideWeight="0.6596218" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3403782" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -394,39 +501,80 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/database/DatabaseConnector.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Server/ServerMain.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/GUI/SheepGUI.java">
+    <entry file="file://$PROJECT_DIR$/src/div/Sheep.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="13" selection-start="768" selection-end="768" vertical-scroll-proportion="0.077892326" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/example/ClientTest/ClientMain.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="0" selection-start="28" selection-end="28" vertical-scroll-proportion="0.019473081" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/example/ClientTest/ClientConnection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="27" selection-start="27" selection-end="27" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Server/ServerMain.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="13" selection-start="142" selection-end="142" vertical-scroll-proportion="0.019473081" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/div/sendMail.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="13" selection-start="693" selection-end="693" vertical-scroll-proportion="0.5588235" />
+        <state line="70" column="60" selection-start="1470" selection-end="1472" vertical-scroll-proportion="-11.28">
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/database/DatabaseConnector.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="26" selection-start="171" selection-end="171" vertical-scroll-proportion="0.030035336">
+        <state line="6" column="26" selection-start="171" selection-end="171" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/GUI/GUI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="32" column="46" selection-start="840" selection-end="840" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/div/sendMail.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="44" selection-start="535" selection-end="535" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/example/ClientTest/ClientMain.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="28" selection-start="150" selection-end="150" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Server/ServerMain.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="0" selection-start="722" selection-end="722" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/div/ClientConnection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="28" column="9" selection-start="650" selection-end="658" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/GUI/SheepGUI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="43" column="30" selection-start="1089" selection-end="1089" vertical-scroll-proportion="0.53968257">
           <folding />
         </state>
       </provider>
@@ -496,6 +644,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
+          <last-edited>javax.mail</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

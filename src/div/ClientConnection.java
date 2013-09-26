@@ -1,8 +1,9 @@
-package example.ClientTest;
+package div;
 
 import java.io.*;
 import java.net.*;
 
+//opprette ny klient tilkoppling til server. Bruk getDataFromServer() for å sende/hente info fra server
 public class ClientConnection {
 
     Socket kkSocket = null;
@@ -10,7 +11,7 @@ public class ClientConnection {
     BufferedReader in = null;
 
 
-    //close all streams
+    //husk å lukke input og output streams når du er ferdig
     public void close() throws IOException {
         out.close();
         in.close();
@@ -18,7 +19,7 @@ public class ClientConnection {
     }
 
 
-    //send a query to the server and get the response
+    //send en melding til server og få respons
     public String getDataFromServer(String query) throws IOException {
         out.println(query);
         return in.readLine();
