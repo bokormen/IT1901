@@ -22,6 +22,10 @@ public class User {
 		setPassword(password);
 		setPhoneNr(phoneNr);
 	}
+	
+	public User() {
+		
+	}
 	public String getFirstName() {
 		return firstName;
 	}

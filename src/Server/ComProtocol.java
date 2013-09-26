@@ -1,3 +1,5 @@
+package Server;
+
 import java.io.IOException;
 
 //handles the input from clients
@@ -30,9 +32,10 @@ public class ComProtocol {
 
         } else if (state == REGISTER) {
             //registerFunction(theInput);
+            theOutput = "done";
             state = WAIT;
 
-        //make a login function for this to parse the string and check credentials
+            //make a login function for this to parse the string and check credentials
         } else if (state == LOGIN) {
             if (theInput.equals("user1:1234")) {
                 state = WAIT;

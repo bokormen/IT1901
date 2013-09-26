@@ -1,5 +1,5 @@
 package div;
-import java.util.Date;
+import java.text.SimpleDateFormat;
 
 /**
  * SheepLocation representerer en sau sin posisjon på et gitt tidspunkt. 
@@ -8,26 +8,27 @@ import java.util.Date;
  */
 public class SheepLocation {
 
-	private final double latitude;
-	private final double longitude;
-	private Date date;
+	private final String position;
+	private final String date;
 	
-	public SheepLocation(double latitude, double longitude, Date date) {
-		this.latitude = latitude;
-		this.longitude = longitude;
+	public SheepLocation(String position, String date) throws Exception {
+		this.position = position;
+		//Valider dato
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		format.setLenient(false);
+		format.parse(date);
 		this.date = date;
 	}
 
-	public double getLatitude() {
-		return latitude;
-	}
-
-	public double getLongitude() {
-		return longitude;
-	}
 	
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
+
+	public String getPosition() {
+		return position;
+	}
+	
+
 
 }

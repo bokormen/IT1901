@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.DriverManager;
-import com.mysql.jdbc.PreparedStatement;
 
 import java.lang.String;
 import div.*;
@@ -17,7 +16,9 @@ public class DatabaseConnector {
 	
 	/**
 	 * @author Oeyvind
-	 * Denne koden aapner en tilkobling til databasen vi bruker i gruppe 10, hoesten 2013i faget IT1901 ved NTNU
+	/**
+	 * @author Oeyvind
+	 * Denne koden �pner en tilkobling til databasen vi bruker i gruppe 10, hoesten 2013i faget IT1901 ved NTNU
 	 */
 	public static void open() {
 		try {
