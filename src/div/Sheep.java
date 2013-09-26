@@ -9,7 +9,7 @@ import java.util.Date;
  */
 public class Sheep {
 
-	private final String id;
+	private final long id;
 	private int age;
 	private int weight;
 	private char gender;
@@ -18,7 +18,7 @@ public class Sheep {
 	private String shepherd;
 	private ArrayList<SheepLocation> locations; 
 	
-	public Sheep(String id, int age, int weight, char gender, String shepherd) throws Exception {
+	public Sheep(long id, int age, int weight, char gender, String shepherd) throws Exception {
 		setAge(age);
 		setWeight(weight);
 		setShepherd(shepherd);
@@ -31,7 +31,7 @@ public class Sheep {
 		}
 	}
 	
-	public String getId() {
+	public long getId() {
 		return id;
 	}
 
@@ -67,8 +67,11 @@ public class Sheep {
 		return locations.get(locations.size()-1);
 	}
 	
-	public void newLocation(double latitude, double longitude, String date) throws Exception {
-		locations.add(new SheepLocation(latitude, longitude, date));
+	/**
+	 * Legger til ny posisjon til sau. Dato må være på formen dd/mm/yyyy. 
+	 */
+	public void newLocation(String position, String date) throws Exception {
+		locations.add(new SheepLocation(position, date));
 	}
 	
 	public ArrayList<SheepLocation> getLocationLog() {
