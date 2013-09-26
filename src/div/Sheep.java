@@ -9,7 +9,7 @@ import java.util.Date;
  */
 public class Sheep {
 
-	private final long id;
+	private final int id;
 	private int age;
 	private int weight;
 	private char gender;
@@ -18,7 +18,7 @@ public class Sheep {
 	private String shepherd;
 	private ArrayList<SheepLocation> locations; 
 	
-	public Sheep(long id, int age, int weight, char gender, String shepherd) throws Exception {
+	public Sheep(int id, int age, int weight, char gender, String shepherd) throws Exception {
 		setAge(age);
 		setWeight(weight);
 		setShepherd(shepherd);
@@ -31,7 +31,7 @@ public class Sheep {
 		}
 	}
 	
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
