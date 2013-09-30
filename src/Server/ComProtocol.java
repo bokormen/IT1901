@@ -1,6 +1,9 @@
 package Server;
 
 import java.io.IOException;
+import java.util.StringTokenizer;
+
+import database.DatabaseConnector;
 
 //handles the input from clients
 public class ComProtocol {
@@ -31,13 +34,15 @@ public class ComProtocol {
             }
 
         } else if (state == REGISTER) {
-            //registerFunction(theInput);
+            if (theInput != null) {
+                regiserUser(theInput);
+            }
             theOutput = "done";
             state = WAIT;
 
             //make a login function for this to parse the string and check credentials
         } else if (state == LOGIN) {
-            if (theInput.equals("user1:1234")) {
+            if (theInput.equals("user1||1234")) {
                 state = WAIT;
                 sct.isLoggedIn = true;
                 sct.log.addEntry("user1 logged in");
@@ -58,6 +63,16 @@ public class ComProtocol {
         }
 
         return theOutput;
+    }
+
+    //registers a user in the database
+    //typical input string is: "email||name||phoneNumber||password"
+    //newUser(String email, String name, String phoneNumber, String password)
+
+    private void regiserUser(String theInput) {
+        StringTokenizer st = new StringTokenizer("||");
+        DatabaseConnector.newUser(st.nextToken(), st.nextToken(), st.nextToken(), st.nextToken());
+
     }
 
     public void changeState(String newstate) {
