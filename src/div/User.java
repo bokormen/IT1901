@@ -116,8 +116,8 @@ public class User {
 		return false;
 	}
 
-	public String getLongitude() {
-		return longitude;
+	public double getLongitudeDouble(String longitude) {
+		return longlatIsValid(longitude);
 	}
 
 	public void setLongitude(String longitude) throws Exception {
@@ -142,8 +142,9 @@ public class User {
 		
 	}
 
-	public String getLatitude() {
-		return latitude;
+	public double getLatitudeDouble(String latitude) {
+		return longlatIsValid(latitude);
+
 	}
 
 	public void setLatitude(String latitude) throws Exception {
