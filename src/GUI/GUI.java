@@ -1,10 +1,9 @@
-package GUI;
+package gui;
 
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,23 +12,28 @@ import java.awt.event.FocusListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
 
 import javax.imageio.ImageIO;
-import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
-import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
-import javax.swing.text.JTextComponent;
 
+import server.Server;
+
+import components.MyBorder;
+import components.MyButton;
+import components.MyImagePanel;
+import components.MyPasswordField;
+import components.MyTextField;
+
+import div.Sheep;
 import div.User;
 
 /**
@@ -39,6 +43,7 @@ import div.User;
  * 
  */
 public class GUI extends JFrame {
+
 	public static void main(String args[]) {
 		GUI f = new GUI();
 		f.setVisible(true);
@@ -50,10 +55,10 @@ public class GUI extends JFrame {
 	private int height;
 
 	private User user; // gitt bruker etter en har logget på
-	private User tUser = new User(); // test bruker, for å sjekke om input er
-										// gyldig
+	private User tUser = new User(); // test bruker
 
-	public static int START = 0, LOGIN = 1, REG = 2, FORGOT = 3, MAIN = 4;
+	public static int START = 0, LOGIN = 1, REG = 2, FORGOT = 3, MAIN = 4,
+			SEARCH = 5, EDIT = 6, LIST = 7, SHEEPREG = 8;
 	private int state; // hvor i programmet en er
 
 	// Font
@@ -61,9 +66,9 @@ public class GUI extends JFrame {
 	public final static Font FONT = new Font(fontType, Font.BOLD, 12);
 
 	public final static Color valid = Color.green;
-	public final static Color invalid = new Color(255, 100, 15);
+	public final static Color invalid = Color.red;
 
-	private Listener actionListener;
+	private MyListener actionListener;
 	private FocusListener focusListener;
 	private TimerListener tListener;
 	private Timer timer;
@@ -82,7 +87,7 @@ public class GUI extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// setBackground(Color.BLUE);
 
-		actionListener = new Listener();
+		actionListener = new MyListener();
 		createFocusListener();
 		tListener = new TimerListener();
 		timer = new Timer(100, tListener);
@@ -103,6 +108,13 @@ public class GUI extends JFrame {
 		createLoginInterfaceComponents(lp);
 		createRegisterInterfaceComponents(lp);
 		createForgotInterfaceComponents(lp);
+
+		createMainInterfaceComponents(lp);
+		createSearchInterfaceComponents(lp);
+		createEditInterfaceComponents(lp);
+		createListInterfaceComponents(lp);
+		createRegSheepInterfaceComponents(lp);
+
 		createPanels(lp);
 
 		createComponentArrays(); // igjen for å legge til objektene
@@ -117,16 +129,23 @@ public class GUI extends JFrame {
 		repaintPanel();
 	}
 
+	public ArrayList<Component> getComponentList(int arg) {
+		if (arg == LOGIN) {
+			return loginComps;
+		} else if (arg == REG) {
+			return registerComps;
+		} else if (arg == START) {
+			return startComps;
+		} else if (arg == FORGOT) {
+			return forgotComps;
+		} else {
+			return null;
+		}
+	}
+
 	public void repaintPanel() {
 		repaint();
 		validate();
-
-	}
-
-	// for tull SLETT
-	private Color randomColor() {
-		Random r = new Random();
-		return new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255));
 	}
 
 	/**
@@ -171,11 +190,25 @@ public class GUI extends JFrame {
 			lp.add(rightPanel);
 		}
 
+		BufferedImage img2 = null;
+		try {
+			img2 = ImageIO.read(this.getClass().getClassLoader()
+					.getResource("images/sheepbackground.jpeg"));
+		} catch (IOException e) {
+			System.err.println(e.getLocalizedMessage());
+		}
+		BufferedImage[] imgs2 = { img2 };
+		int[] xs2 = { 0 };
+		int[] ys2 = { 0 };
+
+		rightPanel = new MyImagePanel(imgs2, xs2, ys2);
+		rightPanel.repaint();
+		rightPanel.setBounds(width / 3, 0, 2 * width / 3, height);
+
 		BufferedImage img1 = null;
 		try {
 			img1 = ImageIO.read(this.getClass().getClassLoader()
-					.getResource("blackcarbon.jpg"));
-			System.out.println(img1.getHeight());
+					.getResource("images/blackcarbon.jpg"));
 		} catch (IOException e) {
 			System.err.println(e.getLocalizedMessage());
 		}
@@ -188,36 +221,8 @@ public class GUI extends JFrame {
 		leftPanel.setBounds(0, 0, width / 3, height);
 		// leftPanel.setBackground(Color.ORANGE);
 		lp.add(leftPanel);
+		lp.add(rightPanel);
 
-	}
-
-	/**
-	 * En egen klasse for JPanel som har en egen verson av painComponent
-	 * metoden.
-	 * 
-	 * @author andreas
-	 * 
-	 */
-	class MyImagePanel extends JPanel {
-		private BufferedImage[] img;
-		private int[] x;
-		private int[] y;
-
-		public MyImagePanel(BufferedImage[] img, int[] x, int[] y) {
-			this.img = img;
-			this.x = x;
-			this.y = y;
-		}
-
-		@Override
-		public void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			if (img != null) {
-				for (int i = 0; i < img.length; i++) {
-					g.drawImage(img[i], x[i], y[i], this);
-				}
-			}
-		}
 	}
 
 	/**
@@ -230,28 +235,32 @@ public class GUI extends JFrame {
 		int bw = width / 6;
 		int bh = height / 10;
 
-		loginButton = new JButton("Login");
+		ImageIcon img = null;
+		try {
+			img = new ImageIcon(ImageIO.read(this.getClass().getClassLoader()
+					.getResource("images/buttonimage.png")));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		loginButton = new MyButton(new JButton(), "Login", "bluesheepicon2");
 		loginButton.setBounds(width / 12, 6 * height / 20, bw, bh);
 		loginButton.addActionListener(actionListener);
-		loginButton.setVisible(false);
 
-		registerButton = new JButton("Register");
+		registerButton = new MyButton(new JButton(), "Register", "blueformicon");
 		registerButton.setBounds(width / 12, 9 * height / 20, bw, bh);
 		registerButton.addActionListener(actionListener);
-		registerButton.setVisible(false);
 
-		forgotButton = new JButton("Forgot");
+		forgotButton = new MyButton(new JButton(), "Forgot", "bluequestionicon");
 		forgotButton.setBounds(width / 12, 125 * height / 200, bw, 3 * bh / 4);
 		forgotButton.addActionListener(actionListener);
-		forgotButton.setVisible(false);
 
-		sendButton = new JButton("Send");
+		sendButton = new MyButton(new JButton(), "Send", null);
 		sendButton.setBounds(width / 12, 9 * height / 20, bw, 3 * bh / 4);
 		sendButton.addActionListener(actionListener);
-		sendButton.setVisible(false);
 
 		backButton = new JButton("          Back", new ImageIcon(this
-				.getClass().getClassLoader().getResource("sheep.png")));
+				.getClass().getClassLoader().getResource("images/sheep.png")));
 		backButton.setBounds(11 * width / 48, 19 * height / 25, bw / 2, bw / 2);
 		backButton.addActionListener(actionListener);
 		backButton.setBorder(BorderFactory.createEmptyBorder());
@@ -259,7 +268,7 @@ public class GUI extends JFrame {
 		backButton.setVisible(false);
 
 		exitButton = new JButton("          Exit", new ImageIcon(this
-				.getClass().getClassLoader().getResource("sheep.png")));
+				.getClass().getClassLoader().getResource("images/sheep.png")));
 		exitButton.setBounds(width / 48, 19 * height / 25, bw / 2, bw / 2);
 		exitButton.addActionListener(actionListener);
 		exitButton.setBorder(BorderFactory.createEmptyBorder());
@@ -295,23 +304,20 @@ public class GUI extends JFrame {
 		pwLabel.setBounds(width / 60, 55 * height / 200, cw, ch);
 		pwLabel.setVisible(false);
 
-		unField = new JTextField();
-		unField.setBounds(width / 12, 40 * height / 200, width / 6, ch);
+		unField = new MyTextField(new JTextField(), "blueusericon", "Email");
+		unField.setBounds(width / 12, 35 * height / 200, width / 6, ch);
 		unField.addActionListener(actionListener);
 		unField.setName("unField");
-		// unField.setHorizontalAlignment(JTextField.CENTER);
-		unField.setVisible(false);
 
-		pwField = new JPasswordField();
+		pwField = new MyPasswordField(new JPasswordField(), "bluekeyicon",
+				"Password");
 		// mask formatter!
 		pwField.setBounds(width / 12, 55 * height / 200, width / 6, ch);
 		pwField.addActionListener(actionListener);
 		pwField.setName("pwField");
-		// pwField.setHorizontalAlignment(JTextField.RIGHT);
-		pwField.setVisible(false);
 
-		lp.add(unLabel);
-		lp.add(pwLabel);
+		// lp.add(unLabel);
+		// lp.add(pwLabel);
 		lp.add(unField);
 		lp.add(pwField);
 	}
@@ -329,6 +335,8 @@ public class GUI extends JFrame {
 		int cw = width / 9 /* 4 * width / 30 */;
 		int ch = 3 * height / 40;
 		int hReg = 15 * height / 200;
+
+		// TODO slette alle labels?
 
 		regNameLabel = new JLabel("Name:");
 		regNameLabel.setForeground(Color.WHITE);
@@ -360,61 +368,60 @@ public class GUI extends JFrame {
 		regPwLabel2.setBounds(width / 60, 115 * height / 200 - hReg, cw, ch);
 		regPwLabel2.setVisible(false);
 
-		regNameField = new JTextField();
+		regNameField = new MyTextField(new JTextField(), "bluesheepicon",
+				"Firstname");
 		regNameField.setBounds(width / 12, 40 * height / 200 - hReg,
 				3 * cw / 2, ch);
 		regNameField.addActionListener(actionListener);
 		regNameField.addFocusListener(focusListener);
 		regNameField.setName("regNameField");
-		regNameField.setVisible(false);
 
-		regLNameField = new JTextField();
+		regLNameField = new MyTextField(new JTextField(), "bluesheepicon",
+				"Lastname");
 		regLNameField.setBounds(width / 12, 55 * height / 200 - hReg,
 				3 * cw / 2, ch);
 		regLNameField.addActionListener(actionListener);
 		regLNameField.addFocusListener(focusListener);
 		regLNameField.setName("regLNameField");
-		regLNameField.setVisible(false);
 
-		regEmailField = new JTextField();
+		regEmailField = new MyTextField(new JTextField(), "bluemailicon",
+				"Email");
 		regEmailField.setBounds(width / 12, 70 * height / 200 - hReg,
 				3 * cw / 2, ch);
 		regEmailField.addActionListener(actionListener);
 		regEmailField.addFocusListener(focusListener);
 		regEmailField.setName("regEmailField");
-		regEmailField.setVisible(false);
 
-		regPhoneField = new JTextField();
+		regPhoneField = new MyTextField(new JTextField(), "bluephoneicon",
+				"Phone");
 		regPhoneField.setBounds(width / 12, 85 * height / 200 - hReg,
 				3 * cw / 2, ch);
 		regPhoneField.addActionListener(actionListener);
 		regPhoneField.addFocusListener(focusListener);
 		regPhoneField.setName("regPhoneField");
-		regPhoneField.setVisible(false);
 
-		// JPasswordField isteden? ******
-		regPwField = new JPasswordField();
+		regPwField = new MyPasswordField(new JPasswordField(), "bluekeyicon",
+				"Password");
 		regPwField.setBounds(width / 12, 100 * height / 200 - hReg, 3 * cw / 2,
 				ch);
 		regPwField.addActionListener(actionListener);
 		regPwField.addFocusListener(focusListener);
 		regPwField.setName("regPwField");
-		regPwField.setVisible(false);
 
-		regPwField2 = new JPasswordField();
+		regPwField2 = new MyPasswordField(new JPasswordField(), "bluekeyicon",
+				"Password");
 		regPwField2.setBounds(width / 12, 115 * height / 200 - hReg,
 				3 * cw / 2, ch);
 		regPwField2.setName("regPwField2");
 		regPwField2.addFocusListener(focusListener);
 		regPwField2.addActionListener(actionListener);
-		regPwField2.setVisible(false);
 
-		lp.add(regNameLabel);
-		lp.add(regLNameLabel);
-		lp.add(regEmailLabel);
-		lp.add(regPhoneLabel);
-		lp.add(regPwLabel);
-		lp.add(regPwLabel2);
+		// lp.add(regNameLabel);
+		// lp.add(regLNameLabel);
+		// lp.add(regEmailLabel);
+		// lp.add(regPhoneLabel);
+		// lp.add(regPwLabel);
+		// lp.add(regPwLabel2);
 		lp.add(regNameField);
 		lp.add(regLNameField);
 		lp.add(regEmailField);
@@ -437,101 +444,143 @@ public class GUI extends JFrame {
 		emailLabel = new JLabel("Email: ");
 		emailLabel.setForeground(Color.WHITE);
 		emailLabel.setBounds(width / 60, 6 * height / 20, cw, ch);
-		emailLabel.setVisible(false);
 
-		emailField = new JTextField();
+		emailField = new MyTextField(new JTextField(), "bluemailicon", "Email");
 		emailField.setBounds(width / 12, 6 * height / 20, cw, ch);
 		emailField.addActionListener(actionListener);
 		emailField.setName("emailField");
-		emailField.setVisible(false);
 
-		lp.add(emailLabel);
+		// lp.add(emailLabel);
 		lp.add(emailField);
 	}
 
-	private void setFocusListener() {
-		for (final Component c : fieldComps) {
-			c.addFocusListener(new FocusListener() {
-				@Override
-				public void focusGained(FocusEvent e) {
-					((JTextComponent) c).selectAll();
-				}
-
-				@Override
-				public void focusLost(FocusEvent arg0) {
-
-				}
-			});
-		}
-	}
-
-	// sette sammen en liste her for å slippe create***InterfaceComponents
-	// metodene. tror ikke det var en god ide.
-	private void cListCreate() {
+	private void createMainInterfaceComponents(JLayeredPane lp) {
+		// TODO
 		int cw = width / 6;
-		int ch = height / 10;
-		int hReg = 15 * height / 200;
-		cList = new ArrayList<CompLoc>();
-		cList.clear();
+		int ch = 3 * height / 40;
 
-		cList.add(new CompLoc(regNameLabel, width / 60, 40 * height / 200
-				- hReg, cw, ch, "regNameLabel", null, REG, -1));
-		cList.add(new CompLoc(regEmailLabel, width / 60, 55 * height / 200
-				- hReg, cw, ch, "regEmailLabel", null, REG, -1));
-		cList.add(new CompLoc(regPhoneLabel, width / 60, 70 * height / 200
-				- hReg, cw, ch, "regPhoneLabel", null, REG, -1));
-		cList.add(new CompLoc(regPwLabel, width / 60, 85 * height / 200 - hReg,
-				cw, ch, "regPwLabel", null, REG, -1));
-		cList.add(new CompLoc(regPwLabel2, width / 60, 100 * height / 200
-				- hReg, cw, ch, "regPwLabel2", null, REG, -1));
-		cList.add(new CompLoc(regNameField, width / 12, 40 * height / 200
-				- hReg, 3 * cw / 2, ch, "regNameField", "regNameField", REG, -1));
-		cList.add(new CompLoc(regEmailField, width / 12, 55 * height / 200
-				- hReg, 3 * cw / 2, ch, "regEmailField", null, REG, -1));
-		cList.add(new CompLoc(regPhoneField, width / 12, 70 * height / 200
-				- hReg, 3 * cw / 2, ch, "regPhoneField", null, REG, -1));
-		cList.add(new CompLoc(regPwField, width / 12, 85 * height / 200 - hReg,
-				3 * cw / 2, ch, "regPwField", null, REG, -1));
-		cList.add(new CompLoc(regPwField2, width / 12, 100 * height / 200
-				- hReg, 3 * cw / 2, ch, "regPwField2", null, REG, -1));
-		cList.add(new CompLoc(unLabel, width / 60, 40 * height / 200, cw, ch,
-				"unLabel", null, LOGIN, -1));
-		cList.add(new CompLoc(pwLabel, width / 60, 55 * height / 200, cw, ch,
-				"pwLabel", null, LOGIN, -1));
-		cList.add(new CompLoc(unField, width / 12, 40 * height / 200,
-				width / 6, ch, "unField", "unField", LOGIN, -1));
-		cList.add(new CompLoc(pwField, width / 12, 55 * height / 200,
-				width / 6, ch, "pwField", "pwField", LOGIN, -1));
-		cList.add(new CompLoc(emailField, width / 12, 90 * height / 200, cw,
-				ch, "emailField", "emailField", FORGOT, -1));
-		cList.add(new CompLoc(emailLabel, width / 12, 90 * height / 200, cw,
-				ch, "Email: ", null, FORGOT, -1));
-		cList.add(new CompLoc(loginButton, width / 12, 60 * height / 200,
-				width / 6, width / 10, "Login", "login", START, LOGIN));
-		cList.add(new CompLoc(registerButton, width / 12, 90 * height / 200,
-				width / 6, height / 10, "Register", "register", LOGIN, REG));
-		cList.add(new CompLoc(sendButton, width / 12, 6 * height / 20,
-				width / 6, 3 * height / 40, "Send", "send", FORGOT, -1));
-		cList.add(new CompLoc(forgotButton, width / 12, 125 * height / 200,
-				width / 6, 3 * height / 40, "Forgot", "forgot", LOGIN, -1));
+		sheepRegButton = new MyButton(new JButton(), "Register sheep", null);
+		sheepRegButton.setBounds(width / 12, 30 * height / 200, cw, ch);
+		sheepRegButton.addActionListener(actionListener);
+
+		listButton = new MyButton(new JButton(), "List over sheeps", null);
+		listButton.setBounds(width / 12, 50 * height / 200, cw, ch);
+		listButton.addActionListener(actionListener);
+
+		searchButton = new MyButton(new JButton(), "Search for sheep", null);
+		searchButton.setBounds(width / 12, 70 * height / 200, cw, ch);
+		searchButton.addActionListener(actionListener);
+
+		editButton = new MyButton(new JButton(), "Edit sheep", null);
+		editButton.setBounds(width / 12, 90 * height / 200, cw, ch);
+		editButton.addActionListener(actionListener);
+
+		homeButton = new MyButton(new JButton(), "Home", null);
+		homeButton.setBounds(width / 12, 110 * height / 200, cw, ch);
+		homeButton.addActionListener(actionListener);
+
+		lp.add(sheepRegButton);
+		lp.add(listButton);
+		lp.add(searchButton);
+		lp.add(editButton);
+		lp.add(homeButton);
+
 	}
 
-	// tror ikke det var en god ide.
-	private void createComponents(ArrayList<CompLoc> list, JLayeredPane lp,
-			Listener l) {
-		for (CompLoc c : list) {
-			c.getComponent().setBounds(c.getX(), c.getY(), c.getWidth(),
-					c.getHeight());
-			if (c.getComponent() instanceof JButton) {
-				((JButton) c.getComponent()).addActionListener(l);
-			} else if (c.getComponent() instanceof JTextField) {
-				((JTextField) c.getComponent()).addActionListener(l);
-			} else if (c.getComponent() instanceof JLabel) {
-			}
-			c.getComponent().setVisible(false);
-			c.getComponent().setName(c.getName());
-			lp.add(c.getComponent());
-		}
+	private void createSearchInterfaceComponents(JLayeredPane lp) {
+		// TODO
+		int cw = width / 6;
+		int ch = 3 * height / 40;
+
+		searchLabel = new JLabel("Write the ID:");
+		searchLabel.setBounds(width / 12, 60 * height / 200, cw, ch);
+		searchLabel.setVisible(false);
+
+		searchField = new MyTextField(new JTextField(), "bluesheepicon", "ID");
+		searchField.setBounds(width / 12, 90 * height / 200, cw, ch);
+
+		// searchButton = new MyButton(new JButton(), "Search");
+		// searchButton.setBounds(width / 12, 80 * height / 200, cw, ch);
+
+		lp.add(searchField);
+		// lp.add(searchButton);
+	}
+
+	private void createEditInterfaceComponents(JLayeredPane lp) {
+		// TODO
+		int cw = width / 6;
+		int ch = 3 * height / 40;
+
+		editIdField = new MyTextField(new JTextField(), "bluesheepicon", "");
+		editIdField.setBounds(width / 12, 30 * height / 200, cw, ch);
+
+		editAgeField = new MyTextField(new JTextField(), "bluesheepicon", "");
+		editAgeField.setBounds(width / 12, 50 * height / 200, cw, ch);
+
+		editWeightField = new MyTextField(new JTextField(), "bluesheepicon", "");
+		editWeightField.setBounds(width / 12, 70 * height / 200, cw, ch);
+
+		editSexField = new MyTextField(new JTextField(), "bluesheepicon", "");
+		editSexField.setBounds(width / 12, 90 * height / 200, cw, ch);
+
+		editShepardField = new MyTextField(new JTextField(), "bluesheepicon",
+				"");
+		editShepardField.setBounds(width / 12, 110 * height / 200, cw, ch);
+
+		clearAllButton = new MyButton(new JButton(), "Clear All", null);
+		clearAllButton.setBounds(width / 12, 140 * height / 200, cw, ch);
+		clearAllButton.addActionListener(actionListener);
+
+		updateButton = new MyButton(new JButton(), "Update", null);
+		updateButton.setBounds(width / 12, 160 * height / 200, cw, ch);
+		updateButton.addActionListener(actionListener);
+
+		lp.add(editIdField);
+		lp.add(editAgeField);
+		lp.add(editWeightField);
+		lp.add(editSexField);
+		lp.add(editShepardField);
+		lp.add(clearAllButton);
+		lp.add(updateButton);
+	}
+
+	private void createListInterfaceComponents(JLayeredPane lp) {
+		// TODO
+		int cw = width / 6;
+		int ch = 3 * height / 40;
+
+		sheepy = new MyButton(new JButton(), "DONT CLICK", "bluesheepicon");
+		sheepy.setBounds(width / 12, 90 * height / 200, cw, ch);
+
+		lp.add(sheepy);
+	}
+
+	private void createRegSheepInterfaceComponents(JLayeredPane lp) {
+		// TODO
+		int cw = width / 6;
+		int ch = 3 * height / 40;
+		regIDField = new MyTextField(new JTextField(), "bluesheepicon", "ID");
+		regIDField.setBounds(width / 12, 30 * height / 200, cw, ch);
+
+		regAgeField = new MyTextField(new JTextField(), "bluesheepicon", "Age");
+		regAgeField.setBounds(width / 12, 50 * height / 200, cw, ch);
+
+		regWeightField = new MyTextField(new JTextField(), "bluesheepicon",
+				"Weight");
+		regWeightField.setBounds(width / 12, 70 * height / 200, cw, ch);
+
+		regSexField = new MyTextField(new JTextField(), "bluesheepicon", "Sex");
+		regSexField.setBounds(width / 12, 90 * height / 200, cw, ch);
+
+		regShepardField = new MyTextField(new JTextField(), "bluesheepicon",
+				"Shepard");
+		regShepardField.setBounds(width / 12, 110 * height / 200, cw, ch);
+
+		lp.add(regIDField);
+		lp.add(regAgeField);
+		lp.add(regWeightField);
+		lp.add(regSexField);
+		lp.add(regShepardField);
 	}
 
 	// setter sammen listene med de ulike kompoentene for å da gå igjennom
@@ -583,6 +632,52 @@ public class GUI extends JFrame {
 		registerComps.add(backButton);
 		registerComps.add(exitButton);
 
+		mainComps = new ArrayList<Component>();
+		mainComps.clear();
+		mainComps.add(sheepRegButton);
+		mainComps.add(listButton);
+		mainComps.add(searchButton);
+		mainComps.add(editButton);
+		mainComps.add(homeButton);
+		mainComps.add(backButton);
+		mainComps.add(exitButton);
+
+		searchComps = new ArrayList<Component>();
+		searchComps.clear();
+		searchComps.add(searchLabel);
+		searchComps.add(searchField);
+		searchComps.add(searchButton);
+		searchComps.add(backButton);
+		searchComps.add(exitButton);
+
+		editComps = new ArrayList<Component>();
+		editComps.clear();
+		editComps.add(editIdField);
+		editComps.add(editAgeField);
+		editComps.add(editWeightField);
+		editComps.add(editSexField);
+		editComps.add(editShepardField);
+		editComps.add(clearAllButton);
+		editComps.add(updateButton);
+		editComps.add(backButton);
+		editComps.add(exitButton);
+
+		listComps = new ArrayList<Component>();
+		listComps.clear();
+		listComps.add(sheepy);
+		listComps.add(backButton);
+		listComps.add(exitButton);
+
+		regSheepComps = new ArrayList<Component>();
+		regSheepComps.clear();
+		regSheepComps.add(regIDField);
+		regSheepComps.add(regAgeField);
+		regSheepComps.add(regWeightField);
+		regSheepComps.add(regSexField);
+		regSheepComps.add(regShepardField);
+		regSheepComps.add(exitButton);
+		regSheepComps.add(backButton);
+
 		fieldComps = new ArrayList<Component>();
 		fieldComps.clear();
 		fieldComps.add(regNameField);
@@ -603,11 +698,8 @@ public class GUI extends JFrame {
 		int ch = 3 * height / 40; // høyden på hver boks
 		int rh = height * 8 / 10; // nederste 20% til back og exit button
 
-		// liste over labels
 		ArrayList<Component> labelList = new ArrayList<Component>();
-		// liste over fields
 		ArrayList<Component> fieldList = new ArrayList<Component>();
-		// liste over knapper
 		ArrayList<Component> buttonList = new ArrayList<Component>();
 
 		// plasserer alle komponenter som skal plasseres i ulike lister
@@ -635,16 +727,17 @@ public class GUI extends JFrame {
 	 *            true for visible
 	 */
 	private void changeToStartInterface(Boolean bool) {
-		loginButton.setBounds(width / 12, 6 * height / 20, width / 6,
-				height / 10);
-		registerButton.setBounds(width / 12, 9 * height / 20, width / 6,
-				height / 10);
-
+		if (bool) {
+			loginButton.setBounds(width / 12, 6 * height / 20, width / 6,
+					height / 10);
+			registerButton.setBounds(width / 12, 9 * height / 20, width / 6,
+					height / 10);
+			state = 0;
+		}
 		for (Component c : startComps) {
 			c.setVisible(bool);
 		}
 		repaintPanel();
-		state = 0;
 	}
 
 	/**
@@ -654,19 +747,19 @@ public class GUI extends JFrame {
 	 *            true for visible
 	 */
 	private void changeToLoginInterface(boolean bool) {
-		loginButton.setBounds(width / 12, 80 * height / 200, width / 6,
-				3 * height / 40);
-		forgotButton.setBounds(width / 12, 95 * height / 200, width / 6,
-				3 * height / 40);
-
 		if (bool) {
+			loginButton.setBounds(width / 12, 85 * height / 200, width / 6,
+					3 * height / 40);
+			forgotButton.setBounds(width / 12, 105 * height / 200, width / 6,
+					3 * height / 40);
 			registerButton.setVisible(!bool);
+			state = LOGIN;
 		}
+
 		for (Component c : loginComps) {
 			c.setVisible(bool);
 		}
 		repaintPanel();
-		state = 1;
 	}
 
 	/**
@@ -676,14 +769,15 @@ public class GUI extends JFrame {
 	 *            true for visible
 	 */
 	private void changeToRegisterInterface(boolean bool) {
-		registerButton.setBounds(width / 12, 120 * height / 200, width / 6,
-				3 * height / 40);
-
+		if (bool) {
+			registerButton.setBounds(width / 12, 120 * height / 200, width / 6,
+					3 * height / 40);
+			state = REG;
+		}
 		for (Component c : registerComps) {
 			c.setVisible(bool);
 		}
 		repaintPanel();
-		state = 2;
 	}
 
 	/**
@@ -693,13 +787,72 @@ public class GUI extends JFrame {
 	 *            true for visible
 	 */
 	private void changeToForgotInterface(boolean bool) {
-		sendButton.setBounds(width / 12, 9 * height / 20, width / 6,
-				3 * height / 40);
+		if (bool) {
+			sendButton.setBounds(width / 12, 85 * height / 200, width / 6,
+					3 * height / 40);
+			state = FORGOT;
+		}
 		for (Component c : forgotComps) {
 			c.setVisible(bool);
 		}
 		repaintPanel();
-		state = 3;
+	}
+
+	private void changeToMainInterface(boolean bool) {
+		// TODO
+		if (bool) {
+			searchButton.setBounds(width / 12, 70 * height / 200, width / 6,
+					3 * height / 40);
+			state = MAIN;
+		}
+		for (Component c : mainComps) {
+			c.setVisible(bool);
+		}
+		repaintPanel();
+	}
+
+	private void changeToSearchInterface(boolean bool) {
+		// TODO
+		if (bool) {
+			searchButton.setBounds(width / 12, 110 * height / 200, width / 6,
+					3 * height / 40);
+			state = SEARCH;
+		}
+		for (Component c : searchComps) {
+			c.setVisible(bool);
+		}
+	}
+
+	private void changeToEditInterface(boolean bool) {
+		// TODO
+		if (bool) {
+			state = EDIT;
+		}
+		for (Component c : editComps) {
+			c.setVisible(bool);
+		}
+	}
+
+	private void changeToListInterface(boolean bool) {
+		// TODO
+		if (bool) {
+			state = LIST;
+		}
+		for (Component c : listComps) {
+			c.setVisible(bool);
+		}
+	}
+
+	private void changeToRegSheepInterface(boolean bool) {
+		// TODO
+		if (bool) {
+			sheepRegButton.setBounds(width / 12, 30 * height / 200, width / 6,
+					3 * height / 40);
+			state = SHEEPREG;
+		}
+		for (Component c : regSheepComps) {
+			c.setVisible(bool);
+		}
 	}
 
 	/**
@@ -728,33 +881,36 @@ public class GUI extends JFrame {
 			int num = Server.sendInformationRegisterUser(firstName, lastName,
 					email, password2, phoneNr);
 			if (num == 1) { // fikk registrert bruker
+				Color white = Color.white;
 				unField.setText(email);
+				((MyBorder) regNameField.getBorder()).setColor(white);
+				((MyBorder) regLNameField.getBorder()).setColor(white);
+				((MyBorder) regEmailField.getBorder()).setColor(white);
+				((MyBorder) regPhoneField.getBorder()).setColor(white);
+				((MyBorder) regPwField.getBorder()).setColor(white);
+				((MyBorder) regPwField2.getBorder()).setColor(white);
 				regNameField.setText("");
-				regNameField.setBackground(Color.WHITE);
 				regLNameField.setText("");
-				regLNameField.setBackground(Color.WHITE);
 				regEmailField.setText("");
-				regEmailField.setBackground(Color.WHITE);
 				regPhoneField.setText("");
-				regPhoneField.setBackground(Color.WHITE);
 				regPwField.setText("");
-				regPwField.setBackground(Color.WHITE);
 				regPwField2.setText("");
-				regPwField2.setBackground(Color.WHITE);
 				return true;
 			} else if (num == -1) {
-				regNameField.setBackground(invalid);
+				((MyBorder) regNameField.getBorder()).setColor(invalid);
 			} else if (num == -2) {
-				regLNameField.setBackground(invalid);
+				((MyBorder) regNameField.getBorder()).setColor(invalid);
 			} else if (num == -3) {
-				regEmailField.setBackground(invalid);
+				((MyBorder) regEmailField.getBorder()).setColor(invalid);
 			} else if (num == -4) {
-				regPwField.setBackground(invalid);
-				regPwField2.setBackground(invalid);
+				((MyBorder) regPhoneField.getBorder()).setColor(invalid);
+			} else if (num == -5) {
+				((MyBorder) regPwField.getBorder()).setColor(invalid);
+				((MyBorder) regPwField2.getBorder()).setColor(invalid);
 			}
 		} else {
-			regPwField.setBackground(invalid);
-			regPwField2.setBackground(invalid);
+			((MyBorder) regPwField.getBorder()).setColor(invalid);
+			((MyBorder) regPwField2.getBorder()).setColor(invalid);
 		}
 		return false;
 	}
@@ -774,7 +930,9 @@ public class GUI extends JFrame {
 		User user = Server.sendInformationLogin(email, password);
 
 		if (user != null) {
-			// DO STUFF
+			// TODO
+			changeToLoginInterface(false);
+			changeToMainInterface(true);
 			System.out.println("Logged in: " + user.getEmail());
 			return true;
 		}
@@ -794,6 +952,12 @@ public class GUI extends JFrame {
 			}
 		}
 		return false;
+	}
+
+	private Sheep editSheep() {
+		// TODO
+		// finner sauen som
+		return null;
 	}
 
 	private void createFocusListener() {
@@ -819,35 +983,51 @@ public class GUI extends JFrame {
 					if (name.equals("regNameField")) {
 						try {
 							input = regNameField.getText();
-							tUser.setFirstName(input);
-							regNameField.setBackground(valid);
+							System.out.println(input);
+							if (!input.equals("")) {
+								tUser.setFirstName(input);
+								((MyBorder) regNameField.getBorder())
+										.changeColor(valid);
+							}
 						} catch (Exception exc) {
-							regNameField.setBackground(invalid);
+							((MyBorder) regNameField.getBorder())
+									.changeColor(invalid);
 						}
 					} else if (name.equals("regLNameField")) {
 						try {
 							input = regLNameField.getText();
-							tUser.setLastName(input);
-							regLNameField.setBackground(valid);
+							if (!input.equals("")) {
+								tUser.setLastName(input);
+								((MyBorder) regLNameField.getBorder())
+										.changeColor(valid);
+							}
 						} catch (Exception exc) {
-							regLNameField.setBackground(invalid);
+							((MyBorder) regLNameField.getBorder())
+									.changeColor(invalid);
 						}
 					} else if (name.equals("regEmailField")) {
 						try {
 							input = regEmailField.getText();
-							tUser.setEmail(input);
-							regEmailField.setBackground(valid);
+							if (!input.equals("")) {
+								tUser.setEmail(input);
+								((MyBorder) regEmailField.getBorder())
+										.changeColor(valid);
+							}
 						} catch (Exception exc) {
-							regEmailField.setBackground(invalid);
+							((MyBorder) regEmailField.getBorder())
+									.changeColor(invalid);
 						}
 					} else if (name.equals("regPhoneField")) {
 						try {
 							input = regPhoneField.getText();
-							System.out.println(input);
-							tUser.setPhoneNr(input);
-							regPhoneField.setBackground(valid);
+							if (!input.equals("")) {
+								tUser.setPhoneNr(input);
+								((MyBorder) regPhoneField.getBorder())
+										.changeColor(valid);
+							}
 						} catch (Exception exc) {
-							regPhoneField.setBackground(invalid);
+							((MyBorder) regPhoneField.getBorder())
+									.changeColor(invalid);
 						}
 					} else if (name.equals("regPwField")) {
 						try {
@@ -856,10 +1036,14 @@ public class GUI extends JFrame {
 							for (int i = 0; i < list.length; i++) {
 								password1 += list[i];
 							}
-							tUser.setPassword(password1);
-							regPwField.setBackground(valid);
+							if (!password1.equals("")) {
+								tUser.setPassword(password1);
+								((MyBorder) regPwField.getBorder())
+										.changeColor(valid);
+							}
 						} catch (Exception exc) {
-							regPwField.setBackground(invalid);
+							((MyBorder) regPwField.getBorder())
+									.changeColor(invalid);
 						}
 					} else if (name.equals("regPwField2")) {
 						try {
@@ -874,17 +1058,24 @@ public class GUI extends JFrame {
 							for (int i = 0; i < list2.length; i++) {
 								password2 += list[i];
 							}
+
 							if (password1.equals(password2)) {
 								tUser.setPassword(password2);
-								regPwField2.setBackground(valid);
+								((MyBorder) regPwField2.getBorder())
+										.changeColor(valid);
 							} else {
 								// LEGGE TIL EN PASSORD MATCHER IKKE LABEL
 								// ELLERNO
+								((MyBorder) regPwField2.getBorder())
+										.changeColor(invalid);
 								System.out.println("Password does not match!");
 								return;
 							}
 						} catch (Exception exc) {
-							regPwField2.setBackground(invalid);
+							((MyBorder) regPwField.getBorder())
+									.changeColor(invalid);
+							((MyBorder) regPwField2.getBorder())
+									.changeColor(invalid);
 						}
 					}
 				}
@@ -898,7 +1089,7 @@ public class GUI extends JFrame {
 	 * @author andreas
 	 * 
 	 */
-	private class Listener implements ActionListener {
+	private class MyListener implements ActionListener {
 		// bruke setActionCommand på alt som skal lyttes på og bruke det
 		// istedenfor navn?
 		@Override
@@ -907,6 +1098,7 @@ public class GUI extends JFrame {
 			if (arg.getSource() instanceof JButton) {
 				JButton pressed = (JButton) arg.getSource();
 				String text = pressed.getText();
+				// System.out.println(text);
 
 				if (text.equals("Register")) {
 					if (state == 2) {
@@ -928,23 +1120,37 @@ public class GUI extends JFrame {
 					if (state == 1) {
 						// metode for å sjekke om brukernavn og passord stemmer
 						login();
+					} else {
+						changeToStartInterface(false);
+						changeToLoginInterface(true);
 					}
-					changeToLoginInterface(true);
 				} else if (text.equals("          Exit")) {
 					System.exit(0);
 				} else if (text.equals("          Back")) {
 					// state holder styr på hvor man er, så programet vet hvor
 					// en
 					// skal sendes tilbake til
-					if (state == 1) {
+					if (state == LOGIN) {
 						changeToLoginInterface(false);
 						changeToStartInterface(true);
-					} else if (state == 2) {
+					} else if (state == REG) {
 						changeToRegisterInterface(false);
 						changeToStartInterface(true);
-					} else if (state == 3) {
+					} else if (state == FORGOT) {
 						changeToForgotInterface(false);
 						changeToLoginInterface(true);
+					} else if (state == SEARCH) {
+						changeToSearchInterface(false);
+						changeToMainInterface(true);
+					} else if (state == EDIT) {
+						changeToEditInterface(false);
+						changeToMainInterface(true);
+					} else if (state == LIST) {
+						changeToListInterface(false);
+						changeToMainInterface(true);
+					} else if (state == SHEEPREG) {
+						changeToRegSheepInterface(false);
+						changeToMainInterface(true);
 					}
 				} else if (text.equals("Forgot")) {
 					changeToLoginInterface(false);
@@ -960,6 +1166,25 @@ public class GUI extends JFrame {
 							// fikk ikke sendt mail av en eller annen grunn
 						}
 					}
+				} else if (text.equals("Register sheep")) {
+					System.out.println("sheep reg");
+					changeToMainInterface(false);
+					changeToRegSheepInterface(true);
+				} else if (text.equals("List over sheeps")) {
+					System.out.println("sheep list");
+					changeToMainInterface(false);
+					changeToListInterface(true);
+				} else if (text.equals("Search for sheep")) {
+					System.out.println("sheep search");
+					changeToMainInterface(false);
+					changeToSearchInterface(true);
+				} else if (text.equals("Edit sheep")) {
+					System.out.println("sheep edit");
+					changeToMainInterface(false);
+					changeToEditInterface(true);
+				} else if (text.equals("Home")) {
+					changeToMainInterface(true);
+					// TODO
 				}
 			} else if (arg.getSource() instanceof JTextField) {
 				// System.out.println(((JTextField) arg.getSource()).getName());
@@ -993,7 +1218,6 @@ public class GUI extends JFrame {
 						}
 					}
 				} else if (state == 3) {
-					System.out.println("fuck");
 					if (text.equals("emailField")) {
 						// SEND EMAIL!
 						if (sendEmail()) {
@@ -1020,7 +1244,6 @@ public class GUI extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			rightPanel.setBackground(randomColor());
 		}
 	}
 
@@ -1059,11 +1282,46 @@ public class GUI extends JFrame {
 	private JPasswordField regPwField;
 	private JPasswordField regPwField2;
 
+	// main components
+	private JButton sheepRegButton;
+	private JButton listButton;
+	private JButton searchButton;
+	private JButton editButton;
+	private JButton homeButton;
+
+	// search components
+	private JLabel searchLabel;
+	private JTextField searchField;
+
+	// edit components
+	private JTextField editIdField;
+	private JTextField editAgeField;
+	private JTextField editWeightField;
+	private JTextField editSexField;
+	private JTextField editShepardField;
+	private JButton clearAllButton;
+	private JButton updateButton;
+
+	// list components
+	private JButton sheepy;
+
+	// register sheep components
+	private JTextField regIDField;
+	private JTextField regAgeField;
+	private JTextField regWeightField;
+	private JTextField regSexField;
+	private JTextField regShepardField;
+
+	// List over the different components
 	private ArrayList<Component> startComps;
 	private ArrayList<Component> loginComps;
 	private ArrayList<Component> registerComps;
 	private ArrayList<Component> forgotComps;
+	private ArrayList<Component> mainComps;
+	private ArrayList<Component> searchComps;
+	private ArrayList<Component> editComps;
+	private ArrayList<Component> listComps;
+	private ArrayList<Component> regSheepComps;
 
-	private ArrayList<CompLoc> cList;
 	private ArrayList<Component> fieldComps;
 }
