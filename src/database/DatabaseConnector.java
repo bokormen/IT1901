@@ -94,7 +94,7 @@ public class DatabaseConnector {
 		try {
 			Statement st = con.createStatement();
 			
-			String linje ="INSERT INTO `oyvilund_sheep`.`Sheep` (`Name`, `Owner`, `Shepherd`, `Weight`,`Heartrate`,`Temperature`,`Age`) VALUES"+
+			String linje ="INSERT INTO `Sheep` (`Name`, `Owner`, `Shepherd`, `Weight`,`Heartrate`,`Temperature`,`Age`) VALUES"+
 			String.format("(\"%s\", \"%s\", \"%s\",%s,%s,%s,%s)", name,owner,shepherd,weight,heartrate,temperature,age);
 			
 			st.executeUpdate(linje);
