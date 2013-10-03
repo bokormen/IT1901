@@ -25,15 +25,26 @@ public class DatabaseConnector {
 	 */
 	public static void open() {
 		try {
-			Class.forName("com.mysql.jdbcDrive");
+			
+			try {
+				Class.forName("com.mysql.jdbc.Driver").newInstance();
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			String url = "jdbc:mysql://mysql.stud.ntnu.no/oyvilund_sheep"; //adressen til databasen
 			String user = "oyvilund_it1901"; //brukernavnet for aa koble til databasen
 			String pw = "passord"; //passordet for aa koble til databasen
 			con = DriverManager.getConnection(url,user,pw);
 		} catch (ClassNotFoundException e) {
-			System.out.println("Error " + e.getMessage());
+			System.out.println("Error " + e.getMessage()+ "ClassNotFound");
+			e.printStackTrace();
 		} catch (SQLException e) {
-			System.out.println("Error " + e.getMessage());
+			System.out.println("Error " + e.getMessage() + "SQLException");
 		}
 	}
 	
