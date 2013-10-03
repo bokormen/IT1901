@@ -69,7 +69,7 @@ public class DatabaseConnector {
 		try {
 			Statement st = con.createStatement();
 			
-			String linje = "INSERT INTO `oyvilund_sheep`.`User` (`Email`, `Name`, `Tlf`, `Password`, `Location`) VALUES "+
+			String linje = "INSERT INTO `User` (`Email`, `Name`, `Tlf`, `Password`, `Location`) VALUES "+
 			String.format("(\"%s\", \"%s\", \"%s\", \"%s\", \"%s\"", email,name,phoneNumber,password,location);
 			
 			st.executeUpdate(linje);
@@ -94,7 +94,7 @@ public class DatabaseConnector {
 		try {
 			Statement st = con.createStatement();
 			
-			String linje ="INSERT INTO `Sheep` (`Name`, `Owner`, `Shepherd`, `Weight`,`Heartrate`,`Temperature`,`Age`) VALUES"+
+			String linje ="INSERT INTO `Sheep` (`Name`, `Owner`, `Shepherd`, `Weight`,`Heartrate`,`Temperature`,`Age`) VALUES "+
 			String.format("(\"%s\", \"%s\", \"%s\",%s,%s,%s,%s)", name,owner,shepherd,weight,heartrate,temperature,age);
 			
 			st.executeUpdate(linje);
