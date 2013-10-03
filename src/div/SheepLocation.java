@@ -29,6 +29,10 @@ public class SheepLocation {
 		return position;
 	}
 	
+	public String toString() {
+		return position + "-" + date;
+	}
+	
 
 
 }
