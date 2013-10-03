@@ -47,7 +47,7 @@ public class ServerConsole extends Thread {
         } else if (fromConsole.equalsIgnoreCase("printlog")) {
             ServerMain.sLog.printLog();
         } else if (fromConsole.equalsIgnoreCase("help")) {
-            String str = "Commands:\nprintlog\nquit";
+            String str = "Commands:\nprintlog\nclearlog\nquit";
             System.out.println(str);
         } else if (fromConsole.equalsIgnoreCase("clearlog")) {
             ServerMain.sLog.clearLog();

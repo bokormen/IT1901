@@ -72,7 +72,7 @@ public class ServerClientThread extends Thread {
 
     //constructor
     public ServerClientThread(Socket socket, ServerLog log) {
-        super("KKMultiServerThread"); //invokes the thread constructor
+        super("MultiServerThread"); //invokes the thread constructor
         this.socket = socket;
         this.log = log;
     }

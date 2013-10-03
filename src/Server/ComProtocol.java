@@ -9,8 +9,10 @@ import database.DatabaseConnector;
 public class ComProtocol {
 
     private static final int WAIT = 1001;
-    private static final int REGISTER = 1002;
-    private static final int LOGIN = 1003;
+    private static final int REGISTERUSER = 1002;
+    private static final int REGISTERSHEEP = 1003;
+
+    private static final int LOGIN = 1004;
 
     private static final int TESTING = 9999;
 
@@ -25,7 +27,7 @@ public class ComProtocol {
                 state = LOGIN;
                 theOutput = "done";
             } else if (theInput.equals("register")) {
-                state = REGISTER;
+                state = REGISTERUSER;
                 theOutput = "done";
             } else if (theInput.equals("print")) {
                 sct.log.printLog();
@@ -33,7 +35,7 @@ public class ComProtocol {
                 theOutput = "bye";
             }
 
-        } else if (state == REGISTER) {
+        } else if (state == REGISTERUSER) {
             if (theInput != null) {
                 regiserUser(theInput);
             }
@@ -70,8 +72,13 @@ public class ComProtocol {
     //newUser(String email, String name, String phoneNumber, String password)
 
     private void regiserUser(String theInput) {
-        StringTokenizer st = new StringTokenizer("||");
-        DatabaseConnector.newUser(st.nextToken(), st.nextToken(), st.nextToken(), st.nextToken());
+        String[] temp = theInput.split("\\|\\|");
+
+        System.out.println(temp.length);
+        System.out.println(temp[0] + " " + temp[1] + " " + temp[2] + " " + temp[3]);
+        DatabaseConnector.newUser(temp[0], temp[1], temp[2], temp[3], temp[4]);
+
+
 
     }
 
@@ -80,7 +87,7 @@ public class ComProtocol {
             state = WAIT;
 
         } else if (newstate.equals("register")) {
-            state = REGISTER;
+            state = REGISTERUSER;
 
         } else if (newstate.equals("login")) {
             state = LOGIN;
