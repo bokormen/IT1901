@@ -1,4 +1,5 @@
 package gui;
+
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -18,7 +19,7 @@ public class GoogleStaticMap {
 	 * @return img BufferedImage
 	 */
 
-	private BufferedImage readURL(String url) {
+	private static BufferedImage readURL(String url) {
 		BufferedImage img = null;
 		try {
 			img = ImageIO.read(new URL(url));
@@ -31,8 +32,8 @@ public class GoogleStaticMap {
 		return img;
 	}
 
-	private String createURL(double latitude, double longitude, int zoom,
-			int width, int height, int scale) {
+	private static String createURL(double latitude, double longitude,
+			int zoom, int width, int height, int scale) {
 		String url = "http://maps.googleapis.com/maps/api/staticmap?";
 		url += "center=" + latitude + "," + longitude;
 		url += "&zoom=" + zoom;
@@ -62,7 +63,7 @@ public class GoogleStaticMap {
 	 * @see createUrl
 	 */
 
-	public Image getImage(double latitude, double longitude, int zoom,
+	public static Image getImage(double latitude, double longitude, int zoom,
 			int width, int height, int scale) {
 		Image img = readURL(createURL(latitude, longitude, zoom, width, height,
 				scale));

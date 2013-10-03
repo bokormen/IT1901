@@ -35,4 +35,8 @@ public class MyBorder extends AbstractBorder {
 	public void setColor(Color color) {
 		this.color = color;
 	}
+
+	public Color getColor() {
+		return this.color;
+	}
 }

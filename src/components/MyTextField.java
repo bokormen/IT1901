@@ -39,9 +39,12 @@ public class MyTextField extends JTextField implements FocusListener,
 		this.setForeground(Color.WHITE);
 		this.setCaretColor(Color.WHITE);
 		try {
-			this.iconStored = new ImageIcon(ImageIO.read(this.getClass()
-					.getClassLoader().getResource("images/" + icon + ".png")));
-			this.icon = iconStored;
+			if (icon != null) {
+				this.iconStored = new ImageIcon(ImageIO.read(this.getClass()
+						.getClassLoader()
+						.getResource("images/" + icon + ".png")));
+				this.icon = iconStored;
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -56,6 +59,7 @@ public class MyTextField extends JTextField implements FocusListener,
 	public MyBorder getMyBorder() {
 		return this.border;
 	}
+
 
 	@Override
 	protected void paintComponent(Graphics g) {
@@ -85,7 +89,12 @@ public class MyTextField extends JTextField implements FocusListener,
 			int h = g.getFontMetrics().getHeight();
 			int textBottom = (height - h) / 2 + h - 4;
 			// int x = this.getInsets().left + icon.getIconWidth() * 2;
-			int x = (width - icon.getIconWidth()) / 2;
+			int x;
+			if (icon != null) {
+				x = (width - icon.getIconWidth()) / 2;
+			} else {
+				x = width / 6;
+			}
 			Graphics2D g2d = (Graphics2D) g;
 			RenderingHints hints = g2d.getRenderingHints();
 			g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,

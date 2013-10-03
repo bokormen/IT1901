@@ -17,6 +17,7 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
@@ -25,11 +26,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
-import server.Server;
-
 import components.MyBorder;
 import components.MyButton;
 import components.MyImagePanel;
+import components.MyMap;
 import components.MyPasswordField;
 import components.MyTextField;
 
@@ -129,7 +129,7 @@ public class GUI extends JFrame {
 		repaintPanel();
 	}
 
-	public ArrayList<Component> getComponentList(int arg) {
+	public ArrayList<JComponent> getComponentList(int arg) {
 		if (arg == LOGIN) {
 			return loginComps;
 		} else if (arg == REG) {
@@ -148,16 +148,23 @@ public class GUI extends JFrame {
 		validate();
 	}
 
+	private BufferedImage getGoogleImage(double latitude, double longitude) {
+		BufferedImage img = (BufferedImage) (googleStaticMap.getImage(latitude,
+				longitude, 4, 2 * width / 3, height, 1));
+		return img;
+	}
+
+	private void updateRightPanelMap(double latitude, double longitude) {
+		rightPanel.changeImage(getGoogleImage(latitude, longitude), 0);
+		rightPanel.repaint();
+	}
+
 	/**
 	 * Lager to paneler fordelt på: leftPanel (width/3) og rightPanel
 	 * (2*width/3)
 	 * 
 	 * @param lp
 	 *            LayeredPane
-	 */
-
-	/**
-	 * @param lp
 	 */
 	private void createPanels(JLayeredPane lp) {
 		boolean googleMap = false;
@@ -294,16 +301,6 @@ public class GUI extends JFrame {
 		int cw = 4 * width / 30;
 		int ch = 3 * height / 40;
 
-		unLabel = new JLabel("Email: ");
-		unLabel.setForeground(Color.WHITE);
-		unLabel.setBounds(width / 60, 40 * height / 200, cw, ch);
-		unLabel.setVisible(false);
-
-		pwLabel = new JLabel("Password: ");
-		pwLabel.setForeground(Color.WHITE);
-		pwLabel.setBounds(width / 60, 55 * height / 200, cw, ch);
-		pwLabel.setVisible(false);
-
 		unField = new MyTextField(new JTextField(), "blueusericon", "Email");
 		unField.setBounds(width / 12, 35 * height / 200, width / 6, ch);
 		unField.addActionListener(actionListener);
@@ -330,102 +327,72 @@ public class GUI extends JFrame {
 	 */
 
 	private void createRegisterInterfaceComponents(JLayeredPane lp) {
-		// Tenkte å lage en for løkke og gjøre alt litt mindre, men før jeg
-		// finner en BRA måte å gjøre det på, så blir det sånn som det er nå.
 		int cw = width / 9 /* 4 * width / 30 */;
 		int ch = 3 * height / 40;
 		int hReg = 15 * height / 200;
 
-		// TODO slette alle labels?
-
-		regNameLabel = new JLabel("Name:");
-		regNameLabel.setForeground(Color.WHITE);
-		regNameLabel.setBounds(width / 60, 40 * height / 200 - hReg, cw, ch);
-		regNameLabel.setVisible(false);
-
-		regLNameLabel = new JLabel("Last name: ");
-		regLNameLabel.setForeground(Color.WHITE);
-		regLNameLabel.setBounds(width / 60, 55 * height / 200 - hReg, cw, ch);
-		regLNameLabel.setVisible(false);
-
-		regEmailLabel = new JLabel("Email:");
-		regEmailLabel.setForeground(Color.WHITE);
-		regEmailLabel.setBounds(width / 60, 70 * height / 200 - hReg, cw, ch);
-		regEmailLabel.setVisible(false);
-
-		regPhoneLabel = new JLabel("Phone:");
-		regPhoneLabel.setForeground(Color.WHITE);
-		regPhoneLabel.setBounds(width / 60, 85 * height / 200 - hReg, cw, ch);
-		regPhoneLabel.setVisible(false);
-
-		regPwLabel = new JLabel("Password:");
-		regPwLabel.setForeground(Color.WHITE);
-		regPwLabel.setBounds(width / 60, 100 * height / 200 - hReg, cw, ch);
-		regPwLabel.setVisible(false);
-
-		regPwLabel2 = new JLabel("Password:");
-		regPwLabel2.setForeground(Color.WHITE);
-		regPwLabel2.setBounds(width / 60, 115 * height / 200 - hReg, cw, ch);
-		regPwLabel2.setVisible(false);
-
 		regNameField = new MyTextField(new JTextField(), "bluesheepicon",
 				"Firstname");
-		regNameField.setBounds(width / 12, 40 * height / 200 - hReg,
-				3 * cw / 2, ch);
+		regNameField.setBounds(width / 12, 20 * height / 200, 3 * cw / 2, ch);
 		regNameField.addActionListener(actionListener);
 		regNameField.addFocusListener(focusListener);
 		regNameField.setName("regNameField");
 
 		regLNameField = new MyTextField(new JTextField(), "bluesheepicon",
 				"Lastname");
-		regLNameField.setBounds(width / 12, 55 * height / 200 - hReg,
-				3 * cw / 2, ch);
+		regLNameField.setBounds(width / 12, 35 * height / 200, 3 * cw / 2, ch);
 		regLNameField.addActionListener(actionListener);
 		regLNameField.addFocusListener(focusListener);
 		regLNameField.setName("regLNameField");
 
 		regEmailField = new MyTextField(new JTextField(), "bluemailicon",
 				"Email");
-		regEmailField.setBounds(width / 12, 70 * height / 200 - hReg,
-				3 * cw / 2, ch);
+		regEmailField.setBounds(width / 12, 50 * height / 200, 3 * cw / 2, ch);
 		regEmailField.addActionListener(actionListener);
 		regEmailField.addFocusListener(focusListener);
 		regEmailField.setName("regEmailField");
 
 		regPhoneField = new MyTextField(new JTextField(), "bluephoneicon",
 				"Phone");
-		regPhoneField.setBounds(width / 12, 85 * height / 200 - hReg,
-				3 * cw / 2, ch);
+		regPhoneField.setBounds(width / 12, 65 * height / 200, 3 * cw / 2, ch);
 		regPhoneField.addActionListener(actionListener);
 		regPhoneField.addFocusListener(focusListener);
 		regPhoneField.setName("regPhoneField");
 
+		regLongitudeField = new MyTextField(new JTextField(), null, "Longitude");
+		regLongitudeField.setBounds(width / 12 + 3 * cw / 4, 80 * height / 200,
+				3 * cw / 4, ch);
+		regLongitudeField.addActionListener(actionListener);
+		regLongitudeField.addFocusListener(focusListener);
+		regLongitudeField.setName("regLongitudeField");
+
+		regLatitudeField = new MyTextField(new JTextField(), null, "Latitude");
+		regLatitudeField.setBounds(width / 12, 80 * height / 200, 3 * cw / 4,
+				ch);
+		regLatitudeField.addActionListener(actionListener);
+		regLatitudeField.addFocusListener(focusListener);
+		regLatitudeField.setName("regLatitudeField");
+
 		regPwField = new MyPasswordField(new JPasswordField(), "bluekeyicon",
 				"Password");
-		regPwField.setBounds(width / 12, 100 * height / 200 - hReg, 3 * cw / 2,
-				ch);
+		regPwField.setBounds(width / 12, 95 * height / 200, 3 * cw / 2, ch);
 		regPwField.addActionListener(actionListener);
 		regPwField.addFocusListener(focusListener);
 		regPwField.setName("regPwField");
 
 		regPwField2 = new MyPasswordField(new JPasswordField(), "bluekeyicon",
 				"Password");
-		regPwField2.setBounds(width / 12, 115 * height / 200 - hReg,
-				3 * cw / 2, ch);
+		regPwField2.setBounds(width / 12, 110 * height / 200, 3 * cw / 2, ch);
 		regPwField2.setName("regPwField2");
 		regPwField2.addFocusListener(focusListener);
 		regPwField2.addActionListener(actionListener);
 
-		// lp.add(regNameLabel);
-		// lp.add(regLNameLabel);
-		// lp.add(regEmailLabel);
-		// lp.add(regPhoneLabel);
-		// lp.add(regPwLabel);
-		// lp.add(regPwLabel2);
 		lp.add(regNameField);
 		lp.add(regLNameField);
 		lp.add(regEmailField);
 		lp.add(regPhoneField);
+		lp.add(regLongitudeField);
+		lp.add(regLatitudeField);
 		lp.add(regPwField);
 		lp.add(regPwField2);
 	}
@@ -440,10 +407,6 @@ public class GUI extends JFrame {
 	private void createForgotInterfaceComponents(JLayeredPane lp) {
 		int cw = width / 6/* 4 * width / 30 */;
 		int ch = 3 * height / 40;
-
-		emailLabel = new JLabel("Email: ");
-		emailLabel.setForeground(Color.WHITE);
-		emailLabel.setBounds(width / 60, 6 * height / 20, cw, ch);
 
 		emailField = new MyTextField(new JTextField(), "bluemailicon", "Email");
 		emailField.setBounds(width / 12, 6 * height / 20, cw, ch);
@@ -479,6 +442,9 @@ public class GUI extends JFrame {
 		homeButton.setBounds(width / 12, 110 * height / 200, cw, ch);
 		homeButton.addActionListener(actionListener);
 
+		myMap = new MyMap(width, height);
+
+		lp.add(myMap);
 		lp.add(sheepRegButton);
 		lp.add(listButton);
 		lp.add(searchButton);
@@ -589,16 +555,14 @@ public class GUI extends JFrame {
 	 * Sets together the different lists of components that are showing in the
 	 */
 	private void createComponentArrays() {
-		startComps = new ArrayList<Component>();
+
+		startComps = new ArrayList<JComponent>();
 		startComps.clear();
 		startComps.add(loginButton);
 		startComps.add(registerButton);
 		startComps.add(exitButton);
 
-		loginComps = new ArrayList<Component>();
-		loginComps.clear();
-		loginComps.add(unLabel);
-		loginComps.add(pwLabel);
+		loginComps = new ArrayList<JComponent>();
 		loginComps.add(pwField);
 		loginComps.add(unField);
 		loginComps.add(forgotButton);
@@ -606,33 +570,27 @@ public class GUI extends JFrame {
 		loginComps.add(backButton);
 		loginComps.add(exitButton);
 
-		forgotComps = new ArrayList<Component>();
+		forgotComps = new ArrayList<JComponent>();
 		forgotComps.clear();
-		forgotComps.add(emailLabel);
 		forgotComps.add(emailField);
 		forgotComps.add(backButton);
 		forgotComps.add(exitButton);
 		forgotComps.add(sendButton);
 
-		registerComps = new ArrayList<Component>();
-		registerComps.clear();
-		registerComps.add(regNameLabel);
-		registerComps.add(regLNameLabel);
-		registerComps.add(regEmailLabel);
-		registerComps.add(regPhoneLabel);
-		registerComps.add(regPwLabel);
-		registerComps.add(regPwLabel2);
+		registerComps = new ArrayList<JComponent>();
 		registerComps.add(regNameField);
 		registerComps.add(regLNameField);
 		registerComps.add(regEmailField);
 		registerComps.add(regPhoneField);
+		registerComps.add(regLongitudeField);
+		registerComps.add(regLatitudeField);
 		registerComps.add(regPwField);
 		registerComps.add(regPwField2);
 		registerComps.add(registerButton);
 		registerComps.add(backButton);
 		registerComps.add(exitButton);
 
-		mainComps = new ArrayList<Component>();
+		mainComps = new ArrayList<JComponent>();
 		mainComps.clear();
 		mainComps.add(sheepRegButton);
 		mainComps.add(listButton);
@@ -642,7 +600,7 @@ public class GUI extends JFrame {
 		mainComps.add(backButton);
 		mainComps.add(exitButton);
 
-		searchComps = new ArrayList<Component>();
+		searchComps = new ArrayList<JComponent>();
 		searchComps.clear();
 		searchComps.add(searchLabel);
 		searchComps.add(searchField);
@@ -650,7 +608,7 @@ public class GUI extends JFrame {
 		searchComps.add(backButton);
 		searchComps.add(exitButton);
 
-		editComps = new ArrayList<Component>();
+		editComps = new ArrayList<JComponent>();
 		editComps.clear();
 		editComps.add(editIdField);
 		editComps.add(editAgeField);
@@ -662,13 +620,13 @@ public class GUI extends JFrame {
 		editComps.add(backButton);
 		editComps.add(exitButton);
 
-		listComps = new ArrayList<Component>();
+		listComps = new ArrayList<JComponent>();
 		listComps.clear();
 		listComps.add(sheepy);
 		listComps.add(backButton);
 		listComps.add(exitButton);
 
-		regSheepComps = new ArrayList<Component>();
+		regSheepComps = new ArrayList<JComponent>();
 		regSheepComps.clear();
 		regSheepComps.add(regIDField);
 		regSheepComps.add(regAgeField);
@@ -678,7 +636,7 @@ public class GUI extends JFrame {
 		regSheepComps.add(exitButton);
 		regSheepComps.add(backButton);
 
-		fieldComps = new ArrayList<Component>();
+		fieldComps = new ArrayList<JComponent>();
 		fieldComps.clear();
 		fieldComps.add(regNameField);
 		fieldComps.add(regLNameField);
@@ -770,7 +728,7 @@ public class GUI extends JFrame {
 	 */
 	private void changeToRegisterInterface(boolean bool) {
 		if (bool) {
-			registerButton.setBounds(width / 12, 120 * height / 200, width / 6,
+			registerButton.setBounds(width / 12, 130 * height / 200, width / 6,
 					3 * height / 40);
 			state = REG;
 		}
@@ -883,18 +841,13 @@ public class GUI extends JFrame {
 			if (num == 1) { // fikk registrert bruker
 				Color white = Color.white;
 				unField.setText(email);
-				((MyBorder) regNameField.getBorder()).setColor(white);
-				((MyBorder) regLNameField.getBorder()).setColor(white);
-				((MyBorder) regEmailField.getBorder()).setColor(white);
-				((MyBorder) regPhoneField.getBorder()).setColor(white);
-				((MyBorder) regPwField.getBorder()).setColor(white);
-				((MyBorder) regPwField2.getBorder()).setColor(white);
-				regNameField.setText("");
-				regLNameField.setText("");
-				regEmailField.setText("");
-				regPhoneField.setText("");
-				regPwField.setText("");
-				regPwField2.setText("");
+				for (JComponent c : registerComps) {
+					if (c instanceof MyTextField
+							|| c instanceof MyPasswordField) {
+						((MyTextField) c).setText("");
+						((MyBorder) c.getBorder()).setColor(white);
+					}
+				}
 				return true;
 			} else if (num == -1) {
 				((MyBorder) regNameField.getBorder()).setColor(invalid);
@@ -934,10 +887,12 @@ public class GUI extends JFrame {
 			changeToLoginInterface(false);
 			changeToMainInterface(true);
 			System.out.println("Logged in: " + user.getEmail());
+			this.user = user;
+			myMap.setUser(user);
+
 			return true;
 		}
 		return false;
-
 	}
 
 	/**
@@ -1029,6 +984,45 @@ public class GUI extends JFrame {
 							((MyBorder) regPhoneField.getBorder())
 									.changeColor(invalid);
 						}
+					} else if (name.equals("regLatitudeField")) {
+						try {
+							input = regLatitudeField.getText();
+							if (!input.equals("")) {
+								System.out.println(input);
+								tUser.setLatitude(input);
+								((MyBorder) regLatitudeField.getBorder())
+										.changeColor(valid);
+								System.out.println("hore");
+								if (((MyBorder) regLongitudeField.getBorder())
+										.getColor().equals(valid)) {
+									updateRightPanelMap(
+											tUser.getLatitudeDouble(),
+											tUser.getLongitudeDouble());
+								}
+							}
+						} catch (Exception exc) {
+							((MyBorder) regLatitudeField.getBorder())
+									.changeColor(invalid);
+						}
+					} else if (name.equals("regLongitudeField")) {
+						try {
+							input = regLongitudeField.getText();
+							if (!input.equals("")) {
+								tUser.setLongitude(input);
+								((MyBorder) regLongitudeField.getBorder())
+										.changeColor(valid);
+								if (((MyBorder) regLatitudeField.getBorder())
+										.getColor().equals(valid)) {
+									updateRightPanelMap(
+											tUser.getLatitudeDouble(),
+											tUser.getLongitudeDouble());
+								}
+							}
+						} catch (Exception exc) {
+							((MyBorder) regLongitudeField.getBorder())
+									.changeColor(invalid);
+						}
+
 					} else if (name.equals("regPwField")) {
 						try {
 							char[] list = regPwField.getPassword();
@@ -1178,6 +1172,9 @@ public class GUI extends JFrame {
 					System.out.println("sheep search");
 					changeToMainInterface(false);
 					changeToSearchInterface(true);
+					updateRightPanelMap(user.getLatitudeDouble(),
+							user.getLongitudeDouble());
+
 				} else if (text.equals("Edit sheep")) {
 					System.out.println("sheep edit");
 					changeToMainInterface(false);
@@ -1259,26 +1256,19 @@ public class GUI extends JFrame {
 	private MyImagePanel leftPanel;
 
 	// login components
-	private JLabel unLabel;
-	private JLabel pwLabel;
 	private JTextField unField;
 	private JPasswordField pwField;
 
 	// forgot components
-	private JLabel emailLabel;
 	private JTextField emailField;
 
 	// register components
-	private JLabel regNameLabel;
-	private JLabel regLNameLabel;
-	private JLabel regEmailLabel;
-	private JLabel regPhoneLabel;
-	private JLabel regPwLabel;
-	private JLabel regPwLabel2;
 	private JTextField regNameField;
 	private JTextField regLNameField;
 	private JTextField regEmailField;
 	private JTextField regPhoneField;
+	private JTextField regLongitudeField;
+	private JTextField regLatitudeField;
 	private JPasswordField regPwField;
 	private JPasswordField regPwField2;
 
@@ -1288,6 +1278,7 @@ public class GUI extends JFrame {
 	private JButton searchButton;
 	private JButton editButton;
 	private JButton homeButton;
+	private MyMap myMap;
 
 	// search components
 	private JLabel searchLabel;
@@ -1313,15 +1304,16 @@ public class GUI extends JFrame {
 	private JTextField regShepardField;
 
 	// List over the different components
-	private ArrayList<Component> startComps;
-	private ArrayList<Component> loginComps;
-	private ArrayList<Component> registerComps;
-	private ArrayList<Component> forgotComps;
-	private ArrayList<Component> mainComps;
-	private ArrayList<Component> searchComps;
-	private ArrayList<Component> editComps;
-	private ArrayList<Component> listComps;
-	private ArrayList<Component> regSheepComps;
+	private ArrayList<JComponent> buttonComps;
+	private ArrayList<JComponent> startComps;
+	private ArrayList<JComponent> loginComps;
+	private ArrayList<JComponent> registerComps;
+	private ArrayList<JComponent> forgotComps;
+	private ArrayList<JComponent> mainComps;
+	private ArrayList<JComponent> searchComps;
+	private ArrayList<JComponent> editComps;
+	private ArrayList<JComponent> listComps;
+	private ArrayList<JComponent> regSheepComps;
 
-	private ArrayList<Component> fieldComps;
+	private ArrayList<JComponent> fieldComps;
 }

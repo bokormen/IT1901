@@ -22,6 +22,10 @@ public class MyImagePanel extends JPanel {
 		this.y = y;
 	}
 
+	public void changeImage(BufferedImage img, int num) {
+		this.img[num] = img;
+	}
+
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
