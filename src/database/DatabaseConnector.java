@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.DriverManager;
 
+//la til noe bare for aa gjoere en endring
+
 //import com.mysql.jdbc.PreparedStatement;
 
 import java.lang.String;
