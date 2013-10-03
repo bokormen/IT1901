@@ -13,6 +13,8 @@ public class User {
 	private String email;
 	private String password;
 	private String phoneNr;
+	private String longitude;
+	private String latitude;
 	
 	public User(String firstName, String lastName, String email,
 			String password, String phoneNr) throws Exception {
@@ -112,6 +114,45 @@ public class User {
 			return true;
 		}
 		return false;
+	}
+
+	public double getLongitudeDouble(String longitude) {
+		return longlatIsValid(longitude);
+	}
+
+	public void setLongitude(String longitude) throws Exception {
+		
+		if(longlatIsValid(longitude) != 0) {
+			this.longitude = longitude;
+		} else {
+			throw new Exception("Coordinate is not valid");
+		}
+	}
+
+	private double longlatIsValid(String longlat) {
+		double tall = 0;
+	      try {
+	          tall = Double.parseDouble(longlat);
+	          return tall;
+	      }
+	      catch (Exception e)
+	      {
+	    	  return 0;
+	      }
+		
+	}
+
+	public double getLatitudeDouble(String latitude) {
+		return longlatIsValid(latitude);
+
+	}
+
+	public void setLatitude(String latitude) throws Exception {
+		if(longlatIsValid(longitude) != 0) {
+			this.latitude = latitude;
+		} else {
+			throw new Exception("Coordinate is not valid");
+		}
 	}
 	
 
