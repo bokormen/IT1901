@@ -56,9 +56,29 @@ public class DatabaseConnector {
 		}
 	}
 	
-	public static void main(String[] args) {
-		open();
-		newUser("test6@test.test","Harald Hårfagre","12345678","p","60,12345.50,4321");
+//	public static void main(String[] args) {
+//		open();
+//		newUser("test7@test.test","Olav Haraldsson","12345678","p","60,12345.50,4321");
+//	}
+	
+	public static boolean doesUserExcist(String user) {
+		try {
+			Statement st = con.createStatement();
+			String query = "SELECT Email FROM User WHERE Email = '" + user + "'";
+			ResultSet rs= st.executeQuery(query);
+			int matchingUsers=0;
+			while(rs.next()) {
+				matchingUsers+=1;
+			}
+			if (matchingUsers>0) {
+				return true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return false;
 	}
 	
 	/**
