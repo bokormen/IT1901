@@ -90,18 +90,19 @@ public class DatabaseConnector {
 	/**
 	 * Denne koden oppretter en ny bruker
 	 * @param email
-	 * @param name
+	 * @param firstName
+	 * @param lastName
 	 * @param phoneNumber
 	 * @param password
 	 * @param location
 	 * @author Oeyvind
 	 */
-	public static void newUser(String email, String name, String phoneNumber, String password, String location) {
+	public static void newUser(String email, String firstName, String lastName, String phoneNumber, String password, String location) {
 		try {
 			Statement st = con.createStatement();
 			
 			String linje = "INSERT INTO `User` (`Email`, `Name`, `Tlf`, `Password`, `Location`) VALUES "+
-			String.format("(\"%s\", \"%s\", \"%s\", \"%s\", \"%s\")", email,name,phoneNumber,password,location);
+			String.format("(\"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")", email,firstName,lastName,phoneNumber,password,location);
 			
 			st.executeUpdate(linje);
 		} catch (SQLException e) {
