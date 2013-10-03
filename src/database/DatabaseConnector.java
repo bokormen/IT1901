@@ -61,6 +61,12 @@ public class DatabaseConnector {
 //		newUser("test7@test.test","Olav Haraldsson","12345678","p","60,12345.50,4321");
 //	}
 	
+	/**
+	 * Denne funksjonen sjekker om det eksisterer en bruker i databasen med e-posten som sendes til funksjonen
+	 * @param user
+	 * @return
+	 * @author Oeyvind
+	 */
 	public static boolean doesUserExcist(String user) {
 		try {
 			Statement st = con.createStatement();
