@@ -3,7 +3,7 @@ package div;
 import java.io.*;
 import java.net.*;
 
-//opprette ny klient tilkoppling til server. Bruk getDataFromServer() for Ã¥ sende/hente info fra server
+//opprette ny klient tilkoppling til server. Bruk getDataFromServer() for å sende/hente info fra server
 public class ClientConnection {
 
     Socket ClientSocket = null;
@@ -11,7 +11,7 @@ public class ClientConnection {
     BufferedReader in = null;
 
 
-    //husk Ã¥ lukke input og output streams nÃ¥r du er ferdig
+    //husk å lukke input og output streams når du er ferdig
     public void close() throws IOException {
         out.close();
         in.close();
@@ -19,7 +19,7 @@ public class ClientConnection {
     }
 
 
-    //send en melding til server og fÃ¥ respons
+    //send en melding til server og få respons
     public String getDataFromServer(String query) throws IOException {
         out.println(query);
         return in.readLine();

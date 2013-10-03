@@ -42,6 +42,3 @@
 10:13:21: Server Start-Up
 10:13:27: /78.91.19.197 connected.
 10:21:07: /78.91.19.197 disconnected.
-10:46:21: Server Start-Up
-10:46:43: /78.91.19.197 connected.
-10:50:05: /78.91.19.197 disconnected.
