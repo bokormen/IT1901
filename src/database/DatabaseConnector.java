@@ -68,7 +68,7 @@ public class DatabaseConnector {
 		try {
 			Statement st = con.createStatement();
 			
-			String linje = "INSERT INTO `oyvilund_sheep`.`User` (`Email`, `Name`, `Tlf`, `Password`) VALUES"+
+			String linje = "INSERT INTO `oyvilund_sheep`.`User` (`Email`, `Name`, `Tlf`, `Password`) VALUES "+
 			String.format("(\"%s\", \"%s\", \"%s\", \"%s\"", email,name,phoneNumber,password);
 			
 			st.executeUpdate(linje);
