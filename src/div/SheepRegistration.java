@@ -12,10 +12,12 @@ import database.DatabaseConnector;
 public class SheepRegistration {
 	private ArrayList<Sheep> sheep = new ArrayList<Sheep>();
 
-	public void registerSheep(int id, int age, int weight, char gender, String shepherd) throws Exception {
-		Sheep s = new Sheep(id, age, weight, gender, shepherd);
+	public void registerSheep(String name, int age, int weight, char gender, String shepherd) throws Exception {
+		Sheep s = new Sheep(name, age, weight, gender, shepherd);
 		sheep.add(s);
-		//DatabaseConnector.newSheep(id, null, shepherd, weight, 0, 0, age);
+		DatabaseConnector.open();
+		DatabaseConnector.newSheep(name, "Per", shepherd, weight, 75, 39, age);
+		DatabaseConnector.close();
 		
 	}
 	
@@ -23,14 +25,7 @@ public class SheepRegistration {
 		sheep.remove(s);
 	}
 	
-	public Sheep sheepSearch(long id) {
-		for(Sheep s : sheep) {
-			if(s.getId() == id) {
-				return s;
-			}
-		}
-		return null;
-	}
+
 	
 
 	

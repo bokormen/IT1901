@@ -32,9 +32,6 @@ public class SheepAttackMail {
 	}
 
 	public boolean sheepAttack(String email, int sheepNr) throws Exception {
-
-		try {
-
 			Message message = new MimeMessage(session);
 			message.setFrom(new InternetAddress("sheepcontrolit1901@gmail.com"));
 			message.setRecipients(Message.RecipientType.TO,
@@ -44,10 +41,6 @@ public class SheepAttackMail {
 
 			Transport.send(message);
 			return true;
-
-		} catch (Exception e) {
-			throw new Exception(e.getLocalizedMessage());
-		}
 	}
 	
 	public boolean newPassword(String email, String newPassword) throws Exception {
