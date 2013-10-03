@@ -56,6 +56,11 @@ public class DatabaseConnector {
 		}
 	}
 	
+	public static void main(String[] args) {
+		open();
+		newUser("test6@test.test","Harald Hårfagre","12345678","p","60,12345.50,4321");
+	}
+	
 	/**
 	 * Denne koden oppretter en ny bruker
 	 * @param email
@@ -70,7 +75,7 @@ public class DatabaseConnector {
 			Statement st = con.createStatement();
 			
 			String linje = "INSERT INTO `User` (`Email`, `Name`, `Tlf`, `Password`, `Location`) VALUES "+
-			String.format("(\"%s\", \"%s\", \"%s\", \"%s\", \"%s\"", email,name,phoneNumber,password,location);
+			String.format("(\"%s\", \"%s\", \"%s\", \"%s\", \"%s\")", email,name,phoneNumber,password,location);
 			
 			st.executeUpdate(linje);
 		} catch (SQLException e) {
@@ -126,7 +131,7 @@ public class DatabaseConnector {
 				
 				Sheep sau = new Sheep(rs.getInt(0),rs.getInt(6),rs.getInt(3),rs.getString(1).charAt(0), rs.getString(7));
 				
-				Sheeps.add(sau); //Maa sansynligvis endres litt da constructoren ikke ser ut til ï¿½ ta hensyn til all infoen
+				Sheeps.add(sau); //Maa sansynligvis endres litt da constructoren ikke ser ut til aa ta hensyn til all infoen
 				Statement st2 = con.createStatement();
 				String query2 = "Select Date, Position From Location as L INNER JOIN Sheep as S ON (S.ID="+rs.getInt(1)+");";
 				ResultSet rs2 = st2.executeQuery(query2);
