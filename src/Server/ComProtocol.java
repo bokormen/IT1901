@@ -26,24 +26,35 @@ public class ComProtocol {
             if (theInput.equals("login")) {
                 state = LOGIN;
                 theOutput = "done";
-            } else if (theInput.equals("register")) {
+
+            } else if (theInput.equals("registeruser")) {
                 state = REGISTERUSER;
                 theOutput = "done";
+
+            } else if (theInput.equals("registersheep")) {
+                state = REGISTERSHEEP;
+                theOutput = "done";
+
             } else if (theInput.equals("print")) {
                 sct.log.printLog();
+
             } else if (theInput.equals("quit")) {
                 theOutput = "bye";
+
             }
 
         } else if (state == REGISTERUSER) {
+
             if (theInput != null) {
                 regiserUser(theInput);
             }
+
             theOutput = "done";
             state = WAIT;
 
             //make a login function for this to parse the string and check credentials
         } else if (state == LOGIN) {
+
             if (theInput.equals("user1||1234")) {
                 state = WAIT;
                 sct.isLoggedIn = true;
@@ -74,8 +85,8 @@ public class ComProtocol {
     private void regiserUser(String theInput) {
         String[] temp = theInput.split("\\|\\|");
 
-        System.out.println(temp.length);
-        System.out.println(temp[0] + " " + temp[1] + " " + temp[2] + " " + temp[3]);
+        //System.out.println(temp.length);
+        //System.out.println(temp[0] + " " + temp[1] + " " + temp[2] + " " + temp[3]);
         DatabaseConnector.newUser(temp[0], temp[1], temp[2], temp[3], temp[4]);
 
 
