@@ -11,7 +11,11 @@
 
 .DS_Store
 /bin
+
+#intellij filer#
 /.idea
 .idea
 /out
 out
+log.txt
+IT1901.iml
