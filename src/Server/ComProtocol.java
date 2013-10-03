@@ -78,6 +78,7 @@ public class ComProtocol {
         return theOutput;
     }
 
+    //frodo@hotmail.com||frodo||1234566||gandalf||19.2,19.3
     //registers a user in the database
     //typical input string is: "email||name||phoneNumber||password"
     //newUser(String email, String name, String phoneNumber, String password)

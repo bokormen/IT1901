@@ -6,7 +6,7 @@ import java.net.*;
 //opprette ny klient tilkoppling til server. Bruk getDataFromServer() for å sende/hente info fra server
 public class ClientConnection {
 
-    Socket kkSocket = null;
+    Socket ClientSocket = null;
     PrintWriter out = null;
     BufferedReader in = null;
 
@@ -15,7 +15,7 @@ public class ClientConnection {
     public void close() throws IOException {
         out.close();
         in.close();
-        kkSocket.close();
+        ClientSocket.close();
     }
 
 
@@ -31,9 +31,9 @@ public class ClientConnection {
 
 
         try {
-            kkSocket = new Socket(InetAddress.getLocalHost(), 58339);
-            out = new PrintWriter(kkSocket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(kkSocket.getInputStream()));
+            ClientSocket = new Socket(InetAddress.getLocalHost(), 58339);
+            out = new PrintWriter(ClientSocket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(ClientSocket.getInputStream()));
         } catch (UnknownHostException e) {
             System.err.println("Could not find host.");
             System.exit(1);

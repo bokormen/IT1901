@@ -4,7 +4,7 @@
     <list default="true" id="f1d7f4da-7514-437f-bec5-ea0b92fc9121" name="Default" comment="" />
     <ignored path="ServerTest.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/fragment.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1380788525628" ignored="false" />
+    <file path="/fragment.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1380791053918" ignored="false" />
     <file path="/Main.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1378385382687" ignored="false" />
     <file path="$PROJECT_DIR$/../ClientTest/src/ClientMain.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1379936869436" ignored="false" />
     <file path="$PROJECT_DIR$/../ClientTest/src/KnockKnockClient.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1379840322386" ignored="false" />
@@ -15,7 +15,7 @@
     <file path="/KnockKnockProtocol.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1379843825611" ignored="false" />
     <file path="$PROJECT_DIR$/../ClientTest/src/SheepGUI.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1379840128528" ignored="false" />
     <file path="$PROJECT_DIR$/../ClientTest/src/ClientConnection.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1379936884258" ignored="false" />
-    <file path="/ClientConnection.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1380185267328" ignored="false" />
+    <file path="/ClientConnection.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1380791395636" ignored="false" />
     <file path="/ServerMain.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1380185855620" ignored="false" />
     <file path="/ServerClientThread.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1380178842543" ignored="false" />
     <file path="/ComProtocol.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1380789606219" ignored="false" />
@@ -23,6 +23,8 @@
     <file path="/ServerConsole.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1380784572165" ignored="false" />
     <file path="/DatabaseConnector.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1380188551884" ignored="false" />
     <file path="/ConnectorTest.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1380788409420" ignored="false" />
+    <file path="/MyButton.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1380792004891" ignored="false" />
+    <file path="/GUI.java" changelist="f1d7f4da-7514-437f-bec5-ea0b92fc9121" time="1380792121621" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,15 +85,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="DatabaseConnector.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/database/DatabaseConnector.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="24" column="7" selection-start="539" selection-end="539" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="ClientMain.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/example/ClientTest/ClientMain.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -130,13 +123,22 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ComProtocol.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="ComProtocol.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Server/ComProtocol.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="77" column="12" selection-start="2170" selection-end="2170" vertical-scroll-proportion="0.5827465">
+            <state line="80" column="59" selection-start="2250" selection-end="2250" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UserRegistration.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/div/UserRegistration.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="23" column="0" selection-start="632" selection-end="632" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -150,10 +152,19 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="GUI.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/gui/GUI.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="285" column="8" selection-start="8320" selection-end="8320" vertical-scroll-proportion="0.94014084">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="ClientConnection.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/div/ClientConnection.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="26" column="0" selection-start="639" selection-end="639" vertical-scroll-proportion="0.0">
+            <state line="34" column="47" selection-start="855" selection-end="855" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -169,8 +180,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/ServerMain.java" />
-        <option value="$PROJECT_DIR$/src/ServerConsole.java" />
         <option value="$PROJECT_DIR$/src/ServerLog.java" />
         <option value="$PROJECT_DIR$/src/ServerClientThread.java" />
         <option value="$PROJECT_DIR$/src/Server/Utils/ComProtocol.java" />
@@ -178,13 +187,15 @@
         <option value="$PROJECT_DIR$/src/Database/DatabaseConnector.java" />
         <option value="$PROJECT_DIR$/src/example/ClientTest/ClientConnection.java" />
         <option value="$PROJECT_DIR$/src/example/ClientTest/ClientMain.java" />
-        <option value="$PROJECT_DIR$/src/div/ClientConnection.java" />
         <option value="$PROJECT_DIR$/src/Server/ServerMain.java" />
         <option value="$PROJECT_DIR$/src/Server/ServerClientThread.java" />
         <option value="$PROJECT_DIR$/src/Server/ServerConsole.java" />
         <option value="$PROJECT_DIR$/src/database/DatabaseConnector.java" />
         <option value="$PROJECT_DIR$/src/example/ClientTest/ConnectorTest.java" />
         <option value="$PROJECT_DIR$/src/Server/ComProtocol.java" />
+        <option value="$PROJECT_DIR$/src/div/ClientConnection.java" />
+        <option value="$PROJECT_DIR$/src/gui/GUI.java" />
+        <option value="$PROJECT_DIR$/src/components/MyButton.java" />
       </list>
     </option>
   </component>
@@ -284,6 +295,42 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="images" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="IT1901" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="IT1901" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gui" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="IT1901" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="IT1901" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="ClientTest" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -324,6 +371,24 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="IT1901" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="IT1901" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="components" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="PackagesPane" />
@@ -346,7 +411,7 @@
     <property name="GoToClass.includeLibraries" value="false" />
     <property name="dynamic.classpath" value="false" />
   </component>
-  <component name="RunManager" selected="Application.ConnectorTest">
+  <component name="RunManager" selected="Application.GUI">
     <configuration default="false" name="ClientMain" type="Application" factoryName="Application" temporary="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="MAIN_CLASS_NAME" value="example.ClientTest.ClientMain" />
@@ -413,10 +478,28 @@
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
-    <list size="3">
+    <configuration default="false" name="GUI" type="Application" factoryName="Application">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="MAIN_CLASS_NAME" value="gui.GUI" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="IT1901" />
+      <envs />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <list size="4">
       <item index="0" class="java.lang.String" itemvalue="Application.ServerMain" />
       <item index="1" class="java.lang.String" itemvalue="Application.ConnectorTest" />
-      <item index="2" class="java.lang.String" itemvalue="Application.ClientMain" />
+      <item index="2" class="java.lang.String" itemvalue="Application.GUI" />
+      <item index="3" class="java.lang.String" itemvalue="Application.ClientMain" />
     </list>
     <recent_temporary>
       <list size="1">
@@ -456,7 +539,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -546,36 +629,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/Server/ComProtocol.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="38" selection-start="1120" selection-end="1120" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/div/ClientConnection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="0" selection-start="639" selection-end="639" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/database/DatabaseConnector.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/database/DatabaseConnector.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Server/ServerMain.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
@@ -597,13 +650,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/div/ClientConnection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="0" selection-start="639" selection-end="639" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Server/ServerConsole.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="60" column="5" selection-start="1670" selection-end="1670" vertical-scroll-proportion="0.0">
@@ -617,13 +663,6 @@
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/database/DatabaseConnector.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="7" selection-start="539" selection-end="539" vertical-scroll-proportion="0.0">
-          <folding />
         </state>
       </provider>
     </entry>
@@ -641,13 +680,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/example/ClientTest/ConnectorTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="100" selection-start="426" selection-end="426" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
@@ -657,10 +689,57 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Server/ComProtocol.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="77" column="12" selection-start="2170" selection-end="2170" vertical-scroll-proportion="0.5827465">
+        <state line="80" column="59" selection-start="2250" selection-end="2250" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/div/UserRegistration.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="0" selection-start="632" selection-end="632" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/database/DatabaseConnector.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="99" column="21" selection-start="2700" selection-end="2700" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/div/ClientConnection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="34" column="47" selection-start="855" selection-end="855" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/example/ClientTest/ConnectorTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="100" selection-start="426" selection-end="426" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/images/sheepbackground.jpeg">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/MyButton.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="37" column="11" selection-start="870" selection-end="870" vertical-scroll-proportion="0.66021127">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/gui/GUI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="285" column="8" selection-start="8320" selection-end="8320" vertical-scroll-proportion="0.94014084">
+          <folding />
         </state>
       </provider>
     </entry>
