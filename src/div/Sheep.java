@@ -44,7 +44,7 @@ public class Sheep {
 	 * @throws Exception 
 	 */
 	public void setAge(int age) throws Exception {
-		if(age > 0 && age < 40) {
+		if(age >= 0 && age < 40) {
 			this.age = age;			
 		} else {
 			throw new Exception("Age is not valid");
