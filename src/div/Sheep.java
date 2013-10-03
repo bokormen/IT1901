@@ -9,7 +9,7 @@ import java.util.Date;
  */
 public class Sheep {
 
-	private final int id;
+	private String name;
 	private int age;
 	private int weight;
 	private char gender;
@@ -18,12 +18,12 @@ public class Sheep {
 	private String shepherd;
 	private ArrayList<SheepLocation> locations; 
 	
-	public Sheep(int id, int age, int weight, char gender, String shepherd) throws Exception {
+	public Sheep(String name, int age, int weight, char gender, String shepherd) throws Exception {
 		setAge(age);
 		setWeight(weight);
 		setShepherd(shepherd);
 		locations = new ArrayList<SheepLocation>();
-		this.id = id;
+		this.name = name;
 		if(gender == 'f' || gender == 'm') {
 			this.gender = gender;
 		} else {
@@ -31,8 +31,11 @@ public class Sheep {
 		}
 	}
 	
-	public int getId() {
-		return id;
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public int getAge() {
@@ -56,7 +59,7 @@ public class Sheep {
 	}
 
 	public void setWeight(int weight) throws Exception {
-		if(weight > 0) {
+		if(weight >= 0) {
 			this.weight = weight;			
 		} else {
 			throw new Exception("Weight is not valid");

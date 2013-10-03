@@ -16,7 +16,10 @@ public class UserRegistration {
 	public void registerUser(String firstName, String lastName, String email, String password, String phoneNr) throws Exception {
 		User user = new User(firstName, lastName, email, password, phoneNr);
 		users.add(user);
-		//DatabaseConnector.newUser(email, firstName + lastName, phoneNr, password);
+		
+		DatabaseConnector.open();
+		DatabaseConnector.newUser(email, firstName + lastName, phoneNr, password, "15.0,7.4");
+		DatabaseConnector.close();
 	}
 	
 	public void deleteUser(User user) {
