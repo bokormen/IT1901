@@ -62,14 +62,15 @@ public class DatabaseConnector {
 	 * @param name
 	 * @param phoneNumber
 	 * @param password
+	 * @param location
 	 * @author Oeyvind
 	 */
-	public static void newUser(String email, String name, String phoneNumber, String password) {
+	public static void newUser(String email, String name, String phoneNumber, String password, String location) {
 		try {
 			Statement st = con.createStatement();
 			
-			String linje = "INSERT INTO `oyvilund_sheep`.`User` (`Email`, `Name`, `Tlf`, `Password`) VALUES "+
-			String.format("(\"%s\", \"%s\", \"%s\", \"%s\"", email,name,phoneNumber,password);
+			String linje = "INSERT INTO `oyvilund_sheep`.`User` (`Email`, `Name`, `Tlf`, `Password`, `Location`) VALUES "+
+			String.format("(\"%s\", \"%s\", \"%s\", \"%s\", \"%s\"", email,name,phoneNumber,password,location);
 			
 			st.executeUpdate(linje);
 		} catch (SQLException e) {
