@@ -18,28 +18,31 @@ public class ComProtocol {
 
     private int state = WAIT;
 
-    //process some input depending on state
+    //Haandterer input fra bruker
     public String processInput(String theInput, ServerClientThread sct) throws IOException {
         String theOutput = "";
 
+        //hvis state er WAIT saa venter serveren paa et signal om hva den skal gj0re
         if (state == WAIT) {
-            if (theInput.equals("login")) {
+            if (theInput.equals("login")) { //bruker vil logge inn, gaa til state LOGIN
                 state = LOGIN;
                 theOutput = "done";
 
-            } else if (theInput.equals("registeruser")) {
+            } else if (theInput.equals("registeruser")) { //bruker vil registrere seg
                 state = REGISTERUSER;
                 theOutput = "done";
 
-            } else if (theInput.equals("registersheep")) {
+            } else if (theInput.equals("registersheep")) { //bruker vil registrere sau
                 state = REGISTERSHEEP;
                 theOutput = "done";
 
-            } else if (theInput.equals("quit")) {
+            } else if (theInput.equals("quit")) { // bruker vil avslutte
                 theOutput = "bye";
 
             }
 
+        // I denne staten venter server paa input fra bruker med info om registrering
+        //Input eksempel: "email||firstName||lastName||phoneNumber||password||location"
         } else if (state == REGISTERUSER) {
 
             if (theInput != null) {
@@ -49,7 +52,7 @@ public class ComProtocol {
             theOutput = "done";
             state = WAIT;
 
-            //make a login function for this to parse the string and check credentials
+        //IKKE FERDIG
         } else if (state == LOGIN) {
 
             if (theInput.equals("user1||1234")) {
@@ -64,6 +67,7 @@ public class ComProtocol {
             }
         }
 
+        //FOR TESTING
         else if (state == TESTING) {
             if (theInput.equalsIgnoreCase("hello world!")) {
                 theOutput = "Hello User";
@@ -78,7 +82,6 @@ public class ComProtocol {
     //registers a user in the database
     //typical input string is: "email||firstName||lastName||phoneNumber||password||location"
     //example "frodo@hotmail.com||frodo||baggins||1234566||gandalf||19.2,19.3"
-    //newUser(String email, String firstName, String lastName, String phoneNumber, String password, String location)
 
     private void regiserUser(String theInput) {
 
@@ -91,6 +94,7 @@ public class ComProtocol {
 
     }
 
+    //ikke brukt
     public void changeState(String newstate) {
         if (newstate.equals("wait")) {
             state = WAIT;
