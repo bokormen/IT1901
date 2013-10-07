@@ -1,5 +1,7 @@
 package div;
 
+import java.util.ArrayList;
+
 /**
  * User-klassen representerer en brukers profil. Lagrer og validerer generell
  * info om brukeren, inkludert email og passord som er nødvendig for innlogging.
@@ -183,6 +185,10 @@ public class User {
 	
 	public boolean deleteSheep(Sheep sheep) {
 		return sheepReg.deleteSheep(sheep);
+	}
+	
+	public ArrayList<Sheep> getSheepList() {
+		return sheepReg.getSheepList();
 	}
 
 }

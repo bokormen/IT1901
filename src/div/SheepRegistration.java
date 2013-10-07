@@ -35,10 +35,7 @@ public class SheepRegistration {
         sheepList.add(new Sheep(id, age, weight, gender, shepherd));
 		
 	}
-	
-	public void getSheep() {
-		
-	}
+
 	
 	public boolean deleteSheep(Sheep s) {
 		return sheepList.remove(s);
@@ -46,6 +43,10 @@ public class SheepRegistration {
 	
 	public Sheep sheepSearch(int id) {
 		return null;
+	}
+
+	public ArrayList<Sheep> getSheepList() {
+		return sheepList;
 	}
 	
 

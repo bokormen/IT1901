@@ -29,7 +29,7 @@ public class SheepSim {
 		Random randomGen = new Random();
 		int newHR = -1;
 		while (newHR <= 0 || newHR > 200 ) {
-			newHR = oldHR + ((int) ((randomGen.nextInt(10) * Math.pow(-1, randomGen.nextInt(1)) )));
+			newHR = oldHR + ((int) ((randomGen.nextInt(5) * Math.pow(-1, randomGen.nextInt(1)) )));
 		}
 		return newHR;
 	}
