@@ -1,5 +1,6 @@
 package div;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import database.DatabaseConnector;
 
@@ -38,15 +39,25 @@ public class UserRegistration {
 	}	
 
 	public User login(String email, String password) {
-		for(User user : users) {
-			if(email.equals(user.getEmail())) {
-				if(password.equals(user.getPassword())) {
-					return user;
-				} else {
-					System.out.println("Password not valid");
-				}
-			}
-		}
+
+        //Maa gaa gjennom server, her er ett eksempel.
+
+        //Lager en foresp0rsel til server.
+        //retiningslinjer for kommunikasjon med server vil til en hver tid ligge i server.ComProtocol klassen
+        String query = email + "||" + password;
+
+        //sender foresp0rselen til serveren og faar tilbake respons
+        String serverRespons = null;
+        try {
+            serverRespons = ClientConnection.sendServerQuery("login", query);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //sjekke at melding ble mottatt
+        if (serverRespons.equals("err")) {
+            System.out.println("Error. Can't register user");
+        }
 		return null;
 	}
 	
