@@ -30,6 +30,10 @@ public class Sheep {
 			throw new Exception("Gender not valid");			
 		}
 	}
+	
+	public int getId() {
+		return id;
+	}
 
 
 	public int getAge() {

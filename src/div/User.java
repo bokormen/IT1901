@@ -16,7 +16,6 @@ public class User {
 	private String email;
 	private String password;
 	private String phoneNr;
-	private String position;
 	private String latitude; //Fjerne
 	private String longitude; //Fjerne
 	
@@ -171,11 +170,13 @@ public class User {
 	}
 	
 	public String getPosition() {
-		return position;
+		return latitude+longitude;
 	}
 	
 	public void setPosition(String position) {
-		this.position = position;
+		String[] positionA = position.split(",");
+		latitude = positionA[0];
+		longitude = positionA[1];
 	}
 	
 	
