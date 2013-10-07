@@ -310,28 +310,24 @@ public class DatabaseConnector {
 	 * @author Oeyvind
 	 */
 	public static Sheep findSheep(String user,int ID) {
-		if (!doesUserOwnSheep(user,ID)) {
-			return null;
-		}
+		Sheep sheep = null;
 		try {
 			Statement st = con.createStatement();
 			String query = "SELECT S.ID, S.Gender, S.Shepherd, S.Weight, S.Heartrate, S.Temperature, S.Age, S.Shepherd FROM Sheep AS S WHERE S.Owner = '" + user + "' AND S.ID = "+ID;
 			ResultSet rs= st.executeQuery(query);
-			Sheep sau = null;
 			while(rs.next()) {
 				try {
-					sau = new Sheep(rs.getInt(0),rs.getInt(6),rs.getInt(3),rs.getString(1).charAt(0), rs.getString(7));
+					sheep = new Sheep(rs.getInt(0),rs.getInt(6),rs.getInt(3),rs.getString(1).charAt(0), rs.getString(7));
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-			return sau;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
+		return sheep;
 	}
 	
 }
