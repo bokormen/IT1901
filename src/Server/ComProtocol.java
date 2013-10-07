@@ -55,16 +55,10 @@ public class ComProtocol {
         //IKKE FERDIG
         } else if (state == LOGIN) {
 
-            if (theInput.equals("user1||1234")) {
-                state = WAIT;
-                sct.isLoggedIn = true;
-                sct.log.addEntry("user1 logged in");
-                theOutput = "You are logged in.";
-            } else if (theInput.equals("cancel")) {
-                state = WAIT;
-            } else {
-                theOutput = "Wrong Username or Password";
+            if (theInput != null) {
+                userLogin(theInput);
             }
+            state = WAIT;
         }
 
         //FOR TESTING
@@ -77,6 +71,15 @@ public class ComProtocol {
         }
 
         return theOutput;
+    }
+
+    private void userLogin(String theInput) {
+        String[] temp = theInput.split("\\|\\|"); //split the input string on ||
+        if (temp.length == 2) {
+            if (!DatabaseConnector.doesUserExist(temp[0])) {
+                DatabaseConnector.login(temp[0], temp[1]);
+            }
+        }
     }
 
     //registers a user in the database

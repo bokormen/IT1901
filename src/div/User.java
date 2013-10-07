@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 /**
  * User-klassen representerer en brukers profil. Lagrer og validerer generell
- * info om brukeren, inkludert email og passord som er nødvendig for innlogging.
+ * info om brukeren, inkludert email og passord som er nï¿½dvendig for innlogging.
  * 
  * @author Ragnhild
  * 
@@ -25,7 +25,7 @@ public class User {
 	public User(String firstName, String lastName, String email,
 			String password, String phoneNr) throws Exception {
 		sheepReg = new SheepRegistration();
-		
+
 		setFirstName(firstName);
 		setLastName(lastName);
 		setEmail(email);
