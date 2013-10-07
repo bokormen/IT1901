@@ -147,6 +147,7 @@ public class User {
 
 	private double longlatIsValid(String longlat) {
 		double tall = 0;
+		System.out.println(longlat);
 		try {
 			tall = Double.parseDouble(longlat);
 			return tall;
@@ -162,7 +163,7 @@ public class User {
 	}
 
 	public void setLatitude(String latitude) throws Exception {
-		if (longlatIsValid(longitude) != 0) {
+		if (longlatIsValid(latitude) != 0) {
 			this.latitude = latitude;
 		} else {
 			throw new Exception("Coordinate is not valid");
