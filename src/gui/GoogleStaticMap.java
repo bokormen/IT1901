@@ -32,14 +32,14 @@ public class GoogleStaticMap {
 		return img;
 	}
 
-	private static String createURL(double latitude, double longitude,
-			int zoom, int width, int height, int scale) {
+	private static String createURL(double latitude, double longitude, int zoom, int width, int height, int scale) {
 		String url = "http://maps.googleapis.com/maps/api/staticmap?";
 		url += "center=" + latitude + "," + longitude;
 		url += "&zoom=" + zoom;
 		url += "&size=" + width + "x" + height;
 		url += "&scale=" + scale;
 		url += "&sensor=false";
+		url += "&style=feature:all|element:labels|visibility:off";
 		System.out.println(url);
 		return url;
 	}
@@ -63,10 +63,8 @@ public class GoogleStaticMap {
 	 * @see createUrl
 	 */
 
-	public static Image getImage(double latitude, double longitude, int zoom,
-			int width, int height, int scale) {
-		Image img = readURL(createURL(latitude, longitude, zoom, width, height,
-				scale));
+	public static Image getImage(double latitude, double longitude, int zoom, int width, int height, int scale) {
+		Image img = readURL(createURL(latitude, longitude, zoom, width, height, scale));
 		return img;
 	}
 }

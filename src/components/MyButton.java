@@ -22,12 +22,16 @@ public class MyButton extends JButton implements MouseListener {
 	public MyButton(JButton jb, String text, String icon) {
 		this.jb = jb;
 		this.text = text;
-		this.border = new MyBorder();
+		this.setVisible(false);
+		this.setForeground(Color.WHITE);
+		this.setOpaque(false);
+		this.setContentAreaFilled(false);
+
+		this.border = new MyBorder(20);
 
 		try {
 			if (icon != null) {
-				this.icon = new ImageIcon(ImageIO.read(this.getClass()
-						.getClassLoader()
+				this.icon = new ImageIcon(ImageIO.read(this.getClass().getClassLoader()
 						.getResource("images/" + icon + ".png")));
 			}
 		} catch (IOException e) {
@@ -35,11 +39,8 @@ public class MyButton extends JButton implements MouseListener {
 		}
 
 		this.setText(text);
-		// this.setOpaque(false);
-		this.setForeground(Color.WHITE);
 		this.setBorder(border);
 		this.dummyInsets = border.getBorderInsets(jb);
-		this.setVisible(false);
 
 		this.addMouseListener(this);
 	}

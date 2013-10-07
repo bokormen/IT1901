@@ -20,8 +20,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 
-public class MyTextField extends JTextField implements FocusListener,
-		DocumentListener {
+public class MyTextField extends JTextField implements FocusListener, DocumentListener {
 	private JTextField jtf;
 	private Icon icon;
 	private Icon iconStored;
@@ -34,14 +33,13 @@ public class MyTextField extends JTextField implements FocusListener,
 		this.hint = hint;
 		this.setVisible(false);
 		this.setHorizontalAlignment(JTextField.CENTER);
-		this.setDocument(new DocumentLimiter(24)); // bokstav begrensning
+		this.setDocument(new DocumentLimiter(64)); // bokstav begrensning
 		this.setOpaque(false);
 		this.setForeground(Color.WHITE);
 		this.setCaretColor(Color.WHITE);
 		try {
 			if (icon != null) {
-				this.iconStored = new ImageIcon(ImageIO.read(this.getClass()
-						.getClassLoader()
+				this.iconStored = new ImageIcon(ImageIO.read(this.getClass().getClassLoader()
 						.getResource("images/" + icon + ".png")));
 				this.icon = iconStored;
 			}
@@ -49,7 +47,7 @@ public class MyTextField extends JTextField implements FocusListener,
 			e.printStackTrace();
 		}
 
-		this.border = new MyBorder();
+		this.border = new MyBorder(20);
 		this.setBorder(border);
 		this.dummyInsets = border.getBorderInsets(jtf);
 		addFocusListener(this);
@@ -59,7 +57,6 @@ public class MyTextField extends JTextField implements FocusListener,
 	public MyBorder getMyBorder() {
 		return this.border;
 	}
-
 
 	@Override
 	protected void paintComponent(Graphics g) {
@@ -97,8 +94,7 @@ public class MyTextField extends JTextField implements FocusListener,
 			}
 			Graphics2D g2d = (Graphics2D) g;
 			RenderingHints hints = g2d.getRenderingHints();
-			g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-					RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+			g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 			g2d.drawString(hint, x, textBottom);
 			g2d.setRenderingHints(hints);
 			g.setFont(prev);
