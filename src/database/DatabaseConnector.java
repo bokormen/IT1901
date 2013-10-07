@@ -69,7 +69,7 @@ public class DatabaseConnector {
 	 * @return
 	 * @author Oeyvind
 	 */
-	public static boolean doesUserExist(String user) {
+	public static boolean doesUserExsist(String user) {
 		try {
 			Statement st = con.createStatement();
 			String query = "SELECT Email FROM User WHERE Email = '" + user + "'";
@@ -181,45 +181,15 @@ public class DatabaseConnector {
 	}
 	
 	/**
-	 * Denne funksjonen tar inn en e-postadresse og sjekker om den eksisterer som en bruker i databasen fra foer av, hvis brukeren eksister, saa returner den true, hvis ikke returnerer den false
-	 * @param user
-	 * @return
-	 */
-	public static boolean userExsist(String user) {
-		try {
-			Statement st = con.createStatement();
-			
-			String query = "Select U.Email From User as U WHERE U.Email="+user+";";
-			
-			ResultSet rs = st.executeQuery(query);
-			
-			int counter=0;
-			
-			while (rs.next()) {
-				counter++;
-			}
-			
-			if (counter==0) {
-				return false;
-			}else{
-				return true;
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return false;
-	}
-	
-	/**
 	 * Denne funksjonen tar inn en e-post adresse og et passord, foerst sjekker den om e-posten er registrert paa en bruker, saa sjekker den om passordet som er gitt stemmer med brukerens passord, hvis brukernavnet eksisterer og passordet er riktig, saa returneres true, hvis ikke returneres false
 	 * @param user
 	 * @param password
 	 * @return
+	 * @author Oeyvind
 	 */
 	public static boolean login(String user, String password) {
 		try {
-			if (!userExsist(user)) {
+			if (!doesUserExsist(user)) {
 				return false;
 			}
 			Statement st = con.createStatement();
