@@ -17,9 +17,13 @@ public class User {
 	private String position;
 	private String latitude; //Fjerne
 	private String longitude; //Fjerne
+	
+	private SheepRegistration sheepReg;
 
 	public User(String firstName, String lastName, String email,
 			String password, String phoneNr) throws Exception {
+		sheepReg = new SheepRegistration();
+		
 		setFirstName(firstName);
 		setLastName(lastName);
 		setEmail(email);
@@ -170,6 +174,15 @@ public class User {
 	
 	public void setPosition(String position) {
 		this.position = position;
+	}
+	
+	
+	public void registerSheep(String id, String age, String weight, String gender, String shepherd) throws NumberFormatException, Exception {
+		sheepReg.registerSheep(Integer.parseInt(id), Integer.parseInt(age), Integer.parseInt(weight), gender.charAt(0), shepherd);
+	}
+	
+	public boolean deleteSheep(Sheep sheep) {
+		return sheepReg.deleteSheep(sheep);
 	}
 
 }

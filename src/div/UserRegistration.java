@@ -28,17 +28,9 @@ public class UserRegistration {
 
         //sjekke at melding ble mottatt
         if (serverRespons.equals("err")) {
-            //hvis noe gikk galt gj0r dette
+            System.out.println("Error. Can't register user");
         }
 
-        //ferdig
-
-
-        /*
-		DatabaseConnector.open();
-		DatabaseConnector.newUser(email, firstName, lastName, phoneNr, password, "15.0,7.4");
-		DatabaseConnector.close();
-		*/
 	}
 	
 	public void deleteUser(User user) {
