@@ -28,15 +28,15 @@ public class Server {
 
 		for (int i = 0; i < forNavn.length; i++) {
 			try {
-				userReg.registerUser(forNavn[i], etterNavn[i], email[i], password[i], phone[i]);
+				//userReg.registerUser(forNavn[i], etterNavn[i], email[i], password[i], phone[i]);
 			} catch (Exception e) {
 				System.out.println("fuuuck");
 				e.printStackTrace();
 			}
 		}
 		try {
-			userReg.getUsers().get(7).setLatitude("63.43");
-			userReg.getUsers().get(7).setLongitude("10.39");
+			//userReg.getUsers().get(7).setLatitude("63.43");
+			//userReg.getUsers().get(7).setLongitude("10.39");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -45,7 +45,7 @@ public class Server {
 	public static int sendInformationRegisterUser(String firstName, String lastName, String email, String password,
 			String phoneNr) {
 		try {
-			userReg.registerUser(firstName, lastName, email, password, phoneNr);
+			userReg.registerUser(firstName, lastName, email, password, phoneNr, "0");
 			System.out.println("Registred user: " + firstName + " " + lastName);
 			return 1;
 		} catch (Exception e) {

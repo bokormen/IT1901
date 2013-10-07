@@ -76,7 +76,7 @@ public class ComProtocol {
     private void userLogin(String theInput) {
         String[] temp = theInput.split("\\|\\|"); //split the input string on ||
         if (temp.length == 2) {
-            if (!DatabaseConnector.doesUserExist(temp[0])) {
+            if (!DatabaseConnector.doesUserExsist(temp[0])) {
                 DatabaseConnector.login(temp[0], temp[1]);
             }
         }
@@ -89,8 +89,8 @@ public class ComProtocol {
     private void regiserUser(String theInput) {
 
         String[] temp = theInput.split("\\|\\|"); //split the input string on ||
-        if (temp.length == 5) {
-            if (!DatabaseConnector.doesUserExist(temp[0])) {
+        if (temp.length == 6) {
+            if (!DatabaseConnector.doesUserExsist(temp[0])) {
                 DatabaseConnector.newUser(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5]);
             }
         }

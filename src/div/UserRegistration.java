@@ -12,17 +12,17 @@ import database.DatabaseConnector;
  */
 public class UserRegistration {
 	
-	private ArrayList<User> users = new ArrayList<User>();
+	private  static ArrayList<User> users = new ArrayList<User>();
 
-	public void registerUser(String firstName, String lastName, String email, String password, String phoneNr) throws Exception {
-		User user = new User(firstName, lastName, email, password, phoneNr);
+	public static void registerUser(String firstName, String lastName, String email, String password, String phoneNr, String location) throws Exception {
+		User user = new User(firstName, lastName, email, phoneNr, "69.10,10.30");
 		users.add(user);
 
         //Maa gaa gjennom server, her er ett eksempel.
 
         //Lager en foresp0rsel til server.
         //retiningslinjer for kommunikasjon med server vil til en hver tid ligge i server.ComProtocol klassen
-        String query = email + "||" + firstName + "||" + lastName + "||" + phoneNr + "||" + password  + "||" + "15.0,7.4";
+        String query = email + "||" + firstName + "||" + lastName + "||" + phoneNr + "||" + password  + "||" + "63.43,10.39";
 
         //sender foresp0rselen til serveren og faar tilbake respons
         String serverRespons = ClientConnection.sendServerQuery("registeruser", query);

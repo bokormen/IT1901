@@ -884,7 +884,7 @@ public class GUI extends JFrame {
 
 		if (password.equals(password2)) {
 			try {
-				UserRegistration.registerUser(firstName, lastName, email, password2, phoneNr);
+				UserRegistration.registerUser(firstName, lastName, email, password2, phoneNr, "0");
 				System.out.println("asd");
 				return true;
 			} catch (Exception e) {
