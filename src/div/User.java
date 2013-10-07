@@ -16,8 +16,8 @@ public class User {
 	private String email;
 	private String password;
 	private String phoneNr;
-	private String latitude; //Fjerne
-	private String longitude; //Fjerne
+	private String latitude;
+	private String longitude;
 	
 	private SheepRegistration sheepReg;
 

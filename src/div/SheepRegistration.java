@@ -49,5 +49,9 @@ public class SheepRegistration {
 		return sheepList;
 	}
 	
+	public void editSheep(Sheep s) {
+		
+	}
+	
 
 }
