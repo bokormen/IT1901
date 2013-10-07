@@ -14,8 +14,9 @@ public class User {
 	private String email;
 	private String password;
 	private String phoneNr;
-	private String longitude;
-	private String latitude;
+	private String position;
+	private String latitude; //Fjerne
+	private String longitude; //Fjerne
 
 	public User(String firstName, String lastName, String email,
 			String password, String phoneNr) throws Exception {
@@ -161,6 +162,14 @@ public class User {
 		} else {
 			throw new Exception("Coordinate is not valid");
 		}
+	}
+	
+	public String getPosition() {
+		return position;
+	}
+	
+	public void setPosition(String position) {
+		this.position = position;
 	}
 
 }

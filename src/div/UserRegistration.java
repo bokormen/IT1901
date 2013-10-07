@@ -18,7 +18,7 @@ public class UserRegistration {
 		users.add(user);
 		
 		DatabaseConnector.open();
-		DatabaseConnector.newUser(email, firstName + lastName, phoneNr, password, "15.0,7.4");
+		DatabaseConnector.newUser(email, firstName, lastName, phoneNr, password, "15.0,7.4");
 		DatabaseConnector.close();
 	}
 	
