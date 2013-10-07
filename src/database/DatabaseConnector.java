@@ -180,6 +180,11 @@ public class DatabaseConnector {
 		return Sheeps;
 	}
 	
+	/**
+	 * Denne funksjonen tar inn en e-postadresse og sjekker om den eksisterer som en bruker i databasen fra foer av, hvis brukeren eksister, saa returner den true, hvis ikke returnerer den false
+	 * @param user
+	 * @return
+	 */
 	public static boolean userExsist(String user) {
 		try {
 			Statement st = con.createStatement();
@@ -206,6 +211,12 @@ public class DatabaseConnector {
 		return false;
 	}
 	
+	/**
+	 * Denne funksjonen tar inn en e-post adresse og et passord, foerst sjekker den om e-posten er registrert paa en bruker, saa sjekker den om passordet som er gitt stemmer med brukerens passord, hvis brukernavnet eksisterer og passordet er riktig, saa returneres true, hvis ikke returneres false
+	 * @param user
+	 * @param password
+	 * @return
+	 */
 	public static boolean login(String user, String password) {
 		try {
 			if (!userExsist(user)) {
