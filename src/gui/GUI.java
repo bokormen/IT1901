@@ -28,7 +28,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
-import com.sun.deploy.util.SessionState;
+//import com.sun.deploy.util.SessionState;
 import components.MyBorder;
 import components.MyButton;
 import components.MyImagePanel;
