@@ -21,8 +21,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 
-public class MyPasswordField extends JPasswordField implements FocusListener,
-		DocumentListener {
+public class MyPasswordField extends JPasswordField implements FocusListener, DocumentListener {
 	private JTextField jpf;
 	private Icon icon;
 	private Icon iconStored;
@@ -41,14 +40,14 @@ public class MyPasswordField extends JPasswordField implements FocusListener,
 		this.setCaretColor(Color.WHITE);
 
 		try {
-			this.iconStored = new ImageIcon(ImageIO.read(this.getClass()
-					.getClassLoader().getResource("images/" + icon + ".png")));
+			this.iconStored = new ImageIcon(ImageIO.read(this.getClass().getClassLoader()
+					.getResource("images/" + icon + ".png")));
 			this.icon = iconStored;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		this.border = new MyBorder();
+		this.border = new MyBorder(20);
 		this.setBorder(border);
 		// JTextField dummy = new JTextField();
 		this.dummyInsets = border.getBorderInsets(jpf);
@@ -87,8 +86,7 @@ public class MyPasswordField extends JPasswordField implements FocusListener,
 			int x = (width - icon.getIconWidth()) / 2;
 			Graphics2D g2d = (Graphics2D) g;
 			RenderingHints hints = g2d.getRenderingHints();
-			g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-					RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+			g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 			g2d.drawString(hint, x, textBottom);
 			g2d.setRenderingHints(hints);
 			g.setFont(prev);
