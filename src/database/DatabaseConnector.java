@@ -179,4 +179,55 @@ public class DatabaseConnector {
 		
 		return Sheeps;
 	}
+	
+	public static boolean userExsist(String user) {
+		try {
+			Statement st = con.createStatement();
+			
+			String query = "Select U.Email From User as U WHERE U.Email="+user+";";
+			
+			ResultSet rs = st.executeQuery(query);
+			
+			int counter=0;
+			
+			while (rs.next()) {
+				counter++;
+			}
+			
+			if (counter==0) {
+				return false;
+			}else{
+				return true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public static boolean login(String user, String password) {
+		try {
+			if (!userExsist(user)) {
+				return false;
+			}
+			Statement st = con.createStatement();
+			
+			String query = "Select U.Email, U.Password From User as U WHERE U.Email="+user+";";
+			
+			ResultSet rs = st.executeQuery(query);
+			
+			while (rs.next()) {
+				if (rs.getString(1)==password) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
 }
