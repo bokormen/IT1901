@@ -11,6 +11,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -26,6 +28,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
+import com.sun.deploy.util.SessionState;
 import components.MyBorder;
 import components.MyButton;
 import components.MyImagePanel;
@@ -33,6 +36,7 @@ import components.MyMap;
 import components.MyPasswordField;
 import components.MyTextField;
 
+import div.ClientConnection;
 import div.Sheep;
 import div.User;
 
@@ -45,16 +49,26 @@ import div.User;
 public class GUI extends JFrame {
 
 	public static void main(String args[]) {
-		GUI f = new GUI();
-		f.setVisible(true);
-	}
+
+        GUI f = new GUI();
+        f.setVisible(true);
+
+        if (ClientConnection.ConnectedToServer) {
+            try {
+                ClientConnection.close();
+            } catch (IOException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        }
+
+    }
 
 	// plasserer alt bedre! login specially
 
 	private int width;
 	private int height;
 
-	private User user; // gitt bruker etter en har logget pŒ
+	private User user; // gitt bruker etter en har logget pï¿½
 	private User tUser = new User(); // test bruker
 
 	public static int START = 0, LOGIN = 1, REG = 2, FORGOT = 3, MAIN = 4,
@@ -76,7 +90,9 @@ public class GUI extends JFrame {
 	private GoogleStaticMap googleStaticMap;
 	private KartverketStaticMap kartverketStaticMap;
 
-	// private ClientConnection cc;
+    //serverip
+    private InetAddress serverIP;
+
 
 	public GUI() {
 		super("Tittel");
@@ -96,7 +112,13 @@ public class GUI extends JFrame {
 		googleStaticMap = new GoogleStaticMap();
 		kartverketStaticMap = new KartverketStaticMap();
 
-		// cc = new ClientConnection();
+        //aapne tilkoppling til server
+        try {
+            serverIP = InetAddress.getLocalHost(); //default satt til localhost
+            ClientConnection.open(serverIP);
+        } catch (UnknownHostException e) {
+            System.err.println("Could not find address: " + serverIP.toString());
+        }
 
 		Server.addUsers(); // Legger til brukere til testing
 
@@ -117,7 +139,7 @@ public class GUI extends JFrame {
 
 		createPanels(lp);
 
-		createComponentArrays(); // igjen for Œ legge til objektene
+		createComponentArrays(); // igjen for ï¿½ legge til objektene
 		// setFocusListener(); // legger til focusListener til alle text
 		// feltene.
 
@@ -160,7 +182,7 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Lager to paneler fordelt pŒ: leftPanel (width/3) og rightPanel
+	 * Lager to paneler fordelt pï¿½: leftPanel (width/3) og rightPanel
 	 * (2*width/3)
 	 * 
 	 * @param lp
@@ -549,8 +571,8 @@ public class GUI extends JFrame {
 		lp.add(regShepardField);
 	}
 
-	// setter sammen listene med de ulike kompoentene for Œ da gŒ igjennom
-	// l¿kker for Œ sette de riktige komponentene synlige og usynlige.
+	// setter sammen listene med de ulike kompoentene for ï¿½ da gï¿½ igjennom
+	// lï¿½kker for ï¿½ sette de riktige komponentene synlige og usynlige.
 	/**
 	 * Sets together the different lists of components that are showing in the
 	 */
@@ -650,10 +672,10 @@ public class GUI extends JFrame {
 	}
 
 	// Lage en metode som plasserer de ulie komponentene fint auomatisk. Uten at
-	// en trenger Œ sette bounds pŒ alle.
+	// en trenger ï¿½ sette bounds pï¿½ alle.
 	private void placeComponentsNeat(ArrayList<Component> list) {
-		int cw = width / 6; // bredden pŒ hver boks
-		int ch = 3 * height / 40; // h¿yden pŒ hver boks
+		int cw = width / 6; // bredden pï¿½ hver boks
+		int ch = 3 * height / 40; // hï¿½yden pï¿½ hver boks
 		int rh = height * 8 / 10; // nederste 20% til back og exit button
 
 		ArrayList<Component> labelList = new ArrayList<Component>();
@@ -670,7 +692,7 @@ public class GUI extends JFrame {
 				buttonList.add(c);
 			}
 		}
-		int ih = 1; // h¿yden for alle labels og feilds
+		int ih = 1; // hï¿½yden for alle labels og feilds
 
 		for (Component c : buttonList) {
 
@@ -1084,7 +1106,7 @@ public class GUI extends JFrame {
 	 * 
 	 */
 	private class MyListener implements ActionListener {
-		// bruke setActionCommand pŒ alt som skal lyttes pŒ og bruke det
+		// bruke setActionCommand pï¿½ alt som skal lyttes pï¿½ og bruke det
 		// istedenfor navn?
 		@Override
 		public void actionPerformed(ActionEvent arg) {
@@ -1100,8 +1122,8 @@ public class GUI extends JFrame {
 							changeToRegisterInterface(false);
 							changeToLoginInterface(true);
 						} else {
-							// istdenfor boolean fra registerUser() fŒ tall for
-							// Œ finne ut om hvilke verdier som er feil
+							// istdenfor boolean fra registerUser() fï¿½ tall for
+							// ï¿½ finne ut om hvilke verdier som er feil
 							// Noe lignende med login!
 						}
 					} else {
@@ -1112,7 +1134,7 @@ public class GUI extends JFrame {
 					// sjekker: hvis man er i login interface og trykker login
 					// ->
 					if (state == 1) {
-						// metode for Œ sjekke om brukernavn og passord stemmer
+						// metode for ï¿½ sjekke om brukernavn og passord stemmer
 						login();
 					} else {
 						changeToStartInterface(false);
@@ -1121,7 +1143,7 @@ public class GUI extends JFrame {
 				} else if (text.equals("          Exit")) {
 					System.exit(0);
 				} else if (text.equals("          Back")) {
-					// state holder styr pŒ hvor man er, sŒ programet vet hvor
+					// state holder styr pï¿½ hvor man er, sï¿½ programet vet hvor
 					// en
 					// skal sendes tilbake til
 					if (state == LOGIN) {
@@ -1229,7 +1251,7 @@ public class GUI extends JFrame {
 		}
 	}
 
-	// Lytter for Œ hŒndtere tid. Til komponenter som skal flyttes over tid.
+	// Lytter for ï¿½ hï¿½ndtere tid. Til komponenter som skal flyttes over tid.
 	// Animasjoner!
 	/**
 	 * A class that handles time. Can be used for animations.

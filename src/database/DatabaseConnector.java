@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.DriverManager;
 
+//la til noe bare for aa gjoere en endring
+
 //import com.mysql.jdbc.PreparedStatement;
 
 import java.lang.String;
@@ -67,7 +69,7 @@ public class DatabaseConnector {
 	 * @return
 	 * @author Oeyvind
 	 */
-	public static boolean doesUserExcist(String user) {
+	public static boolean doesUserExist(String user) {
 		try {
 			Statement st = con.createStatement();
 			String query = "SELECT Email FROM User WHERE Email = '" + user + "'";
@@ -156,7 +158,7 @@ public class DatabaseConnector {
 			int i=0;
 			while(rs.next()) {
 				
-				Sheep sau = new Sheep(rs.getInt(0),rs.getInt(6),rs.getInt(3),rs.getString(1).charAt(0), rs.getString(7));
+				Sheep sau = new Sheep(Integer.toString(rs.getInt(0)),rs.getInt(6),rs.getInt(3),rs.getString(1).charAt(0), rs.getString(7));
 				
 				Sheeps.add(sau); //Maa sansynligvis endres litt da constructoren ikke ser ut til aa ta hensyn til all infoen
 				Statement st2 = con.createStatement();

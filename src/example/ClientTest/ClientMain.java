@@ -17,7 +17,7 @@ public class ClientMain {
     public static void main(String args[]) throws IOException {
 
         //create connection to server
-        ClientConnection ccon = new ClientConnection();
+        ClientConnection.open(null);
 
         //input from console
         BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
@@ -27,13 +27,13 @@ public class ClientMain {
         //read input from console, send to server and get reponse
         while ((fromUser = stdIn.readLine()) != null) {
 
-            fromServer = ccon.getDataFromServer(fromUser);
+            fromServer = ClientConnection.sendServerMsg(fromUser);
             System.out.println(fromServer);
             if (fromServer.equals("bye")) {
                 break;
             }
         }
 
-        ccon.close();  //close connection
+        ClientConnection.close();  //close connection
     }
 }

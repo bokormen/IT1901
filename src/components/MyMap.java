@@ -49,7 +49,7 @@ public class MyMap extends JPanel implements MouseListener, MouseMotionListener 
 		}
 		try {
 			for (int i = 0; i < 10; i++) {
-				sheeps.add(new Sheep(0, 0, 10, 'm', "Andy"));
+				sheeps.add(new Sheep("bob", 0, 10, 'm', "Andy"));
 				sheeps.get(sheeps.size() - 1).newLocation(loc[i], "01/01/2000");
 			}
 		} catch (Exception e) {

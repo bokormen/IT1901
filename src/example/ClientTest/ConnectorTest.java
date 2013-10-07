@@ -11,7 +11,7 @@ import database.DatabaseConnector;
  */
 public class ConnectorTest {
     public static void main(String args[]) {
-        DatabaseConnector.open();
-        DatabaseConnector.newUser("frodo@hotmail.com", "frodo", "47999999", "gandalf", "19.5,19.4");
+        //DatabaseConnector.open();
+        //DatabaseConnector.newUser("frodo@hotmail.com", "frodo", "47999999", "gandalf", "19.5,19.4");
     }
 }
