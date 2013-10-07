@@ -103,7 +103,7 @@ public class DatabaseConnector {
 		try {
 			Statement st = con.createStatement();
 			
-			String linje = "INSERT INTO `User` (`Email`, `Name`, `Tlf`, `Password`, `Location`) VALUES "+
+			String linje = "INSERT INTO `User` (`Email`, `FistName`, `LastName`, `Tlf`, `Password`, `Location`) VALUES "+
 			String.format("(\"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")", email,firstName,lastName,phoneNumber,password,location);
 			
 			st.executeUpdate(linje);
