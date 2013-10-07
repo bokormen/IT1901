@@ -33,6 +33,16 @@ public class SheepLocation {
 		return position + "-" + date;
 	}
 	
+	public String getLatitude() {
+		String[] positionA = position.split(",");
+		return positionA[0];
+	}
+	
+	public String getLongitude() {
+		String[] positionA = position.split(",");
+		return positionA[1];
+	}
+	
 
 
 }

@@ -21,16 +21,17 @@ public class User {
 	
 	private SheepRegistration sheepReg;
 
-	public User(String firstName, String lastName, String email,
-			String password, String phoneNr) throws Exception {
+	public User(String firstName, String lastName, String email, String phoneNr, String location) throws Exception {
 		sheepReg = new SheepRegistration();
 		
 		setFirstName(firstName);
 		setLastName(lastName);
 		setEmail(email);
-		setPassword(password);
+		//setPassword(password);
 		setPhoneNr(phoneNr);
+		setPosition(location);
 	}
+
 
 	public User() {
 
