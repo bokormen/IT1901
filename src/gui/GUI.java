@@ -36,9 +36,11 @@ import components.MyPasswordField;
 import components.MySheepButton;
 import components.MyTextField;
 
+import div.ClientConnection;
 import div.MyPoint;
 import div.Sheep;
 import div.User;
+import div.UserRegistration;
 
 /**
  * A class that handles the GUI
@@ -49,6 +51,7 @@ import div.User;
 public class GUI extends JFrame {
 
 	public static void main(String args[]) {
+		ClientConnection.open(null);
 		GUI f = new GUI();
 		f.setVisible(true);
 	}
@@ -80,8 +83,6 @@ public class GUI extends JFrame {
 	private JLayeredPane lp;
 
 	private KartverketStaticMap kartverketStaticMap;
-
-	// private ClientConnection cc;
 
 	public GUI() {
 		super("Tittel");
@@ -882,32 +883,47 @@ public class GUI extends JFrame {
 		}
 
 		if (password.equals(password2)) {
-			int num = Server.sendInformationRegisterUser(firstName, lastName, email, password2, phoneNr);
-			if (num == 1) { // fikk registrert bruker
-				Color white = Color.white;
-				unField.setText(email);
-				for (JComponent c : registerComps) {
-					if (c instanceof MyTextField || c instanceof MyPasswordField) {
-						((MyTextField) c).setText("");
-						((MyBorder) c.getBorder()).setColor(white);
-					}
-				}
+			try {
+				UserRegistration.registerUser(firstName, lastName, email, password2, phoneNr);
+				System.out.println("asd");
 				return true;
-			} else if (num == -1) {
-				((MyBorder) regNameField.getBorder()).setColor(invalid);
-			} else if (num == -2) {
-				((MyBorder) regNameField.getBorder()).setColor(invalid);
-			} else if (num == -3) {
-				((MyBorder) regEmailField.getBorder()).setColor(invalid);
-			} else if (num == -4) {
-				((MyBorder) regPhoneField.getBorder()).setColor(invalid);
-			} else if (num == -5) {
-				((MyBorder) regPwField.getBorder()).setColor(invalid);
-				((MyBorder) regPwField2.getBorder()).setColor(invalid);
+			} catch (Exception e) {
+				if (e.getMessage().equals("First name is not valid")) {
+					((MyBorder) regNameField.getBorder()).setColor(invalid);
+				} else if (e.getMessage().equals("Last name is not valid")) {
+				} else if (e.getMessage().equals("Email is not valid")) {
+				} else if (e.getMessage().equals("Phone number not valid")) {
+				} else if (e.getMessage().equals("Password is not valid")) {
+				}
+				System.out.println(e.getLocalizedMessage());
+				e.printStackTrace();
 			}
-		} else {
-			((MyBorder) regPwField.getBorder()).setColor(invalid);
-			((MyBorder) regPwField2.getBorder()).setColor(invalid);
+//			int num = Server.sendInformationRegisterUser(firstName, lastName, email, password2, phoneNr);
+//			if (num == 1) { // fikk registrert bruker
+//				Color white = Color.white;
+//				unField.setText(email);
+//				for (JComponent c : registerComps) {
+//					if (c instanceof MyTextField || c instanceof MyPasswordField) {
+//						//((MyTextField) c).setText("");
+//						//((MyBorder) c.getBorder()).setColor(white);
+//					}
+//				}
+//				return true;
+//			} else if (num == -1) {
+//				((MyBorder) regNameField.getBorder()).setColor(invalid);
+//			} else if (num == -2) {
+//				((MyBorder) regNameField.getBorder()).setColor(invalid);
+//			} else if (num == -3) {
+//				((MyBorder) regEmailField.getBorder()).setColor(invalid);
+//			} else if (num == -4) {
+//				((MyBorder) regPhoneField.getBorder()).setColor(invalid);
+//			} else if (num == -5) {
+//				((MyBorder) regPwField.getBorder()).setColor(invalid);
+//				((MyBorder) regPwField2.getBorder()).setColor(invalid);
+//			}
+//		} else {
+//			((MyBorder) regPwField.getBorder()).setColor(invalid);
+//			((MyBorder) regPwField2.getBorder()).setColor(invalid);
 		}
 		return false;
 	}
