@@ -232,7 +232,12 @@ public class DatabaseConnector {
 			
 			while (rs.next()) {
 				if (rs.getString(1)==password) {
-					farmer=new User(rs.getString(2),rs.getString(3),rs.getString(0),rs.getString(4),rs.getString(5));
+					try {
+						farmer=new User(rs.getString(2),rs.getString(3),rs.getString(0),rs.getString(4),rs.getString(5));
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				} 
 			}
 			
