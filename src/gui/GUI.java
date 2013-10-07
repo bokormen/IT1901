@@ -295,6 +295,7 @@ public class GUI extends JFrame {
 		backButton.setBorder(BorderFactory.createEmptyBorder());
 		backButton.setHorizontalTextPosition(SwingConstants.CENTER);
 		backButton.setVisible(false);
+        backButton.setContentAreaFilled(false);
 
 		exitButton = new JButton("          Exit", new ImageIcon(this
 				.getClass().getClassLoader().getResource("images/sheep.png")));
@@ -303,6 +304,7 @@ public class GUI extends JFrame {
 		exitButton.setBorder(BorderFactory.createEmptyBorder());
 		exitButton.setHorizontalTextPosition(SwingConstants.CENTER);
 		exitButton.setVisible(false);
+        exitButton.setContentAreaFilled(false);
 
 		lp.add(loginButton);
 		lp.add(registerButton);
