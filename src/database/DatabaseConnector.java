@@ -211,4 +211,122 @@ public class DatabaseConnector {
 		}
 		return false;
 	}
+	
+	/**
+	 * Denne funksjonen tar inn en e-postadresse og et passord og sjekker om brukeren eksisterer og at passordet til brukeren er riktig, hvis alt er der og alt stemmer, saa returners brukeren
+	 * @param user
+	 * @param password
+	 * @return
+	 */
+	public static User loginUser(String user, String password) {
+		User farmer=null;
+		try {
+			if (!doesUserExsist(user)) {
+				return null;
+			}
+			Statement st = con.createStatement();
+			
+			String query = "Select U.Email, U.Password, U.FirstName, U.LastName, U.TLF, U.Location From User as U WHERE U.Email="+user+";";
+			
+			ResultSet rs = st.executeQuery(query);
+			
+			while (rs.next()) {
+				if (rs.getString(1)==password) {
+					farmer=new User(rs.getString(2),rs.getString(3),rs.getString(0),rs.getString(4),rs.getString(5));
+				} 
+			}
+			
+			return farmer;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return farmer;
+	}
+	
+	/**
+	 * Tar inn en saue id og sjekker om sauen eksister i databasen
+	 * @param id
+	 * @return
+	 * @author Oeyvind
+	 */
+	public static boolean doesSheepExsist(int id) {
+		try {
+			Statement st = con.createStatement();
+			String query = "SELECT ID FROM Sheep WHERE ID = '" + id + "'";
+			ResultSet rs= st.executeQuery(query);
+			int matchingSheeps=0;
+			while(rs.next()) {
+				matchingSheeps+=1;
+			}
+			if (matchingSheeps>0) {
+				return true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	/**
+	 * Denne funksjonen tar inn en e-postadresse og en saue id og sjekker foerst om sauen eksisterer og saa om sauen er eid av e-postadressen som blir sent med. Returnerer true om sauen eksisterer og e-postadressen som er oppgitt er satt som owner hos sauen
+	 * @param user
+	 * @param ID
+	 * @return
+	 */
+	public static boolean doesUserOwnSheep(String user,int ID) {
+		if (!doesSheepExsist(ID)) {
+			return false;
+		}
+		try {
+			Statement st = con.createStatement();
+			String query = "SELECT S.ID FROM Sheep AS S WHERE S.Owner = '" + user + "' AND S.ID = "+ID;
+			ResultSet rs= st.executeQuery(query);
+			int matchingSheeps=0;
+			while(rs.next()) {
+				matchingSheeps+=1;
+			}
+			if (matchingSheeps>0) {
+				return true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	/**
+	 * Denne funksjonen tar inn en e-postadresse og en saue id og returnerer sauen om sauen eksisterer og brukeren eier den.
+	 * @param user
+	 * @param ID
+	 * @return
+	 * @author Oeyvind
+	 */
+	public static Sheep findSheep(String user,int ID) {
+		if (!doesUserOwnSheep(user,ID)) {
+			return null;
+		}
+		try {
+			Statement st = con.createStatement();
+			String query = "SELECT S.ID, S.Gender, S.Shepherd, S.Weight, S.Heartrate, S.Temperature, S.Age, S.Shepherd FROM Sheep AS S WHERE S.Owner = '" + user + "' AND S.ID = "+ID;
+			ResultSet rs= st.executeQuery(query);
+			Sheep sau = null;
+			while(rs.next()) {
+				try {
+					sau = new Sheep(rs.getInt(0),rs.getInt(6),rs.getInt(3),rs.getString(1).charAt(0), rs.getString(7));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			return sau;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 }
