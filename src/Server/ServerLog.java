@@ -15,7 +15,7 @@ public class ServerLog {
 
 
     //Prints a log entry to file
-    public void addEntry(String entry) throws IOException {
+    public void addEntry(String entry) {
 
         Date d = new Date(); //gets time
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss"); //formats time
@@ -24,7 +24,11 @@ public class ServerLog {
 
         if (bufferCount > bufferLimit) { //flush the buffer and write to file when bufferLimit reached
             out.close();
-            out = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)));
+            try {
+                out = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)));
+            } catch (IOException e) {
+                System.err.println("Error opening log file.");
+            }
             bufferCount = 0;
         } else {
             bufferCount++;

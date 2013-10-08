@@ -8,6 +8,10 @@ import database.DatabaseConnector;
 //handles the input from clients
 public class ComProtocol {
 
+    public boolean isLoggedIn = false;
+    public String ClientIP = null;
+    private ServerLog log = null;
+    private String UserName = null;
     private static final int WAIT = 1001;
     private static final int REGISTERUSER = 1002;
     private static final int REGISTERSHEEP = 1003;
@@ -18,8 +22,17 @@ public class ComProtocol {
 
     private int state = WAIT;
 
+    //constructor
+    public ComProtocol(String IP, boolean login, ServerLog clientlog) {
+        ClientIP = IP;
+        isLoggedIn = login;
+        log = clientlog;
+    }
+
+
+
     //Haandterer input fra bruker
-    public String processInput(String theInput, ServerClientThread sct) throws IOException {
+    public String processInput(String theInput) throws IOException {
         String theOutput = "";
 
         //hvis state er WAIT saa venter serveren paa et signal om hva den skal gj0re
@@ -38,75 +51,128 @@ public class ComProtocol {
 
             } else if (theInput.equals("quit")) { // bruker vil avslutte
                 theOutput = "bye";
-
+            } else {
+                theOutput = "command no exists";
             }
 
         // I denne staten venter server paa input fra bruker med info om registrering
-        //Input eksempel: "email||firstName||lastName||phoneNumber||password||location"
+        //Input: "email||firstName||lastName||phoneNumber||password||location"
         } else if (state == REGISTERUSER) {
 
             if (theInput != null) {
-                regiserUser(theInput);
+                theOutput = registerUser(theInput);
+            } else {
+                theOutput = "reguser null input";
             }
 
-            theOutput = "done";
             state = WAIT;
 
-        //IKKE FERDIG
+        // I denne staten venter server paa input fra bruker med info om registrering av sau
+        //Input: "id||Eiernavn||shepherd||weight||75||39||age"
+        } else if (state == REGISTERSHEEP) {
+
+            if (theInput != null) {
+                if (isLoggedIn) {
+                    theOutput = registerSheep(theInput);
+                } else {
+                    theOutput = "regsheep no login";
+                }
+            } else {
+                theOutput = "regsheep null input";
+            }
+
+            state = WAIT;
+
+        //Venter paa login
+        //Input: "email||password"
         } else if (state == LOGIN) {
 
             if (theInput != null) {
-                userLogin(theInput);
-            }
-            state = WAIT;
-        }
-
-        //FOR TESTING
-        else if (state == TESTING) {
-            if (theInput.equalsIgnoreCase("hello world!")) {
-                theOutput = "Hello User";
+                theOutput = userLogin(theInput);
             } else {
-                theOutput = "exit";
+                theOutput = "login null input";
             }
+
+            state = WAIT;
+        } else {
+            theOutput = "err";
         }
 
         return theOutput;
     }
 
-    private void userLogin(String theInput) {
-        String[] temp = theInput.split("\\|\\|"); //split the input string on ||
-        if (temp.length == 2) {
-            if (!DatabaseConnector.doesUserExsist(temp[0])) {
-                DatabaseConnector.login(temp[0], temp[1]);
-            }
-        }
-    }
 
-    //registers a user in the database
-    //typical input string is: "email||firstName||lastName||phoneNumber||password||location"
-    //example "frodo@hotmail.com||frodo||baggins||1234566||gandalf||19.2,19.3"
 
-    private void regiserUser(String theInput) {
+    // =============================================
+    // ===============FUNKSJONER====================
+    // =============================================
 
-        String[] temp = theInput.split("\\|\\|"); //split the input string on ||
+
+    //registrere en bruker i databasen
+    //typisk input string er: "email||firstName||lastName||phoneNumber||password||location"
+    //eksempel "frodo@hotmail.com||frodo||baggins||12345678||gandalf||19.2,19.3"
+
+    private String registerUser(String theInput) {
+
+        String[] temp = theInput.split("\\|\\|"); //splitter input ved ||
         if (temp.length == 6) {
             if (!DatabaseConnector.doesUserExsist(temp[0])) {
                 DatabaseConnector.newUser(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5]);
+                log.addEntry(ClientIP + " registered new user (" + temp[0] + ").");
+                return "reguser success";
+            } else {
+                return "reguser exists";
             }
+        } else {
+            return "reguser bad input";
         }
 
     }
 
-    //ikke brukt
-    public void changeState(String newstate) {
-        if (newstate.equals("wait")) {
-            state = WAIT;
 
-        } else if (newstate.equals("register")) {
-            state = REGISTERUSER;
+    //registrere en sau i databasen
+    //typisk input string er: "id||Eiernavn||shepherd||weight||75||39||age"
+    //eksempel "id||Eiernavn||shepherd||weight||75||39||age"
 
-        } else if (newstate.equals("login")) {
-            state = LOGIN;
+    private String registerSheep(String theInput) {
+
+        String[] temp = theInput.split("\\|\\|"); //splitter input ved ||
+        if (temp.length == 7) {
+            if (!DatabaseConnector.doesSheepExsist(temp[0])) {
+                DatabaseConnector.newSheep(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5], temp[6]);
+                log.addEntry(ClientIP + "[" + UserName + "] registered new sheep (" + temp[0] + ").");
+                return "regsheep success";
+            } else {
+                return "regsheep exists";
+            }
+        } else {
+            return "regsheep bad input";
+        }
+
+    }
+
+
+    //logger inn en bruker
+    //typisk input string er: "email||passord"
+    //eksempel "frodo@hotmail.com||gandalf"
+    private String userLogin(String theInput) {
+        String[] temp = theInput.split("\\|\\|"); //split the input string on ||
+        if (temp.length == 2) {
+            if (DatabaseConnector.doesUserExsist(temp[0])) {
+                if (DatabaseConnector.login(temp[0], temp[1])) {
+                    isLoggedIn = true;
+                    UserName = temp[0];
+                    log.addEntry(ClientIP + "[" + UserName + "] logged in.");
+                    return "login success";
+                } else {
+                    return "login wrong password";
+                }
+            } else {
+                return "login no exists";
+            }
+        } else {
+            return "login bad input";
         }
     }
+
 }

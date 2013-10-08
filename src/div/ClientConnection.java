@@ -46,6 +46,43 @@ public class ClientConnection {
         }
     }
 
+    //haandterer feilmeldinger fra server her.
+    public static void handleError(String err) {
+
+        //exception error
+        if (err.equals("err")) {
+            System.out.println(err);
+
+        //reguser errors
+        } else if (err.equals("reguser null input")) {
+            System.out.println(err);
+        } else if (err.equals("reguser exists")) {
+            System.out.println(err);
+        } else if (err.equals("reguser bad input")) {
+            System.out.println(err);
+
+        //regsheep errors
+        } else if (err.equals("regsheep no login")) {
+            System.out.println(err);
+        } else if (err.equals("regsheep null input")) {
+            System.out.println(err);
+        } else if (err.equals("regsheep exists")) {
+            System.out.println(err);
+        } else if (err.equals("regsheep bad input")) {
+            System.out.println(err);
+
+        //login errors
+        } else if (err.equals("login null input")) {
+            System.out.println(err);
+        } else if (err.equals("login wrong password")) {
+            System.out.println(err);
+        } else if (err.equals("login no exists")) {
+            System.out.println(err);
+        } else if (err.equals("login bad input")) {
+            System.out.println(err);
+        }
+    }
+
 
     //aapner en socket til server med gitt ip adresse
     public static void open(InetAddress ip) {

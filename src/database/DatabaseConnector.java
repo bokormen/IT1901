@@ -124,7 +124,7 @@ public class DatabaseConnector {
 	 * @param age
 	 * @author Oeyvind
 	 */
-	public static void newSheep(String name, String owner, String shepherd, int weight, int heartrate, int temperature, int age) {
+	public static void newSheep(String name, String owner, String shepherd, String weight, String heartrate, String temperature, String age) {
 		try {
 			Statement st = con.createStatement();
 			
@@ -255,7 +255,7 @@ public class DatabaseConnector {
 	 * @return
 	 * @author Oeyvind
 	 */
-	public static boolean doesSheepExsist(int id) {
+	public static boolean doesSheepExsist(String id) {
 		try {
 			Statement st = con.createStatement();
 			String query = "SELECT ID FROM Sheep WHERE ID = '" + id + "'";
@@ -280,7 +280,7 @@ public class DatabaseConnector {
 	 * @param ID
 	 * @return
 	 */
-	public static boolean doesUserOwnSheep(String user,int ID) {
+	public static boolean doesUserOwnSheep(String user,String ID) {
 		if (!doesSheepExsist(ID)) {
 			return false;
 		}
@@ -309,7 +309,7 @@ public class DatabaseConnector {
 	 * @return
 	 * @author Oeyvind
 	 */
-	public static Sheep findSheep(String user,int ID) {
+	public static Sheep findSheep(String user,String ID) {
 		Sheep sheep = null;
 		try {
 			Statement st = con.createStatement();

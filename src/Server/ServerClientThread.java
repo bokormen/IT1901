@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 
-//Thread that handles communication with a client
+//Traad som haandterer komunikasjon med klient
 public class ServerClientThread extends Thread {
 
     //some variables
@@ -15,9 +15,8 @@ public class ServerClientThread extends Thread {
     private PrintWriter out = null;
     private BufferedReader in = null;
     protected ServerLog log = null;
-    protected boolean isLoggedIn = false;
 
-    //start running a new thread.
+    //Starter en ny traad
     public void run() {
 
         try {
@@ -25,14 +24,17 @@ public class ServerClientThread extends Thread {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             String inputLine, outputLine;
-            ComProtocol com = new ComProtocol();
 
-            log.addEntry(getClientAddress() + " connected."); //log
+            String ClientIP = getClientAddress();
+            ComProtocol com = new ComProtocol(ClientIP, false, log); //opretter komunikasjons protokollen, all komunikasjon med klient blir prosessert her
+            log.addEntry(ClientIP + " connected."); //loggf0rer
 
-            //read input from client and process
+            //les input fra klient socket og prosesser input
             while ((inputLine = in.readLine()) != null) {
-                outputLine = com.processInput(inputLine, this);
+                outputLine = com.processInput(inputLine);
                 out.println(outputLine);
+
+                //litt ekstra prosessering
                 if (outputLine.equals("quit"))
                     break;
             }
@@ -49,12 +51,12 @@ public class ServerClientThread extends Thread {
         }
     }
 
-    //gets the client ip
+    //finner klient ip
     public String getClientAddress() {
         return socket.getInetAddress().toString();
     }
 
-    //close inputstreams and socket
+    //lukker socket og inputstreams
     public void close() throws IOException {
         log.addEntry(getClientAddress() + " disconnected.");
         out.close();
@@ -62,7 +64,7 @@ public class ServerClientThread extends Thread {
         socket.close();
     }
 
-    //close inputstreams and socket without logging
+    //lukker input strems uten logf0ring, fikser dobbel logf0ring i enkelte tilfeller
     public void closeNoLog() throws IOException {
         out.close();
         in.close();
@@ -70,7 +72,7 @@ public class ServerClientThread extends Thread {
     }
 
 
-    //constructor
+    //konstrukt0r
     public ServerClientThread(Socket socket, ServerLog log) {
         super("MultiServerThread"); //invokes the thread constructor
         this.socket = socket;
