@@ -17,7 +17,7 @@ public class ClientConnection {
     //sender en foresp0rsel til database
     //retningslinjer for komunikasjon ligger i Server.ComProtocol klassen
 
-    public static String sendServerQuery(String command, String query) throws IOException {
+    public static String sendServerQuery(String command, String query) {
 
         String response;
         response = sendServerMsg(command);
@@ -109,9 +109,14 @@ public class ClientConnection {
 
 
     //husk å lukke input og output streams når du er ferdig
-    public static void close() throws IOException {
-        out.close();
-        in.close();
-        ClientSocket.close();
+    public static void close() {
+        try {
+            out.close();
+            in.close();
+            ClientSocket.close();
+        } catch (IOException e) {
+            System.out.println("Error closing connection");
+        } catch (NullPointerException e) {
+        }
     }
 }

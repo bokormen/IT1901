@@ -1,8 +1,6 @@
 package div;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import database.DatabaseConnector;
 
 
 /**
@@ -11,13 +9,9 @@ import database.DatabaseConnector;
  *
  */
 public class UserRegistration {
-	
-	private  static ArrayList<User> users = new ArrayList<User>();
 
-	public static void registerUser(String firstName, String lastName, String email, String password, String phoneNr, String location) throws Exception {
-		User user = new User(firstName, lastName, email, phoneNr, "69.10,10.30");
-		users.add(user);
 
+	public static boolean registerUser(String firstName, String lastName, String email, String password, String phoneNr, String location)  {
 
         //Lager en foresp0rsel til server.
         //retiningslinjer for kommunikasjon med server vil til en hver tid ligge i server.ComProtocol klassen
@@ -30,13 +24,11 @@ public class UserRegistration {
         if (!serverResponse.equals("reguser success")) {
             ClientConnection.handleError(serverResponse);
             System.out.println("Error. Can't register user");
+            return false;
+        } else {
+            return true;
         }
-
 	}
-	
-	public void deleteUser(User user) {
-		users.remove(user);
-	}	
 
 	public User login(String email, String password) {
 
@@ -44,12 +36,7 @@ public class UserRegistration {
         String query = email + "||" + password;
 
         //sender foresp0rselen til serveren og faar tilbake respons
-        String serverResponse;
-        try {
-            serverResponse = ClientConnection.sendServerQuery("login", query);
-        } catch (IOException e) {
-            serverResponse = "err";
-        }
+        String serverResponse = ClientConnection.sendServerQuery("login", query);
 
         //sjekke at melding ble mottatt
         if (!serverResponse.equals("login success")) {
@@ -61,6 +48,11 @@ public class UserRegistration {
     }
 	
 	public ArrayList<User> getUsers() {
+        ArrayList<User> users = new ArrayList<User>();
 		return users;
 	}
+
+    public void deleteUser(User user) {
+        //ikke ferdig
+    }
 }

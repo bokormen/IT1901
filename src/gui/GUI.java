@@ -1199,11 +1199,7 @@ public class GUI extends JFrame {
 						changeToLoginInterface(true);
 					}
 				} else if (text.equals("          Exit")) {
-                    try {
-                        ClientConnection.close();
-                    } catch (IOException e) {
-                        System.out.println("Could not close connection.");
-                    }
+                    ClientConnection.close();
                     System.exit(0);
                 } else if (text.equals("          Back")) {
 					// state holder styr p� hvor man er, s� programet vet hvor
