@@ -5,10 +5,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -52,8 +49,15 @@ public class GUI extends JFrame {
 
 	public static void main(String args[]) {
 		ClientConnection.open(null);
-		GUI f = new GUI();
+		final GUI f = new GUI();
 		f.setVisible(true);
+
+        // naar x klikkes saa simuler et klikk paa exitButton
+        f.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                f.exitButton.doClick();
+            }
+        });
 	}
 
 	// plasserer alt bedre! login specially
@@ -1195,8 +1199,13 @@ public class GUI extends JFrame {
 						changeToLoginInterface(true);
 					}
 				} else if (text.equals("          Exit")) {
-					System.exit(0);
-				} else if (text.equals("          Back")) {
+                    try {
+                        ClientConnection.close();
+                    } catch (IOException e) {
+                        System.out.println("Could not close connection.");
+                    }
+                    System.exit(0);
+                } else if (text.equals("          Back")) {
 					// state holder styr p� hvor man er, s� programet vet hvor
 					// en
 					// skal sendes tilbake til
