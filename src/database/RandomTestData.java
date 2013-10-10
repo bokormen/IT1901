@@ -17,10 +17,31 @@ public class RandomTestData {
 		}
 	}
 	
-	public static void deleteAllTestUsers () {
+	public static void sheepsForTestUsers (int maxNumberOfSheepsPrUser) {
 		ArrayList<String> testUsers = DatabaseConnector.getAllTestUserEmail();
 		for (String s : testUsers) {
-			DatabaseConnector.deleteUser(s);
+			int numberOfSheeps=generator.nextInt(maxNumberOfSheepsPrUser);
+			for (int i=0;i<numberOfSheeps;i++) {
+				String name = "testSheep";
+				String owner = s;
+				String gender = Gender.getRandomGender();
+				int weight = generator.nextInt(30)+40;
+				int heartrate = generator.nextInt(100)+50;
+				int birthyear = generator.nextInt(30)+1983;
+				int temperature = generator.nextInt(7)+30;
+				DatabaseConnector.newSheep(name, owner, "", gender, weight, heartrate, temperature, birthyear);
+			}
 		}
 	}
+	
+	private enum Gender {       
+		f,
+		m;
+
+		public static String getRandomGender() {            
+			Random random = new Random();
+			return values()[random.nextInt(values().length)].name();
+			}
+		}
+	
 }

@@ -18,8 +18,8 @@ public class DatabaseConnector {
 	public static Connection con;
 	
 	/**
-	 * @author Oeyvind
 	 * Denne koden aapner en tilkobling til databasen vi bruker i gruppe 10, hoesten 2013i faget IT1901 ved NTNU
+	 * @author Oeyvind
 	 */
 	public static void open() {
 		try {
@@ -54,11 +54,14 @@ public class DatabaseConnector {
 		}
 	}
 	
-	public static void main(String[] args) {
-		open();
-		RandomTestData.deleteAllTestUsers();
-		close();
-	}
+//	public static void main(String[] args) {
+//		open();
+//		deleteTestSheeps();
+//		deleteTestUsers();
+//		RandomTestData.fillDatabaseWithUsers(3);
+//		RandomTestData.sheepsForTestUsers(4);
+//		close();
+//	}
 	
 	/**
 	 * Denne funksjonen sjekker om det eksisterer en bruker i databasen med e-posten som sendes til funksjonen
@@ -115,10 +118,11 @@ public class DatabaseConnector {
 	 * @param name
 	 * @param owner
 	 * @param shepherd
+	 * @param gender
 	 * @param weight
 	 * @param heartrate
 	 * @param temperature
-	 * @param age
+	 * @param birthyear
 	 * @author Oeyvind
 	 */
 	public static void newSheep(String name, String owner, String shepherd, String gender, int weight, int heartrate, int temperature, int birthyear) {
@@ -431,6 +435,44 @@ public class DatabaseConnector {
 		}
 	}
 	
+	/**
+	 * Sletter test sauer fra databasen
+	 * @author Oeyvind
+	 */
+	public static void deleteTestSheeps() {
+		try {
+			Statement st = con.createStatement();
+			
+			String linje ="DELETE FROM `oyvilund_sheep`.`Sheep` WHERE `Name`=\"testSheep\";";
+			
+			st.executeUpdate(linje);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Sletter test brukere fra databasen, innebaerer ogsaa at alle testsauer tilknyttet disse brukerne blir slettet
+	 * @author Oeyvind
+	 */
+	public static void deleteTestUsers() {
+		try {
+			Statement st = con.createStatement();
+			
+			String linje ="DELETE FROM `oyvilund_sheep`.`User` WHERE `FirstName`=\"testuser\";";
+			
+			st.executeUpdate(linje);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Returnerer en liste med e-postadressen til alle brukerene med navnet "testuser"
+	 * @return
+	 */
 	public static ArrayList<String> getAllTestUserEmail() {
 		ArrayList<String> testUsers = new ArrayList<String>( );
 		
