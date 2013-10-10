@@ -10,8 +10,8 @@ public class RandomTestData {
 			String user = "test"+i+"@test.test";
 			String firstName = "testuser";
 			String lastName = Integer.toString(i);
-			String tlf = Integer.toString(generator.nextInt(99999999)+10000000);
-			String password = Integer.toString(generator.nextInt(99999999)+10000000);
+			String tlf = Integer.toString(generator.nextInt(89999999)+10000000);
+			String password = Integer.toString(generator.nextInt(89999999)+10000000);
 			String location = Double.toString(90*generator.nextDouble())+","+Double.toString(90*generator.nextDouble());
 			DatabaseConnector.newUser(user, firstName, lastName, tlf, password, location);
 		}
