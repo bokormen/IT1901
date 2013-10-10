@@ -56,10 +56,7 @@ public class DatabaseConnector {
 	
 	public static void main(String[] args) {
 		open();
-		for (int i = 1;i<7;i++) {
-			String user = "test"+i+"@test.test";
-			deleteUser(user);
-		}
+		RandomTestData.deleteAllTestUsers();
 		close();
 	}
 	
@@ -433,5 +430,29 @@ public class DatabaseConnector {
 			e.printStackTrace();
 		}
 	}
+	
+	public static ArrayList<String> getAllTestUserEmail() {
+		ArrayList<String> testUsers = new ArrayList<String>( );
+		
+		try {
+			Statement st = con.createStatement();
+			
+			String query = "Select U.Email From User as U WHERE U.FirstName=\"testuser\";";
+			
+			ResultSet rs = st.executeQuery(query);
+			while(rs.next()) {
+				
+				testUsers.add(rs.getString(1));
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return testUsers;
+	}
+	
+	
 	
 }
