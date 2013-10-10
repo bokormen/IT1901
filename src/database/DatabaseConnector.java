@@ -348,8 +348,47 @@ public class DatabaseConnector {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Endrer informasjonen om brukeren i databasen
+	 * @param user
+	 * @param email
+	 * @param firstName
+	 * @param lastName
+	 * @param phoneNumber
+	 * @param location
+	 * @return
+	 */
+	public static void changeUser(String user, String firstName, String lastName, String phoneNumber, String location) {
+		try {
+			Statement st = con.createStatement();
+			
+			String linje ="UPDATE User SET User.FirstName \""+firstName+"\", User.LastName \""+lastName+"\", User.TLF \""+phoneNumber+"\", User.Location \""+location+"\" WHERE User.Email = "+user+";";
+			
+			st.executeUpdate(linje);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
-
+	/**
+	 * Denne funksjonen endrer passordet til en bruker
+	 * @param user
+	 * @param password
+	 */
+	public static void changePassword(String user, String password) {
+		try {
+			Statement st = con.createStatement();
+			
+			String linje ="UPDATE User SET User.Password = \""+password+"\"WHERE User.Email = "+user+";";
+			
+			st.executeUpdate(linje);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }
