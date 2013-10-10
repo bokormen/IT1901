@@ -54,10 +54,11 @@ public class DatabaseConnector {
 		}
 	}
 	
-//	public static void main(String[] args) {
-//		open();
-//		newUser("test7@test.test","Olav Haraldsson","12345678","p","60,12345.50,4321");
-//	}
+	public static void main(String[] args) {
+		open();
+		changeUser("test@test.test","Olav","Nordmann","87654321","60.12345,50.4321");
+		close();
+	}
 	
 	/**
 	 * Denne funksjonen sjekker om det eksisterer en bruker i databasen med e-posten som sendes til funksjonen
@@ -364,7 +365,7 @@ public class DatabaseConnector {
 		try {
 			Statement st = con.createStatement();
 			
-			String linje ="UPDATE User SET User.FirstName \""+firstName+"\", User.LastName \""+lastName+"\", User.TLF \""+phoneNumber+"\", User.Location \""+location+"\" WHERE User.Email = "+user+";";
+			String linje ="UPDATE User SET User.FirstName = \""+firstName+"\", User.LastName = \""+lastName+"\", User.TLF = \""+phoneNumber+"\", User.Location = \""+location+"\" WHERE User.Email = \""+user+"\";";
 			
 			st.executeUpdate(linje);
 		} catch (SQLException e) {
