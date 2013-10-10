@@ -56,7 +56,10 @@ public class DatabaseConnector {
 	
 	public static void main(String[] args) {
 		open();
-		changeUser("test@test.test","Olav","Nordmann","87654321","60.12345,50.4321");
+		for (int i = 1;i<7;i++) {
+			String user = "test"+i+"@test.test";
+			deleteUser(user);
+		}
 		close();
 	}
 	
@@ -344,6 +347,7 @@ public class DatabaseConnector {
 			Statement st = con.createStatement();
 			
 			String linje ="UPDATE Sheep SET Sheep.Name = \""+name+"\", Sheep.Owner =\""+owner+"\", Sheep.Shepherd=\""+shepherd+"\", Sheep.Gender=\""+gender+"\", Sheep.Weight="+weight+", Sheep.Heartrate="+heartrate+", Sheep.Temperature="+temperature+", Sheep.Age="+birthyear+" WHERE Sheep.ID = "+id+";";
+			
 			st.executeUpdate(linje);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -360,6 +364,7 @@ public class DatabaseConnector {
 	 * @param phoneNumber
 	 * @param location
 	 * @return
+	 * @author Oeyvind
 	 */
 	public static void changeUser(String user, String firstName, String lastName, String phoneNumber, String location) {
 		try {
@@ -378,12 +383,49 @@ public class DatabaseConnector {
 	 * Denne funksjonen endrer passordet til en bruker
 	 * @param user
 	 * @param password
+	 * @author Oeyvind
 	 */
 	public static void changePassword(String user, String password) {
 		try {
 			Statement st = con.createStatement();
 			
-			String linje ="UPDATE User SET User.Password = \""+password+"\"WHERE User.Email = "+user+";";
+			String linje ="UPDATE User SET User.Password = \""+password+"\" WHERE User.Email = \""+user+"\";";
+			
+			st.executeUpdate(linje);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Sletter oppgitt bruker fra databasen
+	 * @param user
+	 * @author Oeyvind
+	 */
+	public static void deleteUser(String user) {
+		try {
+			Statement st = con.createStatement();
+			
+			String linje ="DELETE FROM `oyvilund_sheep`.`User` WHERE `Email`=\""+user+"\";";
+			
+			st.executeUpdate(linje);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Sletter oppgitt sau fra databasen
+	 * @param id
+	 * @author Oeyvind
+	 */
+	public static void deleteSheep(int id) {
+		try {
+			Statement st = con.createStatement();
+			
+			String linje ="DELETE FROM `oyvilund_sheep`.`Sheep` WHERE `ID`="+id+";";
 			
 			st.executeUpdate(linje);
 		} catch (SQLException e) {
