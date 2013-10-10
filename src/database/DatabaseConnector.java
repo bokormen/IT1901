@@ -7,8 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.DriverManager;
 
-//la til noe bare for aa gjoere en endring
-
 //import com.mysql.jdbc.PreparedStatement;
 
 import java.lang.String;
@@ -19,8 +17,6 @@ import java.util.*;
 public class DatabaseConnector {
 	public static Connection con;
 	
-	/**
-	 * @author Oeyvind
 	/**
 	 * @author Oeyvind
 	 * Denne koden aapner en tilkobling til databasen vi bruker i gruppe 10, hoesten 2013i faget IT1901 ved NTNU
@@ -124,12 +120,12 @@ public class DatabaseConnector {
 	 * @param age
 	 * @author Oeyvind
 	 */
-	public static void newSheep(String name, String owner, String shepherd, String weight, String heartrate, String temperature, String age) {
+	public static void newSheep(String name, String owner, String shepherd, String gender, int weight, int heartrate, int temperature, int birthyear) {
 		try {
 			Statement st = con.createStatement();
 			
-			String linje ="INSERT INTO `Sheep` (`Name`, `Owner`, `Shepherd`, `Weight`,`Heartrate`,`Temperature`,`Age`) VALUES "+
-			String.format("(\"%s\", \"%s\", \"%s\",%s,%s,%s,%s)", name,owner,shepherd,weight,heartrate,temperature,age);
+			String linje ="INSERT INTO `Sheep` (`Name`, `Owner`, `Shepherd`, `Gender`, `Weight`,`Heartrate`,`Temperature`,`Age`) VALUES "+
+			String.format("(\"%s\", \"%s\", \"%s\", \"%s\",%s,%s,%s,%s)", name,owner,shepherd,gender,weight,heartrate,temperature,birthyear);
 			
 			st.executeUpdate(linje);
 		} catch (SQLException e) {
@@ -328,6 +324,32 @@ public class DatabaseConnector {
 			e.printStackTrace();
 		}
 		return sheep;
+	}
+	
+	/**
+	 * Denne funksjonen tar inn en sau, og skriver de nye verdiene til databasen
+	 * @param id
+	 * @param name
+	 * @param owner
+	 * @param shepherd
+	 * @param weight
+	 * @param heartrate
+	 * @param temperature
+	 * @param birthyear
+	 * @author Oeyvind
+	 */
+	public static void changeSheep(int id, String name, String owner, String shepherd, String gender, int weight, int heartrate, int temperature, int birthyear) {
+		try {
+			Statement st = con.createStatement();
+			
+			String linje ="UPDATE Sheep SET Sheep.Name = \""+name+"\", Sheep.Owner =\""+owner+"\", Sheep.Shepherd=\""+shepherd+"\", Sheep.Gender=\""+gender+"\", Sheep.Weight="+weight+", Sheep.Heartrate="+heartrate+", Sheep.Temperature="+temperature+", Sheep.Age="+birthyear+" WHERE Sheep.ID = "+id+";";
+			st.executeUpdate(linje);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
 	}
 	
 }
