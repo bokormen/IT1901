@@ -56,11 +56,11 @@ public class DatabaseConnector {
 	
 //	public static void main(String[] args) {
 //		open();
-////		deleteTestSheeps();
-////		deleteTestUsers();
-////		RandomTestData.fillDatabaseWithUsers(3);
-////		RandomTestData.sheepsForTestUsers(4);
-////		
+//		deleteTestSheeps();
+//		deleteTestUsers();
+//		RandomTestData.fillDatabaseWithUsers(3);
+//		RandomTestData.sheepsForTestUsers(4);
+//		
 //		for (int i=0;i<10;i++) {
 //			RandomTestData.moveSheeps("10.00000000,60.00000000", "10.0000000,60.00000000");
 //		}
@@ -449,7 +449,7 @@ public class DatabaseConnector {
 			Statement st = con.createStatement();
 			
 			String linje = "INSERT INTO `Location` (`SheepID`, `Date`, `Position`) VALUES "+
-			String.format("(\"%s\", \"%s\", \"%s\", \"%s\")", id,date,location);
+			String.format("(\"%s\", \"%s\", \"%s\")", id,date,location);
 			
 			st.executeUpdate(linje);
 		} catch (SQLException e) {
@@ -593,7 +593,6 @@ public class DatabaseConnector {
 		if (date==null) {
 			date="2013.04.01.00.00";
 		}
-		System.out.println(date);
 		return date;
 	}
 	

@@ -80,14 +80,8 @@ public class RandomTestData {
 	 */
 	public static String nextDate() {
 		String date = DatabaseConnector.getLatetsDate();
-		System.out.println(date);
-		String[] splitDate = date.split(".");
-		System.out.println(splitDate);
-		System.out.println(splitDate[0]);
-		System.out.println(splitDate[1]);
-		System.out.println(splitDate[2]);
-		System.out.println(splitDate[3]);
-		System.out.println(splitDate[4]);
+		String punktum = "\\.";
+		String[] splitDate = date.split(punktum);
 		int time = Integer.parseInt(splitDate[3])+8;
 		int day = Integer.parseInt(splitDate[2]);
 		int month = Integer.parseInt(splitDate[1]);
