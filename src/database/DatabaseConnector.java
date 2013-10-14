@@ -249,6 +249,40 @@ public class DatabaseConnector {
 		}
 		return farmer;
 	}
+
+	/**
+	 * Returnerer et brukerobjekt av brukeren som etterspoer
+	 * @param user
+	 * @return
+	 */
+	public static User getUser(String user) {
+		User farmer=null;
+		try {
+			if (!doesUserExsist(user)) {
+				return null;
+			}
+			Statement st = con.createStatement();
+			
+			String query = "Select U.Email, U.Password, U.FirstName, U.LastName, U.TLF, U.Location From User as U WHERE U.Email="+user+";";
+			
+			ResultSet rs = st.executeQuery(query);
+			
+			while (rs.next()) {
+				try {
+					farmer=new User(rs.getString(2),rs.getString(3),rs.getString(0),rs.getString(4),rs.getString(5));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			return farmer;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return farmer;
+	}
 	
 	/**
 	 * Tar inn en saue id og sjekker om sauen eksister i databasen
@@ -400,6 +434,27 @@ public class DatabaseConnector {
 	}
 	
 	/**
+	 * Lagerer en ny posisjon til sauen
+	 * @param id
+	 * @param date
+	 * @param location
+	 */
+	public static void newPosition(String id,String date, String location) {
+		try {
+			Statement st = con.createStatement();
+			
+			String linje = "INSERT INTO `Location` (`SheepID`, `Date`, `Position`) VALUES "+
+			String.format("(\"%s\", \"%s\", \"%s\", \"%s\")", id,date,location);
+			
+			st.executeUpdate(linje);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	/**
 	 * Sletter oppgitt bruker fra databasen
 	 * @param user
 	 * @author Oeyvind
@@ -495,6 +550,45 @@ public class DatabaseConnector {
 		return testUsers;
 	}
 	
+	public static ArrayList<String> getAllSheepIDs() {
+		ArrayList<String> IDs = new ArrayList<String>( );
+		
+		try {
+			Statement st = con.createStatement();
+			
+			String query = "Select S.ID From Sheep as S;";
+			
+			ResultSet rs = st.executeQuery(query);
+			while(rs.next()) {
+				
+				IDs.add(rs.getString(1));
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return IDs;
+	}
 	
+	public static String getLatetsDate() {
+		String date = null;
+		try {
+			Statement st = con.createStatement();
+			String query = "Select max(Date) From Location;";
+			ResultSet rs= st.executeQuery(query);
+			while(rs.next()) {
+				date = rs.getString(1);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (date==null) {
+			date="2013.04.01.00.00";
+		}
+		return date;
+	}
 	
 }
