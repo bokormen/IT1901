@@ -84,6 +84,9 @@ public class Sheep {
 	}
 
 	public void setTemperature(double temperature) {
+		if(temperature < 35 || temperature > 40) {
+			SheepAttackMail.sendMail("rakrogh@msn.com", "Sheep number " + getId() + " may be under attack");
+		}
 		this.temperature = temperature;
 	}
 
@@ -96,6 +99,9 @@ public class Sheep {
 			this.heartrate = heartrate;			
 		} else {
 			throw new Exception("Heartrate not valid");
+		}
+		if(heartrate < 50 || heartrate > 100) {
+			SheepAttackMail.sendMail("rakrogh@msn.com", "Sheep number " + getId() + " may be under attack.");
 		}
 	}
 

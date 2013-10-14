@@ -2,6 +2,11 @@ package div;
 
 import java.util.ArrayList;
 
+import javax.mail.Message;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
 /**
  * User-klassen representerer en brukers profil. Lagrer og validerer generell
  * info om brukeren, inkludert email og passord som er n�dvendig for innlogging.
@@ -191,7 +196,16 @@ public class User {
 	}
 	
 	public ArrayList<Sheep> getSheepList() {
+		/*String query = email;
+
+        String serverRespons = ClientConnection.sendServerQuery("getsheeplist", query);
+
+        if (serverRespons.equals("err")) {
+            System.out.println("Error. Cannot get list of sheep");
+        }*/
+		
 		return sheepReg.getSheepList();
+	
 	}
 
 }

@@ -36,7 +36,8 @@ public class SheepRegistration {
 		
 	}
 /*
-	public void editSheep(int id, String owner, String shepherd, String gender, int weight, int heartrate, int temperature) {
+	public void editSheep(int id, String owner, String shepherd, String gender, int weight, int heartrate, int temperature, int age) throws Exception {
+		Sheep s = new Sheep(id, age, weight, gender, shepherd);
 		String query = id + "||" + owner + "||" + shepherd + "||" + gender + "||" + weight + "||" + heartrate  + "||" + temperature;
 
         String serverRespons = ClientConnection.sendServerQuery("editsheep", query);

@@ -3,21 +3,21 @@ package div;
 import java.util.Properties;
 
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 public class SheepAttackMail {
 	
-	private Session session;
-	private String email;
+
 	
-	public SheepAttackMail(String email) {
+	public static void sendMail(String email, String description)    {
 		final String username = "sheepcontrolit1901@gmail.com";
 		final String password = "manuer123";
-		this.email = email;
 
 		Properties props = new Properties();
 		props.put("mail.smtp.auth", "true");
@@ -25,42 +25,27 @@ public class SheepAttackMail {
 		props.put("mail.smtp.host", "smtp.gmail.com");
 		props.put("mail.smtp.port", "587");
 
-		session = Session.getInstance(props,
+		Session session = Session.getInstance(props,
 				new javax.mail.Authenticator() {
 					protected PasswordAuthentication getPasswordAuthentication() {
 						return new PasswordAuthentication(username, password);
 					}
 				});
-	}
-
-	public boolean sheepAttack(int sheepNr) throws Exception {
+		try {
 			Message message = new MimeMessage(session);
 			message.setFrom(new InternetAddress("sheepcontrolit1901@gmail.com"));
 			message.setRecipients(Message.RecipientType.TO,
 					InternetAddress.parse(email));
 			message.setSubject("Sheep attack");
-			message.setText("Sheep " + sheepNr + " is under attack.");
+			message.setText(description);
 
 			Transport.send(message);
-			return true;
-	}
-	
-	public boolean newPassword(String newPassword) throws Exception {
-		try {
-
-			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress("sheepcontrolit1901@gmail.com"));
-			message.setRecipients(Message.RecipientType.TO,
-					InternetAddress.parse(email));
-			message.setSubject("New password for your sheepcontrol user");
-			message.setText("Yo dude, here is your new password: "
-					+ newPassword);
-
-			Transport.send(message);
-			return true;
-
-		} catch (Exception e) {
-			throw new Exception(e.getLocalizedMessage());
+		} catch(MessagingException e) {
+			System.out.println(e.getLocalizedMessage());
 		}
+		
 	}
+
+
+
 }
