@@ -125,12 +125,12 @@ public class DatabaseConnector {
 	 * @param birthyear
 	 * @author Oeyvind
 	 */
-	public static void newSheep(String name, String owner, String shepherd, String gender, int weight, int heartrate, int temperature, int birthyear) {
+	public static void newSheep(String name, String owner, String shepherd, String gender, String weight, String heartrate, String temperature, String birthyear) {
 		try {
 			Statement st = con.createStatement();
 			
 			String linje ="INSERT INTO `Sheep` (`Name`, `Owner`, `Shepherd`, `Gender`, `Weight`,`Heartrate`,`Temperature`,`Age`) VALUES "+
-			String.format("(\"%s\", \"%s\", \"%s\", \"%s\",%s,%s,%s,%s)", name,owner,shepherd,gender,weight,heartrate,temperature,birthyear);
+			String.format("(\"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")", name,owner,shepherd,gender,weight,heartrate,temperature,birthyear);
 			
 			st.executeUpdate(linje);
 		} catch (SQLException e) {
@@ -343,7 +343,7 @@ public class DatabaseConnector {
 	 * @param birthyear
 	 * @author Oeyvind
 	 */
-	public static void changeSheep(int id, String name, String owner, String shepherd, String gender, int weight, int heartrate, int temperature, int birthyear) {
+	public static void changeSheep(String id, String name, String owner, String shepherd, String gender, String weight, String heartrate, String temperature, String birthyear) {
 		try {
 			Statement st = con.createStatement();
 			
@@ -422,7 +422,7 @@ public class DatabaseConnector {
 	 * @param id
 	 * @author Oeyvind
 	 */
-	public static void deleteSheep(int id) {
+	public static void deleteSheep(String id) {
 		try {
 			Statement st = con.createStatement();
 			

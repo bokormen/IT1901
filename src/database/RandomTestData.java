@@ -27,9 +27,9 @@ public class RandomTestData {
 				String gender = Gender.getRandomGender();
 				int weight = generator.nextInt(30)+40;
 				int heartrate = generator.nextInt(100)+50;
-				int birthyear = generator.nextInt(30)+1983;
+				int birthyear = generator.nextInt(12)+2001;
 				int temperature = generator.nextInt(7)+30;
-				DatabaseConnector.newSheep(name, owner, "", gender, weight, heartrate, temperature, birthyear);
+				DatabaseConnector.newSheep(name, owner, "", gender, Integer.toString(weight), Integer.toString(heartrate), Integer.toString(temperature), Integer.toString(birthyear));
 			}
 		}
 	}
