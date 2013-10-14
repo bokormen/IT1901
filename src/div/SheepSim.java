@@ -2,23 +2,11 @@ package div;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Timer;
 
 public class SheepSim {
 	
 	private ArrayList<Sheep> sheepList;
-	
-
-	
-	public SheepSim(ArrayList<Sheep> sheepList) {
-		this.sheepList = sheepList;
-		boolean flag = true;
-		while(flag) {
-			for(Sheep s : sheepList) {
-				updateSheep(s);
-			}
-			flag = false;
-		}
-	}
 	
 	/**
 	 * Legger til en ny posisjon til sauen, og oppdaterer puls og temperatur. 
@@ -44,8 +32,8 @@ public class SheepSim {
 		double newLatitude = 91;
 		double newLongitude = 181;
 		while(newLatitude > 90 || newLatitude < -90 || newLongitude > 180 || newLongitude < -180) {
-			newLatitude = oldLatitude + (randomGen.nextInt(10) * Math.pow(-1, randomGen.nextInt(1)) );
-			newLongitude = oldLongitude + (randomGen.nextInt(10) * Math.pow(-1, randomGen.nextInt(1)));
+			newLatitude = oldLatitude + (randomGen.nextInt(5) * Math.pow(-1, randomGen.nextInt(1)) );
+			newLongitude = oldLongitude + (randomGen.nextInt(5) * Math.pow(-1, randomGen.nextInt(1)));
 		}
 		return "" + newLatitude + "," + newLongitude;
 	}
@@ -57,7 +45,7 @@ public class SheepSim {
 		Random randomGen = new Random();
 		double newTemp = -20;
 		while (newTemp > 50 || newTemp < -10) {
-			newTemp = oldTemp + (randomGen.nextInt(3) * Math.pow(-1, randomGen.nextInt(1)));
+			newTemp = oldTemp + (randomGen.nextInt(1) * Math.pow(-1, randomGen.nextInt(1)));
 		}
 		return newTemp;
 	}
@@ -68,7 +56,7 @@ public class SheepSim {
 		Random randomGen = new Random();
 		int newHR = -1;
 		while (newHR <= 0 || newHR > 200 ) {
-			newHR = oldHR + ((int) ((randomGen.nextInt(5) * Math.pow(-1, randomGen.nextInt(1)) )));
+			newHR = oldHR + ((int) ((randomGen.nextInt(3) * Math.pow(-1, randomGen.nextInt(1)) )));
 		}
 		return newHR;
 	}

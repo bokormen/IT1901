@@ -12,10 +12,12 @@ import javax.mail.internet.MimeMessage;
 public class SheepAttackMail {
 	
 	private Session session;
+	private String email;
 	
 	public SheepAttackMail(String email) {
 		final String username = "sheepcontrolit1901@gmail.com";
 		final String password = "manuer123";
+		this.email = email;
 
 		Properties props = new Properties();
 		props.put("mail.smtp.auth", "true");
@@ -31,7 +33,7 @@ public class SheepAttackMail {
 				});
 	}
 
-	public boolean sheepAttack(String email, int sheepNr) throws Exception {
+	public boolean sheepAttack(int sheepNr) throws Exception {
 			Message message = new MimeMessage(session);
 			message.setFrom(new InternetAddress("sheepcontrolit1901@gmail.com"));
 			message.setRecipients(Message.RecipientType.TO,
@@ -43,7 +45,7 @@ public class SheepAttackMail {
 			return true;
 	}
 	
-	public boolean newPassword(String email, String newPassword) throws Exception {
+	public boolean newPassword(String newPassword) throws Exception {
 		try {
 
 			Message message = new MimeMessage(session);

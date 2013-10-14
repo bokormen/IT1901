@@ -51,8 +51,37 @@ public class UserRegistration {
         ArrayList<User> users = new ArrayList<User>();
 		return users;
 	}
-
+/*
     public void deleteUser(User user) {
-        //ikke ferdig
-    }
+    	String query = user.getEmail();
+
+        String serverRespons = ClientConnection.sendServerQuery("deleteuser", query);
+
+        if (serverRespons.equals("err")) {
+            System.out.println("Error. Cannot delete user");
+        }
+    }*/
+    /*
+    public void editUser(String email, String firstName, String lastName, String phoneNumber, String location ) {
+    	
+    	
+    	String query = email + "||" + firstName + "||" + lastName + "||" + phoneNumber + "||" + location;
+
+        String serverRespons = ClientConnection.sendServerQuery("edituser", query);
+
+        if (serverRespons.equals("err")) {
+            System.out.println("Error. Can't change user information");
+        }
+    }*/
+	
+	/*
+	public void changePassword(String user, String password) {
+		String query = user + "||" + password;
+
+        String serverRespons = ClientConnection.sendServerQuery("changepassword", query);
+
+        if (serverRespons.equals("err")) {
+            System.out.println("Error. Cannot change password");
+        }
+	}*/
 }
