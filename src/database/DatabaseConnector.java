@@ -56,10 +56,14 @@ public class DatabaseConnector {
 	
 //	public static void main(String[] args) {
 //		open();
-//		deleteTestSheeps();
-//		deleteTestUsers();
-//		RandomTestData.fillDatabaseWithUsers(3);
-//		RandomTestData.sheepsForTestUsers(4);
+////		deleteTestSheeps();
+////		deleteTestUsers();
+////		RandomTestData.fillDatabaseWithUsers(3);
+////		RandomTestData.sheepsForTestUsers(4);
+////		
+//		for (int i=0;i<10;i++) {
+//			RandomTestData.moveSheeps("10.00000000,60.00000000", "10.0000000,60.00000000");
+//		}
 //		close();
 //	}
 	
@@ -195,12 +199,12 @@ public class DatabaseConnector {
 			}
 			Statement st = con.createStatement();
 			
-			String query = "Select U.Email, U.Password From User as U WHERE U.Email="+user+";";
+			String query = "Select U.Email, U.Password From User as U WHERE U.Email=\""+user+"\";";
 			
 			ResultSet rs = st.executeQuery(query);
 			
 			while (rs.next()) {
-				if (rs.getString(1)==password) {
+				if (rs.getString(2).equals(password)) {
 					return true;
 				} else {
 					return false;
@@ -208,6 +212,7 @@ public class DatabaseConnector {
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			e.fillInStackTrace();
 			e.printStackTrace();
 		}
 		return false;
@@ -588,6 +593,7 @@ public class DatabaseConnector {
 		if (date==null) {
 			date="2013.04.01.00.00";
 		}
+		System.out.println(date);
 		return date;
 	}
 	
