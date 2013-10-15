@@ -30,7 +30,7 @@ public class UserRegistration {
         }
 	}
 
-	public User login(String email, String password) {
+	public static User login(String email, String password) {
 
         //Lager en foresp0rsel til server.
         String query = email + "||" + password;
@@ -41,7 +41,14 @@ public class UserRegistration {
         //sjekke at melding ble mottatt
         if (!serverResponse.equals("login success")) {
             ClientConnection.handleError(serverResponse);
-            return null;
+        }
+
+        query = email;
+
+        Object retobject = ClientConnection.sendObjectQuery("getuser", query);
+
+        if (retobject instanceof User) {
+            return (User) retobject;
         } else {
             return null;
         }

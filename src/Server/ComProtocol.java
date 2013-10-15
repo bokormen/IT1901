@@ -1,9 +1,14 @@
 package Server;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.StringTokenizer;
 
 import database.DatabaseConnector;
+import div.Sheep;
+import div.User;
 
 //handles the input from clients
 public class ComProtocol {
@@ -12,9 +17,14 @@ public class ComProtocol {
     public String ClientIP = null;
     private ServerLog log = null;
     private String UserName = null;
+    private ObjectOutputStream oout = null;
+    private ObjectInputStream oin = null;
+
     private static final int WAIT = 1001;
     private static final int REGISTERUSER = 1002;
     private static final int REGISTERSHEEP = 1003;
+
+    private static final int GETUSER = 2002;
 
     private static final int LOGIN = 1004;
 
@@ -23,7 +33,14 @@ public class ComProtocol {
     private int state = WAIT;
 
     //constructor
-    public ComProtocol(String IP, boolean login, ServerLog clientlog) {
+    public ComProtocol(String IP, Socket osocket, boolean login, ServerLog clientlog) {
+
+        try {
+            oout = new ObjectOutputStream(osocket.getOutputStream());
+            oin = new ObjectInputStream(osocket.getInputStream());
+        } catch (IOException e) {
+            System.err.println("Could not open object streams");
+        }
         ClientIP = IP;
         isLoggedIn = login;
         log = clientlog;
@@ -47,6 +64,10 @@ public class ComProtocol {
 
             } else if (theInput.equals("registersheep")) { //bruker vil registrere sau
                 state = REGISTERSHEEP;
+                theOutput = "done";
+
+            } else if (theInput.equals("getuser")) { //bruker vil registrere sau
+                state = GETUSER;
                 theOutput = "done";
 
             } else if (theInput.equals("quit")) { // bruker vil avslutte
@@ -82,6 +103,28 @@ public class ComProtocol {
             }
 
             state = WAIT;
+
+        } else if (state == GETUSER) {
+
+                if (theInput != null) {
+                    if (isLoggedIn) {
+                        theOutput = "object sending";
+                        //oout.writeObject(DatabaseConnector.getUser(theInput));
+                        try {
+                            User theuser = new User("frodo", "baggins", "frodo@gmail.com", "12345678", "Middle Earth");
+                            oout.writeObject(theuser);
+                        } catch (Exception e) {
+                            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        }
+
+                    } else {
+                        theOutput = "getuser no login";
+                    }
+                } else {
+                    theOutput = "getuser null input";
+                }
+
+                state = WAIT;
 
         //Venter paa login
         //Input: "email||password"
@@ -137,9 +180,9 @@ public class ComProtocol {
     private String registerSheep(String theInput) {
 
         String[] temp = theInput.split("\\|\\|"); //splitter input ved ||
-        if (temp.length == 7) {
+        if (temp.length == 8) {
             if (!DatabaseConnector.doesSheepExsist(temp[0])) {
-                DatabaseConnector.newSheep(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5], temp[6]);
+                DatabaseConnector.newSheep(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5], temp[6], temp[7]);
                 log.addEntry(ClientIP + "[" + UserName + "] registered new sheep (" + temp[0] + ").");
                 return "regsheep success";
             } else {
@@ -172,6 +215,15 @@ public class ComProtocol {
             }
         } else {
             return "login bad input";
+        }
+    }
+
+    public void close() {
+        try {
+            oin.close();
+            oout.close();
+        } catch (IOException e) {
+            System.err.println("Error closing object streams.");
         }
     }
 

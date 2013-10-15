@@ -8,8 +8,11 @@ public class ClientConnection {
 
 
     private static Socket ClientSocket = null;
+    private static Socket ObjectSocket = null;
     private static PrintWriter out = null;
     private static BufferedReader in = null;
+    private static ObjectOutputStream oout = null;
+    private static ObjectInputStream oin = null;
     public static boolean ConnectedToServer;
 
 
@@ -28,6 +31,34 @@ public class ClientConnection {
         }
 
         return sendServerMsg(query);
+
+    }
+
+    //Henter et objekt fra Serveren/databasen
+    //retningslinjer for komunikasjon ligger i Server.ComProtocol klassen
+
+    public static Object sendObjectQuery(String command, String query) {
+
+        String response;
+        response = sendServerMsg(command);
+
+        //check that nothing went wrong
+        if (!response.equals("done")) {
+            return "err";
+        }
+
+        response = sendServerMsg(query);
+        if (response.equals("object sending")) {
+            try {
+                return oin.readObject();
+            } catch (IOException e) {
+                System.err.println("Problem reading object from object stream.");
+            } catch (ClassNotFoundException e) {
+                System.err.println("Object stream contains object of unknown class.");
+            }
+        }
+
+        return response;
 
     }
 
@@ -89,11 +120,16 @@ public class ClientConnection {
         try {
             if (ip == null) {
                 ClientSocket = new Socket(InetAddress.getLocalHost(), 58339);
+                ObjectSocket = new Socket(InetAddress.getLocalHost(), 58339);
+
             } else {
                 ClientSocket = new Socket(ip, 58339);
+                ObjectSocket = new Socket(ip, 58339);
             }
             out = new PrintWriter(ClientSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(ClientSocket.getInputStream()));
+            oout = new ObjectOutputStream(ObjectSocket.getOutputStream());
+            oin = new ObjectInputStream(ObjectSocket.getInputStream());
             ConnectedToServer = true;
         } catch (UnknownHostException e) {
             System.err.println("Could not find host.");
@@ -113,7 +149,10 @@ public class ClientConnection {
         try {
             out.close();
             in.close();
+            oout.close();
+            oin.close();
             ClientSocket.close();
+            ObjectSocket.close();
         } catch (IOException e) {
             System.out.println("Error closing connection");
         } catch (NullPointerException e) {

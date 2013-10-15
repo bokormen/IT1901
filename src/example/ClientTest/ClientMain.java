@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import div.ClientConnection;
+import div.User;
+import div.UserRegistration;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,6 +27,7 @@ public class ClientMain {
         String fromUser;
 
         //read input from console, send to server and get reponse
+        /*
         while ((fromUser = stdIn.readLine()) != null) {
 
             fromServer = ClientConnection.sendServerMsg(fromUser);
@@ -33,7 +36,12 @@ public class ClientMain {
                 break;
             }
         }
+        */
 
+        div.User suser;
+
+        suser = div.UserRegistration.login("lala@gmail.com", "random");
+        System.out.println(suser.getLastName());
         ClientConnection.close();  //close connection
     }
 }

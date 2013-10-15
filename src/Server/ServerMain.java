@@ -38,7 +38,9 @@ public class ServerMain {
         while (currentUser < USERS) {
 
             Socket clientSocket = serverSocket.accept();
-            user[currentUser] = new ServerClientThread(clientSocket, sLog);
+            Socket objectSocket = serverSocket.accept();
+
+            user[currentUser] = new ServerClientThread(clientSocket, objectSocket, sLog);
 
             if (!listening) {   // break out if we executed the quit function
                 break;
@@ -61,6 +63,7 @@ public class ServerMain {
             }
             i += 1;
         }
+        new Socket(InetAddress.getLocalHost(), 58339).close(); //breaks the loop
         new Socket(InetAddress.getLocalHost(), 58339).close(); //breaks the loop
         sLog.addEntry("Server Shut-Down");
     }

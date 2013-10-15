@@ -1,9 +1,6 @@
 package Server;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 
 
@@ -12,6 +9,7 @@ public class ServerClientThread extends Thread {
 
     //some variables
     private Socket socket = null;
+    private Socket osocket = null;
     private PrintWriter out = null;
     private BufferedReader in = null;
     protected ServerLog log = null;
@@ -26,7 +24,7 @@ public class ServerClientThread extends Thread {
             String inputLine, outputLine;
 
             String ClientIP = getClientAddress();
-            ComProtocol com = new ComProtocol(ClientIP, false, log); //opretter komunikasjons protokollen, all komunikasjon med klient blir prosessert her
+            ComProtocol com = new ComProtocol(ClientIP, osocket, false, log); //opretter komunikasjons protokollen, all komunikasjon med klient blir prosessert her
             log.addEntry(ClientIP + " connected."); //loggf0rer
 
             //les input fra klient socket og prosesser input
@@ -39,6 +37,7 @@ public class ServerClientThread extends Thread {
                     break;
             }
 
+            com.close();
             close();
 
         } catch (IOException e) {
@@ -73,9 +72,10 @@ public class ServerClientThread extends Thread {
 
 
     //konstrukt0r
-    public ServerClientThread(Socket socket, ServerLog log) {
+    public ServerClientThread(Socket clientSocket, Socket objectSocket, ServerLog log) {
         super("MultiServerThread"); //invokes the thread constructor
-        this.socket = socket;
+        socket = clientSocket;
+        osocket = objectSocket;
         this.log = log;
     }
 }
