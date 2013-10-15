@@ -1,5 +1,6 @@
 package div;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import javax.mail.Message;
@@ -14,7 +15,7 @@ import javax.mail.internet.MimeMessage;
  * @author Ragnhild
  * 
  */
-public class User {
+public class User implements Serializable {
 
 	private String firstName;
 	private String lastName;

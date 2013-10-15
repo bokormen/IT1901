@@ -109,13 +109,7 @@ public class ComProtocol {
                 if (theInput != null) {
                     if (isLoggedIn) {
                         theOutput = "object sending";
-                        //oout.writeObject(DatabaseConnector.getUser(theInput));
-                        try {
-                            User theuser = new User("frodo", "baggins", "frodo@gmail.com", "12345678", "Middle Earth");
-                            oout.writeObject(theuser);
-                        } catch (Exception e) {
-                            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                        }
+                        oout.writeObject(DatabaseConnector.getUser(theInput));
 
                     } else {
                         theOutput = "getuser no login";

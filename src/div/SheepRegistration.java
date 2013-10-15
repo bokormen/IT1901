@@ -1,15 +1,16 @@
 package div;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import database.DatabaseConnector;
 
 /**
- * Klassen håndterer registrering, sletting og søk av sauer. 
+ * Klassen hï¿½ndterer registrering, sletting og sï¿½k av sauer. 
  * @author Ragnhild
  *
  */
-public class SheepRegistration {
+public class SheepRegistration implements Serializable {
 	
 	private ArrayList<Sheep> sheepList;
 	

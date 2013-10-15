@@ -239,7 +239,7 @@ public class DatabaseConnector {
 			while (rs.next()) {
 				if (rs.getString(1)==password) {
 					try {
-						farmer=new User(rs.getString(2),rs.getString(3),rs.getString(0),rs.getString(4),rs.getString(5));
+						farmer=new User(rs.getString(2),rs.getString(3),rs.getString(1),rs.getString(4),rs.getString(5));
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -263,25 +263,22 @@ public class DatabaseConnector {
 	public static User getUser(String user) {
 		User farmer=null;
 		try {
-			if (!doesUserExsist(user)) {
-				return null;
-			}
+
 			Statement st = con.createStatement();
 			
-			String query = "Select U.Email, U.Password, U.FirstName, U.LastName, U.TLF, U.Location From User as U WHERE U.Email="+user+";";
+			String query = "Select U.FirstName, U.LastName, U.Email, U.TLF, U.Location From User as U WHERE U.Email=\""+user+"\";";
 			
 			ResultSet rs = st.executeQuery(query);
 			
-			while (rs.next()) {
+			if (rs.next()) {
 				try {
-					farmer=new User(rs.getString(2),rs.getString(3),rs.getString(0),rs.getString(4),rs.getString(5));
-				} catch (Exception e) {
+					farmer=new User(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5));
+                    return farmer;
+                } catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-			
-			return farmer;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -398,7 +395,6 @@ public class DatabaseConnector {
 	/**
 	 * Endrer informasjonen om brukeren i databasen
 	 * @param user
-	 * @param email
 	 * @param firstName
 	 * @param lastName
 	 * @param phoneNumber
