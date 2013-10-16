@@ -4,30 +4,37 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JList;
 import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+import javax.swing.ListSelectionModel;
 import javax.swing.Timer;
-
 
 import components.MyBorder;
 import components.MyButton;
 import components.MyImagePanel;
+import components.MyLabel;
+import components.MyListRenderer;
 import components.MyMap;
 import components.MyPasswordField;
 import components.MySheepButton;
@@ -36,11 +43,12 @@ import components.MyTextField;
 import div.ClientConnection;
 import div.MyPoint;
 import div.Sheep;
+import div.SheepRegistration;
 import div.User;
 import div.UserRegistration;
 
 /**
- * A class that handles the GUI
+ * Klasse som lager GUI
  * 
  * @author andreas
  * 
@@ -49,24 +57,20 @@ public class GUI extends JFrame {
 
 	public static void main(String args[]) {
 		ClientConnection.open(null);
-		final GUI f = new GUI();
+		GUI f = new GUI();
 		f.setVisible(true);
-
-        // naar x klikkes saa simuler et klikk paa exitButton
-        f.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                f.exitButton.doClick();
-            }
-        });
 	}
 
-	// plasserer alt bedre! login specially
+	// Plassere alt bedre.
 
 	private int width;
 	private int height;
 
-	private User user; // gitt bruker etter en har logget pï¿½
+	private User user; // gitt bruker etter en har logget paa
 	private User tUser = new User(); // test bruker
+	private Sheep tSheep = new Sheep();
+	private Sheep editSheep;
+	private MySheepButton editSheepButton;
 
 	public static int START = 0, LOGIN = 1, REG = 2, FORGOT = 3, MAIN = 4, SEARCH = 5, EDIT = 6, LIST = 7,
 			SHEEPREG = 8;
@@ -95,7 +99,7 @@ public class GUI extends JFrame {
 		height = 600;
 		setBounds(0, 0, width, height + 20); // +20 for tittel bar'en
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		// setBackground(Color.BLUE);
+		setResizable(false);
 
 		actionListener = new MyListener();
 		createFocusListener();
@@ -105,31 +109,26 @@ public class GUI extends JFrame {
 
 		kartverketStaticMap = new KartverketStaticMap();
 
-		// cc = new ClientConnection();
-
 		Server.addUsers(); // Legger til brukere til testing
 
 		this.lp = getLayeredPane();
 
-		createComponentArrays(); // brukes i createComponents
+		createLowerPanel();
 
-		createButtons(lp);
-		createLoginInterfaceComponents(lp);
-		createRegisterInterfaceComponents(lp);
-		createForgotInterfaceComponents(lp);
+		createButtons();
+		createLoginInterfaceComponents();
+		createRegisterInterfaceComponents();
+		createForgotInterfaceComponents();
 
-		createMainInterfaceComponents(lp);
-		createSearchInterfaceComponents(lp);
-		createEditInterfaceComponents(lp);
-		createListInterfaceComponents(lp);
-		createRegSheepInterfaceComponents(lp);
+		createMainInterfaceComponents();
+		createSearchInterfaceComponents();
+		createEditInterfaceComponents();
+		createRegSheepInterfaceComponents();
+		createListInterfaceComponents();
 
-		createPanels(lp);
+		createPanels();
 
-		createComponentArrays(); // igjen for ï¿½ legge til objektene
-		// setFocusListener(); // legger til focusListener til alle text
-		// feltene.
-
+		createComponentArrays();
 		// cListCreate();
 
 		// Setter alle start komponentene synlige
@@ -168,50 +167,77 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Lager to paneler fordelt pï¿½: leftPanel (width/3) og rightPanel
+	 * Lager to paneler fordelt paa: leftPanel (width/3) og rightPanel
 	 * (2*width/3)
 	 * 
 	 * @param lp
 	 *            LayeredPane
 	 */
-	private void createPanels(JLayeredPane lp) {
-		boolean maps = false;
-		// rightImage = new ImageIcon(googleStaticMap.getImage(63.4305149,
-		// 10.3950528, 12, width / 3, height / 2, 2));
+	private void createPanels() {
+		boolean normal = true;
+		if (normal) {
+			BufferedImage img2 = null;
+			Image scaledImage = null;
+			try {
+				img2 = ImageIO.read(this.getClass().getClassLoader().getResource("images/sheepbackground.jpeg"));
+				scaledImage = img2.getScaledInstance(300, 300, Image.SCALE_FAST);
+			} catch (IOException e) {
+				System.err.println(e.getLocalizedMessage());
+			}
+			Image[] imgs2 = { img2 };
+			int[] xs2 = { 0 };
+			int[] ys2 = { 0 };
 
-		// "topo2", "toporaster2", "norges_grunnkart", "kartdata2"
-		if (maps) {
-			String layer = "topo2";
-			BufferedImage img1 = (BufferedImage) (kartverketStaticMap.getImage(layer, 4332, 2244, 13));
-			BufferedImage img2 = (BufferedImage) (kartverketStaticMap.getImage(layer, 4333, 2244, 13));
-			BufferedImage img3 = (BufferedImage) (kartverketStaticMap.getImage(layer, 4332, 2245, 13));
-			BufferedImage img4 = (BufferedImage) (kartverketStaticMap.getImage(layer, 4333, 2245, 13));
-
-			BufferedImage[] imgs = { img1, img2, img3, img4 };
-			int[] xs = { 0, 256, 0, 256 };
-			int[] ys = { 0, 0, 256, 256 };
-
-			rightPanel = new MyImagePanel(imgs, xs, ys); //
+			rightPanel = new MyImagePanel(imgs2, xs2, ys2);
+			rightPanel.repaint();
 			rightPanel.setBounds(width / 3, 0, 2 * width / 3, height);
+		} else {
+			int test = 1;
+			if (test == 0) {
+				double lat = 63.43;
+				double lon = 10.39;
 
-			// rightPanel.setBackground(Color.RED);
-			lp.add(rightPanel);
+				double w = 0.0172;
+				double h = 0.00577;
+
+				int zoom = 15;
+				BufferedImage img1 = (BufferedImage) GoogleStaticMap.getImage(lat, lon, zoom, 400, 300, 1);
+				BufferedImage img2 = (BufferedImage) GoogleStaticMap.getImage(lat, lon + w, zoom, 400, 300, 1);
+				BufferedImage img3 = (BufferedImage) GoogleStaticMap.getImage(lat - h, lon, zoom, 400, 300, 1);
+				BufferedImage img4 = (BufferedImage) GoogleStaticMap.getImage(lat - h, lon + w, zoom, 400, 300, 1);
+				BufferedImage[] imgs2 = { img1, img2, img3, img4 };
+				int[] xs2 = { 0, 400, 0, 400 };
+				int[] ys2 = { 0, 0, 300, 300 };
+
+				rightPanel = new MyImagePanel(imgs2, xs2, ys2);
+				rightPanel.repaint();
+				rightPanel.setBounds(width / 3, 0, 2 * width / 3, height);
+			} else if (test == 1) {
+				double lat = 63.43;
+				double lon = 10.39;
+				int zoom = 15;
+
+				double w = 0.02745;
+				double h = 0.01231;
+
+				Image img1 = GoogleStaticMap.getImage(lat, lon, zoom, 640, 640, 1);
+				Image img2 = GoogleStaticMap.getImage(lat, lon + w, zoom, 640, 640, 1);
+				Image img3 = GoogleStaticMap.getImage(lat - h, lon, zoom, 640, 640, 1);
+				Image img4 = GoogleStaticMap.getImage(lat - h, lon + w, zoom, 640, 640, 1);
+				img1.getScaledInstance(320, 320, Image.SCALE_DEFAULT);
+				img2.getScaledInstance(320, 320, Image.SCALE_DEFAULT);
+				img3.getScaledInstance(320, 320, Image.SCALE_DEFAULT);
+				img4.getScaledInstance(320, 320, Image.SCALE_DEFAULT);
+
+				Image[] imgs2 = { img1, img2, img3, img4 };
+				int[] xs2 = { 0, 320, 0, 320 };
+				int[] ys2 = { 0, 0, 320, 320 };
+
+				rightPanel = new MyImagePanel(imgs2, xs2, ys2);
+				rightPanel.repaint();
+				rightPanel.setBounds(width / 3, 0, 2 * width / 3, height);
+			}
 		}
-
-		BufferedImage img2 = null;
-		try {
-			img2 = ImageIO.read(this.getClass().getClassLoader().getResource("images/sheepbackground.jpeg"));
-		} catch (IOException e) {
-			System.err.println(e.getLocalizedMessage());
-		}
-		BufferedImage[] imgs2 = { img2 };
-		int[] xs2 = { 0 };
-		int[] ys2 = { 0 };
-
-		rightPanel = new MyImagePanel(imgs2, xs2, ys2);
-		rightPanel.repaint();
-		rightPanel.setBounds(width / 3, 0, 2 * width / 3, height);
-
 		BufferedImage img1 = null;
 		try {
 			img1 = ImageIO.read(this.getClass().getClassLoader().getResource("images/blackcarbon.jpg"));
@@ -225,23 +251,23 @@ public class GUI extends JFrame {
 		leftPanel = new MyImagePanel(imgs, xs, ys);
 		leftPanel.repaint();
 		leftPanel.setBounds(0, 0, width / 3, height);
-		// leftPanel.setBackground(Color.ORANGE);
+
 		lp.add(leftPanel);
 		lp.add(rightPanel);
 	}
 
 	/**
-	 * Creates all the buttons and places them at their start position
+	 * Lager alle knappene og plasserer dem i start posisjonene.
 	 * 
 	 * @param lp
 	 *            LayeredPane
 	 */
-	private void createButtons(JLayeredPane lp) {
+	private void createButtons() {
 		int bw = width / 6;
 		int bh = height / 10;
 
 		loginButton = new MyButton(new JButton(), "Login", "bluesheepicon2");
-		loginButton.setBounds(width / 12, 6 * height / 20, bw, bh);
+		loginButton.setBounds(width / 12, 7 * height / 20, bw, bh);
 		loginButton.addActionListener(actionListener);
 
 		registerButton = new MyButton(new JButton(), "Register", "blueformicon");
@@ -256,23 +282,13 @@ public class GUI extends JFrame {
 		sendButton.setBounds(width / 12, 9 * height / 20, bw, 3 * bh / 4);
 		sendButton.addActionListener(actionListener);
 
-		backButton = new JButton("          Back", new ImageIcon(this.getClass().getClassLoader()
-				.getResource("images/sheep.png")));
-		backButton.setBounds(11 * width / 48, 19 * height / 25, bw / 2, bw / 2);
+		backButton = new MyButton(new JButton(), "Back", null);
+		backButton.setBounds(11 * width / 48, 21 * height / 25, bw / 2, bh);
 		backButton.addActionListener(actionListener);
-		backButton.setBorder(BorderFactory.createEmptyBorder());
-		backButton.setHorizontalTextPosition(SwingConstants.CENTER);
-		backButton.setContentAreaFilled(false);
-		backButton.setVisible(false);
 
-		exitButton = new JButton("          Exit", new ImageIcon(this.getClass().getClassLoader()
-				.getResource("images/sheep.png")));
-		exitButton.setBounds(width / 48, 19 * height / 25, bw / 2, bw / 2);
+		exitButton = new MyButton(new JButton(), "Exit", null);
+		exitButton.setBounds(width / 48, 21 * height / 25, bw / 2, bh);
 		exitButton.addActionListener(actionListener);
-		exitButton.setBorder(BorderFactory.createEmptyBorder());
-		exitButton.setHorizontalTextPosition(SwingConstants.CENTER);
-		exitButton.setContentAreaFilled(false);
-		exitButton.setVisible(false);
 
 		lp.add(loginButton);
 		lp.add(registerButton);
@@ -289,7 +305,7 @@ public class GUI extends JFrame {
 	 *            LayeredPane
 	 */
 
-	private void createLoginInterfaceComponents(JLayeredPane lp) {
+	private void createLoginInterfaceComponents() {
 		int cw = 4 * width / 30;
 		int ch = 3 * height / 40;
 
@@ -304,8 +320,6 @@ public class GUI extends JFrame {
 		pwField.addActionListener(actionListener);
 		pwField.setName("pwField");
 
-		// lp.add(unLabel);
-		// lp.add(pwLabel);
 		lp.add(unField);
 		lp.add(pwField);
 	}
@@ -317,7 +331,7 @@ public class GUI extends JFrame {
 	 *            LayeredPane
 	 */
 
-	private void createRegisterInterfaceComponents(JLayeredPane lp) {
+	private void createRegisterInterfaceComponents() {
 		int cw = width / 9 /* 4 * width / 30 */;
 		int ch = 3 * height / 40;
 
@@ -386,7 +400,7 @@ public class GUI extends JFrame {
 	 *            LayeredPane
 	 */
 
-	private void createForgotInterfaceComponents(JLayeredPane lp) {
+	private void createForgotInterfaceComponents() {
 		int cw = width / 6/* 4 * width / 30 */;
 		int ch = 3 * height / 40;
 
@@ -399,7 +413,7 @@ public class GUI extends JFrame {
 		lp.add(emailField);
 	}
 
-	private void createMainInterfaceComponents(JLayeredPane lp) {
+	private void createMainInterfaceComponents() {
 		// TODO
 		int cw = width / 6;
 		int ch = 3 * height / 40;
@@ -417,7 +431,7 @@ public class GUI extends JFrame {
 		searchButton.addActionListener(actionListener);
 
 		editButton = new MyButton(new JButton(), "Edit sheep", null);
-		editButton.setBounds(width / 12, 90 * height / 200, cw, ch);
+		editButton.setBounds(width / 12, 120 * height / 200, cw, ch);
 		editButton.addActionListener(actionListener);
 
 		homeButton = new MyButton(new JButton(), "Home", null);
@@ -431,52 +445,74 @@ public class GUI extends JFrame {
 		lp.add(homeButton);
 	}
 
-	private void createSearchInterfaceComponents(JLayeredPane lp) {
+	private void createSearchInterfaceComponents() {
 		// TODO
 		int cw = width / 6;
 		int ch = 3 * height / 40;
 
-		searchLabel = new JLabel("Write the ID:");
-		searchLabel.setBounds(width / 12, 60 * height / 200, cw, ch);
+		searchLabel = new JLabel("");
+		searchLabel.setBounds(width / 12, 80 * height / 200, cw, ch);
+		searchLabel.setForeground(Color.RED);
+		searchLabel.setHorizontalAlignment(JLabel.CENTER);
 		searchLabel.setVisible(false);
 
 		searchField = new MyTextField(new JTextField(), "bluesheepicon", "ID");
-		searchField.setBounds(width / 12, 90 * height / 200, cw, ch);
+		searchField.setBounds(width / 12, 65 * height / 200, cw, ch);
+		searchField.addFocusListener(focusListener);
+		searchField.setName("searchField");
 
 		// searchButton = new MyButton(new JButton(), "Search");
 		// searchButton.setBounds(width / 12, 80 * height / 200, cw, ch);
 
+		lp.add(searchLabel);
 		lp.add(searchField);
 		// lp.add(searchButton);
 	}
 
-	private void createEditInterfaceComponents(JLayeredPane lp) {
+	private void createEditInterfaceComponents() {
 		// TODO
 		int cw = width / 6;
 		int ch = 3 * height / 40;
 
 		editIdField = new MyTextField(new JTextField(), "bluesheepicon", "");
-		editIdField.setBounds(width / 12, 30 * height / 200, cw, ch);
+		editIdField.setBounds(width / 12, 25 * height / 200, cw, ch);
+		editIdField.addFocusListener(focusListener);
+		editIdField.setName("editIdField");
 
 		editAgeField = new MyTextField(new JTextField(), "bluesheepicon", "");
-		editAgeField.setBounds(width / 12, 50 * height / 200, cw, ch);
+		editAgeField.setBounds(width / 12, 40 * height / 200, cw, ch);
+		editAgeField.addFocusListener(focusListener);
+		editAgeField.setName("editAgeField");
 
 		editWeightField = new MyTextField(new JTextField(), "bluesheepicon", "");
-		editWeightField.setBounds(width / 12, 70 * height / 200, cw, ch);
+		editWeightField.setBounds(width / 12, 55 * height / 200, cw, ch);
+		editWeightField.addFocusListener(focusListener);
+		editWeightField.setName("editWeightField");
 
 		editSexField = new MyTextField(new JTextField(), "bluesheepicon", "");
-		editSexField.setBounds(width / 12, 90 * height / 200, cw, ch);
+		editSexField.setBounds(width / 12, 70 * height / 200, cw, ch);
+		editSexField.addFocusListener(focusListener);
+		editSexField.setName("editSexField");
 
 		editShepherdField = new MyTextField(new JTextField(), "bluesheepicon", "");
-		editShepherdField.setBounds(width / 12, 110 * height / 200, cw, ch);
+		editShepherdField.setBounds(width / 12, 85 * height / 200, cw, ch);
+		editShepherdField.addFocusListener(focusListener);
+		editShepherdField.setName("editShepherdField");
 
 		clearAllButton = new MyButton(new JButton(), "Clear All", null);
-		clearAllButton.setBounds(width / 12, 140 * height / 200, cw, ch);
+		clearAllButton.setBounds(width / 12, 110 * height / 200, cw, ch);
 		clearAllButton.addActionListener(actionListener);
+		clearAllButton.setName("clearAllButton");
 
 		updateButton = new MyButton(new JButton(), "Update", null);
-		updateButton.setBounds(width / 12, 160 * height / 200, cw, ch);
+		updateButton.setBounds(width / 12, 130 * height / 200, cw, ch);
 		updateButton.addActionListener(actionListener);
+		updateButton.setName("updateButton");
+
+		regretButton = new MyButton(new JButton(), "Regret", null);
+		regretButton.setBounds(width / 12 + cw / 2, 110 * height / 200, cw / 2, ch);
+		regretButton.addActionListener(actionListener);
+		regretButton.setName("regretButton");
 
 		lp.add(editIdField);
 		lp.add(editAgeField);
@@ -485,37 +521,60 @@ public class GUI extends JFrame {
 		lp.add(editShepherdField);
 		lp.add(clearAllButton);
 		lp.add(updateButton);
+		lp.add(regretButton);
 	}
 
-	private void createListInterfaceComponents(JLayeredPane lp) {
+	private void createListInterfaceComponents() {
 		// TODO
 		int cw = width / 6;
 		int ch = 3 * height / 40;
 
 		sheepy = new MyButton(new JButton(), "DONT CLICK", "bluesheepicon");
-		sheepy.setBounds(width / 12, 90 * height / 200, cw, ch);
+		sheepy.setBounds(width / 12, 20 * height / 200, cw, ch);
+		sheepy.addActionListener(actionListener);
 
+		sheepListModel = new DefaultListModel();
+
+		sheepList = new JList(sheepListModel);
+		sheepList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+		sheepList.setCellRenderer(new MyListRenderer());
+
+		sheepScrollPane = new JScrollPane(sheepList);
+		sheepScrollPane.setBounds(width / 24, 50 * height / 200, 3 * cw / 2, ch * 6);
+		sheepScrollPane.setVisible(false);
+
+		lp.add(sheepScrollPane);
 		lp.add(sheepy);
 	}
 
-	private void createRegSheepInterfaceComponents(JLayeredPane lp) {
+	private void createRegSheepInterfaceComponents() {
 		// TODO
 		int cw = width / 6;
 		int ch = 3 * height / 40;
 		regIDField = new MyTextField(new JTextField(), "bluesheepicon", "ID");
 		regIDField.setBounds(width / 12, 25 * height / 200, cw, ch);
+		regIDField.addFocusListener(focusListener);
+		regIDField.setName("regIDField");
 
 		regAgeField = new MyTextField(new JTextField(), "bluesheepicon", "Age");
 		regAgeField.setBounds(width / 12, 45 * height / 200, cw, ch);
+		regAgeField.addFocusListener(focusListener);
+		regAgeField.setName("regAgeField");
 
 		regWeightField = new MyTextField(new JTextField(), "bluesheepicon", "Weight");
 		regWeightField.setBounds(width / 12, 65 * height / 200, cw, ch);
+		regWeightField.addFocusListener(focusListener);
+		regWeightField.setName("regWeightField");
 
 		regSexField = new MyTextField(new JTextField(), "bluesheepicon", "Sex");
 		regSexField.setBounds(width / 12, 85 * height / 200, cw, ch);
+		regSexField.addFocusListener(focusListener);
+		regSexField.setName("regSexField");
 
 		regShepherdField = new MyTextField(new JTextField(), "bluesheepicon", "Shepard");
 		regShepherdField.setBounds(width / 12, 105 * height / 200, cw, ch);
+		regShepherdField.addFocusListener(focusListener);
+		regShepherdField.setName("regShepherdField");
 
 		lp.add(regIDField);
 		lp.add(regAgeField);
@@ -528,25 +587,51 @@ public class GUI extends JFrame {
 	private ArrayList<Sheep> testingGetSheepList(double lat, double lon) {
 		ArrayList<Sheep> sheeps = new ArrayList<Sheep>();
 		ArrayList<String> locs = new ArrayList<String>();
-		double num = 0.02745;
+		double numw = 0.0172;
+		double numh = 0.00577;
+		// double numw = 0.00855;
+		// double numh = 0.00577;
 		Random r = new Random();
 		// System.out.println(xr + "  " + yr);
-		int quantity = 200;
+		int quantity = 20;
 		for (int i = 0; i < quantity; i++) {
-			double xi = (lat - num) + (num * 2) * r.nextDouble();
-			double yi = (lon - num) + (num * 2) * r.nextDouble();
-			locs.add("" + xi + "," + yi);
-			// System.out.println("" + xi + "," + yi);
+			double xi = (lon - numw / 2) + (numw) * r.nextDouble();
+			double yi = (lat - numh / 2) + (numh) * r.nextDouble();
+			locs.add("" + yi + "," + xi);
+			System.out.println("" + xi + "," + yi);
 		}
 
 		try {
 			for (int i = 0; i < quantity; i++) {
-				sheeps.add(new Sheep(i, 1, 10, 'm', "Andy@hotmail.com"));
+				char c = (i % 2 == 1) ? 'f' : 'm';
+				sheeps.add(new Sheep(i, 1, 10, c, "Andy@hotmail.com"));
 				sheeps.get(sheeps.size() - 1).newLocation(locs.get(i), "01/01/2000");
 			}
+
+			String cord = "63.43,10.39";
+			sheeps.add(new Sheep(1337, 1, 10, 'm', "Andy@hotmail.com"));
+			sheeps.get(sheeps.size() - 1).newLocation(cord, "01/01/2000");
+
+			cord = "63.43," + (10.39 + numw / 2);
+			sheeps.add(new Sheep(1338, 1, 10, 'm', "Andy@hotmail.com"));
+			sheeps.get(sheeps.size() - 1).newLocation(cord, "01/01/2000");
+
+			cord = "63.43," + (10.39 - numw / 2);
+			sheeps.add(new Sheep(1339, 1, 10, 'm', "Andy@hotmail.com"));
+			sheeps.get(sheeps.size() - 1).newLocation(cord, "01/01/2000");
+
+			cord = (63.43 + numh / 2) + ",10.39";
+			sheeps.add(new Sheep(1340, 1, 10, 'm', "Andy@hotmail.com"));
+			sheeps.get(sheeps.size() - 1).newLocation(cord, "01/01/2000");
+
+			cord = (63.43 - numh / 2) + ",10.39";
+			sheeps.add(new Sheep(1341, 1, 10, 'm', "Andy@hotmail.com"));
+			sheeps.get(sheeps.size() - 1).newLocation(cord, "01/01/2000");
+
 			return sheeps;
 		} catch (Exception e) {
 			System.out.println("Fikk ikke lasted inn sauene");
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -562,13 +647,15 @@ public class GUI extends JFrame {
 		return null;
 	}
 
-	private void addMySheepButtons(JLayeredPane lp) {
+	private void addMySheepButtons() {
 		mySheepButtons = new ArrayList<MySheepButton>();
 		ArrayList<Sheep> list = testingGetSheepList(user.getLatitudeDouble(), user.getLongitudeDouble());
-		double num = 0.02745;
-		double numh = height / 3 / num;
-		double numw = width / 3 / num;
+		int zoom = 15;
+		double numw = 0.0172 / 2;
+		double numh = 0.00577 / 2;
 
+		double nh = height / 2 / numh;
+		double nw = width / 3 / numw;
 		for (Sheep s : list) {
 			MyPoint p = null;
 			try {
@@ -576,25 +663,155 @@ public class GUI extends JFrame {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			int x = (int) ((user.getLongitudeDouble() - p.getLongitude()) * numw);
-			int y = (int) ((user.getLatitudeDouble() - p.getLatitude()) * numh);
+			int x = (int) ((user.getLongitudeDouble() - p.getLongitude()) * nw);
+			int y = (int) ((user.getLatitudeDouble() - p.getLatitude()) * nh);
 			// System.out.println(x + "  " + y);
 
 			// System.out.println((2 * width / 3 - x) + "  " + (height / 2 -
 			// y));
-			mySheepButtons.add(new MySheepButton(new JButton(), s, 2 * width / 3 - x, height / 2 - y, 10));
+			mySheepButtons.add(new MySheepButton(new JButton(), s, 2 * width / 3 - x, height / 2 + y, 10, this));
 		}
 
 		for (MySheepButton b : mySheepButtons) {
-			System.out.println(b.getBounds().x + "  " + b.getBounds().y);
+			// System.out.println(b.getBounds().x + "  " + b.getBounds().y);
 			lp.add(b);
 		}
 	}
 
-	private void createMap(JLayeredPane lp) {
-		myMap = new MyMap(2 * width / 3, height, lp);
-		myMap.setBounds(width / 3, 0, 2 * width / 3, height);
+	public void changeMySheepButtonBounds(double lat, double lon, int zoom) {
+		double numw = 0.0172 / 2;
+		double numh = 0.00577 / 2;
+		if (zoom == 17) {
+			numw = 0.0172 / 8;
+			numh = 0.00577 / 8;
+		}
+
+		double nh = height / 2 / numh;
+		double nw = width / 3 / numw;
+
+		for (MySheepButton b : mySheepButtons) {
+			MyPoint p = null;
+			try {
+				p = getLocationPoint(b.getSheep().getLocation().getPosition());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			int x = (int) ((lon - p.getLongitude()) * nw);
+			int y = (int) ((lat - p.getLatitude()) * nh);
+
+			b.setLocation(2 * width / 3 - x, height / 2 + y);
+			if (zoom == 17) {
+				b.changeSize(20);
+			} else {
+				b.changeSize(10);
+			}
+			b.repaint();
+		}
+	}
+
+	private void createMap() {
+		myMap = new MyMap(2 * width / 3, 85 * height / 100, this);
+		myMap.setBounds(width / 3, 0, 2 * width / 3, 85 * height / 100);
 		lp.add(myMap);
+	}
+
+	private void createLowerPanel() {
+		try {
+			lwEditLabel = new JLabel() {
+				BufferedImage image = ImageIO.read(this.getClass().getClassLoader()
+						.getResource("images/blackcarbon.jpg"));;
+
+				protected void paintComponent(Graphics g) {
+					super.paintComponent(g);
+					g.drawImage(image, 0, 0, this);
+				}
+			};
+
+			int cw = width / 12;
+			int ch = 2 * height / 40;
+
+			lwEditLabel.setBounds(width / 3, 85 * height / 100, 2 * width / 3, 15 * height / 100);
+			lwEditLabel.setVisible(false);
+
+			lwEditIdField = new MyTextField(new JTextField(), null, "");
+			lwEditIdField.setBounds(21 * width / 60, 9 * height / 10, cw / 2, ch);
+			lwEditIdField.setEditable(false);
+			// lwEditIdField.setVisible(true);
+
+			lwEditAgeField = new MyTextField(new JTextField(), null, "");
+			lwEditAgeField.setBounds(24 * width / 60, 9 * height / 10, cw / 2, ch);
+			// lwEditAgeField.setVisible(true);
+
+			lwEditWeightField = new MyTextField(new JTextField(), null, "");
+			lwEditWeightField.setBounds(27 * width / 60, 9 * height / 10, cw / 2, ch);
+			// lwEditWeightField.setVisible(true);
+
+			lwEditOwnerField = new MyTextField(new JTextField(), null, "");
+			lwEditOwnerField.setBounds(30 * width / 60, 9 * height / 10, 27 * cw / 16, ch);
+			// lwEditOwnerField.setVisible(true);
+
+			lwEditShepherdField = new MyTextField(new JTextField(), null, "");
+			lwEditShepherdField.setBounds(39 * width / 60, 9 * height / 10, 27 * cw / 16, ch);
+			// lwEditShepherdField.setVisible(true);
+
+			lwEditHeartrateField = new MyTextField(new JTextField(), null, "");
+			lwEditHeartrateField.setBounds(48 * width / 60, 9 * height / 10, cw / 2, ch);
+			// lwEditHeartrateField.setVisible(true);
+
+			lwEditTemperatureField = new MyTextField(new JTextField(), null, "");
+			lwEditTemperatureField.setBounds(51 * width / 60, 9 * height / 10, cw / 2, ch);
+			// lwEditTemperatureField.setVisible(true);
+
+			lwEditBirthyearField = new MyTextField(new JTextField(), null, "");
+			lwEditBirthyearField.setBounds(54 * width / 60, 9 * height / 10, cw, ch);
+			// lwEditBirthyearField.setVisible(true);
+
+			lwEditIdLabel = new MyLabel(new JLabel(), "ID:", null);
+			lwEditIdLabel.setBounds(21 * width / 60, 85 * height / 100, cw / 2, ch);
+
+			lwEditAgeLabel = new MyLabel(new JLabel(), "Age:", null);
+			lwEditAgeLabel.setBounds(24 * width / 60, 85 * height / 100, cw / 2, ch);
+
+			lwEditWeightLabel = new MyLabel(new JLabel(), "Weight:", null);
+			lwEditWeightLabel.setBounds(27 * width / 60, 85 * height / 100, cw / 2, ch);
+
+			lwEditOwnerLabel = new MyLabel(new JLabel(), "Owner:", null);
+			lwEditOwnerLabel.setBounds(30 * width / 60, 85 * height / 100, 27 * cw / 16, ch);
+
+			lwEditShepherdLabel = new MyLabel(new JLabel(), "Sheperd:", null);
+			lwEditShepherdLabel.setBounds(39 * width / 60, 85 * height / 100, 27 * cw / 16, ch);
+
+			lwEditHeartrateLabel = new MyLabel(new JLabel(), "", "redtempicon");
+			lwEditHeartrateLabel.setBounds(48 * width / 60, 85 * height / 100, cw / 2, ch);
+
+			lwEditTemperatureLabel = new MyLabel(new JLabel(), "", "redhearticon");
+			lwEditTemperatureLabel.setBounds(51 * width / 60, 85 * height / 100, cw / 2, ch);
+
+			lwEditBirthyearLabel = new MyLabel(new JLabel(), "Birthyear:", null);
+			lwEditBirthyearLabel.setBounds(54 * width / 60, 85 * height / 100, cw, ch);
+
+			lp.add(lwEditIdField);
+			lp.add(lwEditAgeField);
+			lp.add(lwEditWeightField);
+			lp.add(lwEditOwnerField);
+			lp.add(lwEditShepherdField);
+			lp.add(lwEditHeartrateField);
+			lp.add(lwEditTemperatureField);
+			lp.add(lwEditBirthyearField);
+
+			lp.add(lwEditIdLabel);
+			lp.add(lwEditAgeLabel);
+			lp.add(lwEditWeightLabel);
+			lp.add(lwEditOwnerLabel);
+			lp.add(lwEditShepherdLabel);
+			lp.add(lwEditHeartrateLabel);
+			lp.add(lwEditTemperatureLabel);
+			lp.add(lwEditBirthyearLabel);
+
+			lp.add(lwEditLabel);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// setter sammen listene med de ulike kompoentene for ï¿½ da gï¿½ igjennom
@@ -605,7 +822,6 @@ public class GUI extends JFrame {
 	private void createComponentArrays() {
 
 		startComps = new ArrayList<JComponent>();
-		startComps.clear();
 		startComps.add(loginButton);
 		startComps.add(registerButton);
 		startComps.add(exitButton);
@@ -619,7 +835,6 @@ public class GUI extends JFrame {
 		loginComps.add(exitButton);
 
 		forgotComps = new ArrayList<JComponent>();
-		forgotComps.clear();
 		forgotComps.add(emailField);
 		forgotComps.add(backButton);
 		forgotComps.add(exitButton);
@@ -639,17 +854,14 @@ public class GUI extends JFrame {
 		registerComps.add(exitButton);
 
 		mainComps = new ArrayList<JComponent>();
-		mainComps.clear();
 		mainComps.add(sheepRegButton);
 		mainComps.add(listButton);
 		mainComps.add(searchButton);
-		mainComps.add(editButton);
 		mainComps.add(homeButton);
 		mainComps.add(backButton);
 		mainComps.add(exitButton);
 
 		searchComps = new ArrayList<JComponent>();
-		searchComps.clear();
 		searchComps.add(searchLabel);
 		searchComps.add(searchField);
 		searchComps.add(searchButton);
@@ -657,7 +869,6 @@ public class GUI extends JFrame {
 		searchComps.add(exitButton);
 
 		editComps = new ArrayList<JComponent>();
-		editComps.clear();
 		editComps.add(editIdField);
 		editComps.add(editAgeField);
 		editComps.add(editWeightField);
@@ -669,13 +880,12 @@ public class GUI extends JFrame {
 		editComps.add(exitButton);
 
 		listComps = new ArrayList<JComponent>();
-		listComps.clear();
 		listComps.add(sheepy);
+		listComps.add(sheepScrollPane);
 		listComps.add(backButton);
 		listComps.add(exitButton);
 
 		regSheepComps = new ArrayList<JComponent>();
-		regSheepComps.clear();
 		regSheepComps.add(regIDField);
 		regSheepComps.add(regAgeField);
 		regSheepComps.add(regWeightField);
@@ -686,7 +896,6 @@ public class GUI extends JFrame {
 		regSheepComps.add(backButton);
 
 		fieldComps = new ArrayList<JComponent>();
-		fieldComps.clear();
 		fieldComps.add(regNameField);
 		fieldComps.add(regLNameField);
 		fieldComps.add(regEmailField);
@@ -696,14 +905,37 @@ public class GUI extends JFrame {
 		fieldComps.add(pwField);
 		fieldComps.add(unField);
 		fieldComps.add(emailField);
+
+		lwEditComps = new ArrayList<JComponent>();
+		lwEditComps.add(lwEditLabel);
+		lwEditComps.add(lwEditIdField);
+		lwEditComps.add(lwEditAgeField);
+		lwEditComps.add(lwEditWeightField);
+		lwEditComps.add(lwEditOwnerField);
+		lwEditComps.add(lwEditShepherdField);
+		lwEditComps.add(lwEditHeartrateField);
+		lwEditComps.add(lwEditTemperatureField);
+		lwEditComps.add(lwEditBirthyearField);
+		lwEditComps.add(lwEditIdLabel);
+		lwEditComps.add(lwEditAgeLabel);
+		lwEditComps.add(lwEditWeightLabel);
+		lwEditComps.add(lwEditOwnerLabel);
+		lwEditComps.add(lwEditShepherdLabel);
+		lwEditComps.add(lwEditHeartrateLabel);
+		lwEditComps.add(lwEditTemperatureLabel);
+		lwEditComps.add(lwEditBirthyearLabel);
 	}
 
-	// Lage en metode som plasserer de ulie komponentene fint auomatisk. Uten at
-	// en trenger ï¿½ sette bounds pï¿½ alle.
+	/**
+	 * Metode for aa plassere de ulike komponentene bedre, for Œ slippe mye av
+	 * den samme koden.
+	 * 
+	 * @param list
+	 */
 	private void placeComponentsNeat(ArrayList<Component> list) {
-		int cw = width / 6; // bredden pï¿½ hver boks
-		int ch = 3 * height / 40; // hï¿½yden pï¿½ hver boks
-		int rh = height * 8 / 10; // nederste 20% til back og exit button
+		int cw = width / 6;
+		int ch = 3 * height / 40;
+		int rh = height * 8 / 10;
 
 		ArrayList<Component> labelList = new ArrayList<Component>();
 		ArrayList<Component> fieldList = new ArrayList<Component>();
@@ -728,10 +960,10 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Method for setting all the start components visible or not.
+	 * Metode for Œ bytte til start interface
 	 * 
 	 * @param bool
-	 *            true for visible
+	 *            true for synlig
 	 */
 	private void changeToStartInterface(Boolean bool) {
 		if (bool) {
@@ -746,10 +978,10 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Method for setting all the login components visible or not.
+	 * Metode for Œ bytte til login interface
 	 * 
 	 * @param bool
-	 *            true for visible
+	 *            true for synlig
 	 */
 	private void changeToLoginInterface(boolean bool) {
 		for (Component c : loginComps) {
@@ -759,25 +991,23 @@ public class GUI extends JFrame {
 			loginButton.setBounds(width / 12, 85 * height / 200, width / 6, 3 * height / 40);
 			forgotButton.setBounds(width / 12, 105 * height / 200, width / 6, 3 * height / 40);
 			registerButton.setVisible(!bool);
-			backButton.setText("          Back");
+			backButton.setText("Back");
 			unField.requestFocus();
-			unField.setText("Frodo@hotmail.com");
-			pwField.setText("passord123");
 			state = LOGIN;
 		}
 		repaintPanel();
 	}
 
 	/**
-	 * Method for setting all the register components visible or not.
+	 * Metode for Œ bytte til register interface
 	 * 
 	 * @param bool
-	 *            true for visible
+	 *            true for synlig
 	 */
 	private void changeToRegisterInterface(boolean bool) {
 		if (bool) {
 			registerButton.setBounds(width / 12, 130 * height / 200, width / 6, 3 * height / 40);
-			backButton.setText("          Back");
+			backButton.setText("Back");
 			state = REG;
 		}
 		for (Component c : registerComps) {
@@ -787,15 +1017,15 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Method for setting all the forgot components visible or not.
+	 * Metode for Œ bytte til forgot interface
 	 * 
 	 * @param bool
-	 *            true for visible
+	 *            true for synlig
 	 */
 	private void changeToForgotInterface(boolean bool) {
 		if (bool) {
 			sendButton.setBounds(width / 12, 85 * height / 200, width / 6, 3 * height / 40);
-			backButton.setText("          Back");
+			backButton.setText("Back");
 			state = FORGOT;
 		}
 		for (Component c : forgotComps) {
@@ -804,12 +1034,21 @@ public class GUI extends JFrame {
 		repaintPanel();
 	}
 
+	/**
+	 * Metode for Œ bytte til main interface
+	 * 
+	 * @param bool
+	 *            true for synlig
+	 */
 	private void changeToMainInterface(boolean bool) {
-		// TODO
 		if (bool) {
 			searchButton.setBounds(width / 12, 70 * height / 200, width / 6, 3 * height / 40);
 			sheepRegButton.setBounds(width / 12, 30 * height / 200, width / 6, 3 * height / 40);
-			backButton.setText("            Log out");
+			backButton.setText("Log out");
+			editButton.setVisible(false);
+			if (editSheepButton != null) {
+				((MyBorder) editSheepButton.getBorder()).setColor(Color.RED);
+			}
 			state = MAIN;
 		}
 		for (Component c : mainComps) {
@@ -818,11 +1057,17 @@ public class GUI extends JFrame {
 		repaintPanel();
 	}
 
+	/**
+	 * Metode for Œ bytte til search interface
+	 * 
+	 * @param bool
+	 *            true for synlig
+	 */
 	private void changeToSearchInterface(boolean bool) {
-		// TODO
 		if (bool) {
-			searchButton.setBounds(width / 12, 110 * height / 200, width / 6, 3 * height / 40);
-			backButton.setText("          Back");
+			searchButton.setBounds(width / 12, 85 * height / 200, width / 6, 3 * height / 40);
+			searchLabel.setText("");
+			backButton.setText("Back");
 			state = SEARCH;
 		}
 		for (Component c : searchComps) {
@@ -830,10 +1075,15 @@ public class GUI extends JFrame {
 		}
 	}
 
+	/**
+	 * Metode for Œ bytte til edit interface
+	 * 
+	 * @param bool
+	 *            true for synlig
+	 */
 	private void changeToEditInterface(boolean bool) {
-		// TODO
 		if (bool) {
-			backButton.setText("          Back");
+			backButton.setText("Back");
 			state = EDIT;
 		}
 		for (Component c : editComps) {
@@ -841,10 +1091,15 @@ public class GUI extends JFrame {
 		}
 	}
 
+	/**
+	 * Metode for Œ bytte til list interface
+	 * 
+	 * @param bool
+	 *            true for synlig
+	 */
 	private void changeToListInterface(boolean bool) {
-		// TODO
 		if (bool) {
-			backButton.setText("          Back");
+			backButton.setText("Back");
 			state = LIST;
 		}
 		for (Component c : listComps) {
@@ -852,11 +1107,16 @@ public class GUI extends JFrame {
 		}
 	}
 
+	/**
+	 * Metode for Œ bytte til register sheep interface
+	 * 
+	 * @param bool
+	 *            true for synlig
+	 */
 	private void changeToRegSheepInterface(boolean bool) {
-		// TODO
 		if (bool) {
 			sheepRegButton.setBounds(width / 12, 130 * height / 200, width / 6, 3 * height / 40);
-			backButton.setText("          Back");
+			backButton.setText("Back");
 			state = SHEEPREG;
 		}
 		for (Component c : regSheepComps) {
@@ -865,8 +1125,7 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Method that runs when the user requests to finish his registration and
-	 * save a new user.
+	 * Metode som pr¿ver Œ registrere bruker naar brukeren ber om det
 	 */
 	// Henter informasjon fra tekst boksene og skriver dem ut.
 	private boolean registerUser() {
@@ -874,6 +1133,8 @@ public class GUI extends JFrame {
 		String lastName = regLNameField.getText();
 		String email = regEmailField.getText();
 		String phoneNr = regPhoneField.getText();
+		String latitude = regLatitudeField.getText();
+		String longitude = regLongitudeField.getText();
 		char[] pw = regPwField.getPassword();
 		char[] pw2 = regPwField2.getPassword();
 
@@ -885,56 +1146,22 @@ public class GUI extends JFrame {
 		for (int i = 0; i < pw2.length; i++) {
 			password2 += pw2[i];
 		}
-
+		// Sjekker om passordene stemmer oversend
 		if (password.equals(password2)) {
 			try {
+				// Registrer bruker
 				UserRegistration.registerUser(firstName, lastName, email, password2, phoneNr, "0");
-				System.out.println("asd");
+				System.out.println("User registered.");
 				return true;
 			} catch (Exception e) {
-				if (e.getMessage().equals("First name is not valid")) {
-					((MyBorder) regNameField.getBorder()).setColor(invalid);
-				} else if (e.getMessage().equals("Last name is not valid")) {
-				} else if (e.getMessage().equals("Email is not valid")) {
-				} else if (e.getMessage().equals("Phone number not valid")) {
-				} else if (e.getMessage().equals("Password is not valid")) {
-				}
-				System.out.println(e.getLocalizedMessage());
-				e.printStackTrace();
+				return false;
 			}
-//			int num = Server.sendInformationRegisterUser(firstName, lastName, email, password2, phoneNr);
-//			if (num == 1) { // fikk registrert bruker
-//				Color white = Color.white;
-//				unField.setText(email);
-//				for (JComponent c : registerComps) {
-//					if (c instanceof MyTextField || c instanceof MyPasswordField) {
-//						//((MyTextField) c).setText("");
-//						//((MyBorder) c.getBorder()).setColor(white);
-//					}
-//				}
-//				return true;
-//			} else if (num == -1) {
-//				((MyBorder) regNameField.getBorder()).setColor(invalid);
-//			} else if (num == -2) {
-//				((MyBorder) regNameField.getBorder()).setColor(invalid);
-//			} else if (num == -3) {
-//				((MyBorder) regEmailField.getBorder()).setColor(invalid);
-//			} else if (num == -4) {
-//				((MyBorder) regPhoneField.getBorder()).setColor(invalid);
-//			} else if (num == -5) {
-//				((MyBorder) regPwField.getBorder()).setColor(invalid);
-//				((MyBorder) regPwField2.getBorder()).setColor(invalid);
-//			}
-//		} else {
-//			((MyBorder) regPwField.getBorder()).setColor(invalid);
-//			((MyBorder) regPwField2.getBorder()).setColor(invalid);
 		}
 		return false;
 	}
 
 	/**
-	 * Method that runs when the user requests to login after entering email and
-	 * password in the fields.
+	 * Metode som prover aa logge inn med gitt email og passord
 	 */
 	private boolean login() {
 		String email = unField.getText();
@@ -944,10 +1171,54 @@ public class GUI extends JFrame {
 			password += c[i];
 		}
 
+		// FOR TESTING
+		if (email.equals("")) {
+			try {
+				this.user = new User("admin", "admin", "admin@admin.com", "13371337", "63.43,10.39");
+				ArrayList<String> locs = new ArrayList<String>();
+				double num = 0.0171;
+				double lat = user.getLatitudeDouble();
+				double lon = user.getLongitudeDouble();
+				Random r = new Random();
+				// System.out.println(xr + "  " + yr);
+				int quantity = 200;
+				for (int i = 0; i < quantity; i++) {
+					double xi = (lat - num) + (num * 2) * r.nextDouble();
+					double yi = (lon - num) + (num * 2) * r.nextDouble();
+					locs.add("" + xi + "," + yi);
+					// System.out.println("" + xi + "," + yi);
+				}
+
+				try {
+					for (int i = 0; i < quantity; i++) {
+						user.registerSheep("" + i, "" + 1, "" + 10, "m", "Andy@hotmail.com");
+						user.getSheepList().get(user.getSheepList().size() - 1).newLocation(locs.get(i), "01/01/2000");
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					System.out.println("Fikk ikke lasted inn sauene");
+				}
+				changeToLoginInterface(false);
+				changeToMainInterface(true);
+				System.out.println("Logged in: " + user.getEmail());
+				rightPanel.setVisible(false);
+				testingGetSheepList(user.getLatitudeDouble(), user.getLongitudeDouble());
+				addMySheepButtons();
+				createMap();
+				myMap.setUser(user);
+				updateSheepList();
+				for (JComponent jc : lwEditComps) {
+					jc.setVisible(true);
+				}
+			} catch (Exception e) {
+				System.out.println("Noe galt med admin bruker");
+			}
+			return true;
+		}
+
 		User user = Server.sendInformationLogin(email, password);
 
 		if (user != null) {
-			// TODO
 			changeToLoginInterface(false);
 			changeToMainInterface(true);
 			System.out.println("Logged in: " + user.getEmail());
@@ -955,9 +1226,10 @@ public class GUI extends JFrame {
 			rightPanel.setVisible(false);
 			testingGetSheepList(user.getLatitudeDouble(), user.getLongitudeDouble());
 
-			addMySheepButtons(lp);
-			createMap(lp);
+			addMySheepButtons();
+			createMap();
 			myMap.setUser(user);
+			updateSheepList();
 
 			return true;
 		}
@@ -965,8 +1237,7 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Method that runs when the user requests to get a new password sent to his
-	 * email registered to his user.
+	 * Metode som vil prove aa sende nytt passord til email
 	 */
 	private boolean sendEmail() {
 		boolean sendmail = true;
@@ -978,18 +1249,24 @@ public class GUI extends JFrame {
 		return false;
 	}
 
+	/**
+	 * Metode der en kan endre paa saue informasjonen
+	 */
 	private Sheep editSheep() {
-		// TODO
-		Sheep regSheep = Server.getInformationSheepList().get(0);
-//		editIdField.setText("" + regSheep.getId());
-		editAgeField.setText("" + regSheep.getAge());
-		editWeightField.setText("" + regSheep.getWeight());
-		editSexField.setText("" + regSheep.getGender());
-		editShepherdField.setText("" + regSheep.getShepherd());
+		editIdField.setText("" + editSheep.getId());
+		editAgeField.setText("" + editSheep.getAge());
+		editWeightField.setText("" + editSheep.getWeight());
+		editSexField.setText("" + editSheep.getGender());
+		editShepherdField.setText("" + editSheep.getShepherd());
 
 		return null;
 	}
 
+	/**
+	 * Registrerer sau med informasjon gitt i tekstboksene.
+	 * 
+	 * @return true Hvis sau er blitt registrert
+	 */
 	private boolean registerSheep() {
 		String id = regIDField.getText();
 		String age = regAgeField.getText();
@@ -998,8 +1275,8 @@ public class GUI extends JFrame {
 		String shepherd = regShepherdField.getText();
 
 		try {
-			Server.sendInformationRegisterSheep(id, age, weight, gender, shepherd);
-
+			SheepRegistration.registerSheep(Integer.parseInt(id), Integer.parseInt(age), Integer.parseInt(weight),
+					gender.charAt(0), shepherd);
 			return true;
 		} catch (NumberFormatException e) {
 			System.out.println("hey wrong");
@@ -1011,13 +1288,130 @@ public class GUI extends JFrame {
 		}
 	}
 
-	// Metode som kjï¿½rer nï¿½ en trykker pï¿½ log out knappen.
+	/**
+	 * Metode som logger ut ifra bruker
+	 */
 	private void logout() {
 		System.out.println("Logged out from: " + user.getEmail());
 		myMap.setUser(null);
 		rightPanel.setVisible(true);
+		for (JComponent jc : lwEditComps) {
+			jc.setVisible(false);
+		}
 		this.user = null;
 	}
+
+	/**
+	 * Soker etter riktig sau og zoomer inn pŒ kartet til rett sau.
+	 */
+	private void searchSheep() {
+		String input = searchField.getText();
+		int id = -1;
+		try {
+			id = Integer.parseInt(input);
+			searchButton.setBounds(width / 12, 85 * height / 200, width / 6, 3 * height / 40);
+			searchLabel.setText("");
+			editButton.setVisible(false);
+			Sheep sheep = null; // getSheep(ID);
+			for (MySheepButton b : mySheepButtons) {
+				if (id == b.getSheep().getId()) {
+					sheep = b.getSheep();
+					editSheepButton = b;
+					((MyBorder) b.getBorder()).setColor(Color.BLUE);
+				}
+			}
+			if (sheep != null) {
+				double latitude = Double.parseDouble(sheep.getLocation().getLatitude());
+				double longitude = Double.parseDouble(sheep.getLocation().getLongitude());
+				editSheep = sheep;
+				try {
+					myMap.zoomInOnSheep(latitude, longitude);
+					double lat = Double.parseDouble(editSheep.getLocation().getLatitude());
+					double lon = Double.parseDouble(editSheep.getLocation().getLongitude());
+					changeMySheepButtonBounds(lat, lon, 17);
+				} catch (Exception e) {
+					System.out.println("no internet");
+				}
+				editButton.setVisible(true);
+			} else {
+				// kan ikke finne sheep, vise fram pŒ en mŒte
+				searchButton.setBounds(width / 12, 95 * height / 200, width / 6, 3 * height / 40);
+				searchLabel.setText("No sheep by that ID, (" + input + ").");
+			}
+		} catch (NumberFormatException e) {
+			// feil verdier for input
+			searchButton.setBounds(width / 12, 95 * height / 200, width / 6, 3 * height / 40);
+			searchLabel.setText("ID input is not a valid number.");
+			editButton.setVisible(false);
+		}
+	}
+
+	/**
+	 * Endre fargen pŒ saue knappene
+	 * 
+	 * @param num
+	 *            Tall for forskjellige farger
+	 */
+	private void changeMySheepButtonColors(int num) {
+		// 1 = m/f, 2
+		System.out.println(num);
+		if (num == 1) {
+			for (MySheepButton b : mySheepButtons) {
+				Sheep s = b.getSheep();
+				if (s.getGender() == 'm') {
+					b.setColor(Color.BLUE); // m
+				} else {
+					b.setColor(Color.MAGENTA); // f
+				}
+			}
+		} else if (num == 2) {
+			for (MySheepButton b : mySheepButtons) {
+				b.setColor(Color.RED);
+			}
+		} else if (num == 3) {
+			for (MySheepButton b : mySheepButtons) {
+				b.setColor(Color.GREEN);
+			}
+		} else if (num == 4) {
+			for (MySheepButton b : mySheepButtons) {
+				b.setColor(Color.CYAN);
+			}
+		} else if (num == 5) {
+			for (MySheepButton b : mySheepButtons) {
+				b.setColor(Color.PINK);
+			}
+		}
+	}
+
+	/**
+	 * Setter inn informasjon fra en sau inn i lwEdit feltene.
+	 * 
+	 * @param s
+	 *            Gitt Sheep
+	 */
+
+	public void setLwEditSheep(Sheep s) {
+		lwEditIdField.setText("" + s.getId());
+		lwEditAgeField.setText("" + s.getAge());
+		lwEditWeightField.setText("" + s.getWeight());
+		lwEditOwnerField.setText("" + user.getLastName()); // get owner
+		lwEditShepherdField.setText("" + s.getShepherd());
+		lwEditHeartrateField.setText("" + s.getHeartrate());
+		lwEditTemperatureField.setText("" + s.getTemperature());
+		lwEditBirthyearField.setText(""); // denne eller age?
+	}
+
+	private void updateSheepList() {
+		for (MySheepButton s : mySheepButtons) {
+			sheepListModel.addElement(s.toString());
+		}
+
+	}
+
+	/**
+	 * Lager en FocusListener som lytter til naar en bruker trykker pŒ
+	 * tekstbokser og forlater dem
+	 */
 
 	private void createFocusListener() {
 		focusListener = new FocusListener() {
@@ -1151,6 +1545,55 @@ public class GUI extends JFrame {
 							((MyBorder) regPwField.getBorder()).changeColor(invalid);
 							((MyBorder) regPwField2.getBorder()).changeColor(invalid);
 						}
+					} else if (name.equals("regIDField")) {
+						try {
+							// TODO metode for Œ sjekke om ID field finnes.
+							input = "1337";// regIDField.getID();
+							if (Integer.parseInt(input) >= 0) {
+								((MyBorder) regIDField.getBorder()).changeColor(valid);
+							} else {
+								((MyBorder) regIDField.getBorder()).changeColor(invalid);
+							}
+						} catch (Exception exc) {
+							((MyBorder) regIDField.getBorder()).changeColor(invalid);
+						}
+					} else if (name.equals("regAgeField")) {
+						try {
+							input = regAgeField.getText();
+							tSheep.setAge(Integer.parseInt(input));
+							((MyBorder) regAgeField.getBorder()).changeColor(valid);
+						} catch (Exception exc) {
+							((MyBorder) regAgeField.getBorder()).changeColor(invalid);
+						}
+					} else if (name.equals("regWeightField")) {
+						try {
+							input = regWeightField.getText();
+							tSheep.setWeight(Integer.parseInt(input));
+							((MyBorder) regWeightField.getBorder()).changeColor(valid);
+						} catch (Exception exc) {
+							((MyBorder) regWeightField.getBorder()).changeColor(invalid);
+						}
+					} else if (name.equals("regSexField")) {
+						try {
+							input = regSexField.getText();
+							if (input.charAt(0) == 'm' || input.charAt(0) == 'f') {
+								((MyBorder) regSexField.getBorder()).changeColor(valid);
+							} else {
+								((MyBorder) regSexField.getBorder()).changeColor(invalid);
+							}
+						} catch (Exception exc) {
+							((MyBorder) regSexField.getBorder()).changeColor(invalid);
+						}
+					} else if (name.equals("regShepherdField")) {
+						try {
+							input = regShepherdField.getText();
+							tSheep.setShepherd(input);
+							((MyBorder) regShepherdField.getBorder()).changeColor(valid);
+						} catch (Exception exc) {
+							((MyBorder) regShepherdField.getBorder()).changeColor(invalid);
+						}
+					} else if (name.equals("searchField")) {
+						// mmmh
 					}
 				}
 			}
@@ -1158,7 +1601,8 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * A class that handles the button and text field listening.
+	 * Egen version av ActionListener klasse som haandterer knappetrykking og
+	 * naar "enter" blir trykket pŒ mens i en tekst boks
 	 * 
 	 * @author andreas
 	 * 
@@ -1166,13 +1610,15 @@ public class GUI extends JFrame {
 	private class MyListener implements ActionListener {
 		// bruke setActionCommand pï¿½ alt som skal lyttes pï¿½ og bruke det
 		// istedenfor navn?
+		private int delete = 0;
+
 		@Override
 		public void actionPerformed(ActionEvent arg) {
-			// rightPanel.setBackground(randomColor());
+
 			if (arg.getSource() instanceof JButton) {
 				JButton pressed = (JButton) arg.getSource();
 				String text = pressed.getText();
-				// System.out.println(text);
+				System.out.println(text);
 
 				if (text.equals("Register")) {
 					if (state == 2) {
@@ -1180,8 +1626,8 @@ public class GUI extends JFrame {
 							changeToRegisterInterface(false);
 							changeToLoginInterface(true);
 						} else {
-							// istdenfor boolean fra registerUser() fï¿½ tall for
-							// ï¿½ finne ut om hvilke verdier som er feil
+							// istedenfor boolean fra registerUser() faa tall
+							// for aa finne ut om hvilke verdier som er feil
 							// Noe lignende med login!
 						}
 					} else {
@@ -1192,19 +1638,18 @@ public class GUI extends JFrame {
 					// sjekker: hvis man er i login interface og trykker login
 					// ->
 					if (state == 1) {
-						// metode for ï¿½ sjekke om brukernavn og passord stemmer
+						// metode for aa sjekke om brukernavn og passord stemmer
 						login();
 					} else {
 						changeToStartInterface(false);
 						changeToLoginInterface(true);
 					}
-				} else if (text.equals("          Exit")) {
-                    ClientConnection.close();
-                    System.exit(0);
-                } else if (text.equals("          Back")) {
-					// state holder styr pï¿½ hvor man er, sï¿½ programet vet hvor
-					// en
-					// skal sendes tilbake til
+				} else if (text.equals("Exit")) {
+					System.exit(0);
+					ClientConnection.close();
+				} else if (text.equals("Back")) {
+					// state holder styr paa hvor man er, saa programet vet
+					// hvor en skal sendes tilbake til
 					if (state == LOGIN) {
 						changeToLoginInterface(false);
 						changeToStartInterface(true);
@@ -1217,6 +1662,9 @@ public class GUI extends JFrame {
 					} else if (state == SEARCH) {
 						changeToSearchInterface(false);
 						changeToMainInterface(true);
+						regretButton.setVisible(false);
+						changeMySheepButtonBounds(user.getLatitudeDouble(), user.getLongitudeDouble(), 15);
+						myMap.bigMap();
 					} else if (state == EDIT) {
 						changeToEditInterface(false);
 						changeToMainInterface(true);
@@ -1255,23 +1703,67 @@ public class GUI extends JFrame {
 					changeToListInterface(true);
 				} else if (text.equals("Search for sheep")) {
 					System.out.println("sheep search");
-					changeToMainInterface(false);
-					changeToSearchInterface(true);
-					updateRightPanelMap(user.getLatitudeDouble(), user.getLongitudeDouble());
+					if (state == SEARCH) {
+						searchSheep();
+					} else {
+						changeToMainInterface(false);
+						changeToSearchInterface(true);
+					}
 
 				} else if (text.equals("Edit sheep")) {
 					System.out.println("sheep edit");
-					changeToMainInterface(false);
+					changeToSearchInterface(false);
+					editButton.setVisible(false);
 					changeToEditInterface(true);
 
 					editSheep();
 				} else if (text.equals("Home")) {
 					changeToMainInterface(true);
 					// TODO
-				} else if (text.equals("            Log out")) {
+				} else if (text.equals("Log out")) {
 					changeToMainInterface(false);
 					changeToStartInterface(true);
 					logout();
+				} else if (text.equals("Clear All")) {
+					editIdField.setText("");
+					editAgeField.setText("");
+					editWeightField.setText("");
+					editSexField.setText("");
+					editShepherdField.setText("");
+
+					clearAllButton.setBounds(width / 12, 110 * height / 200, width / 12, 3 * height / 40);
+					regretButton.setVisible(true);
+				} else if (text.equals("Update")) {
+					for (JComponent c : editComps) {
+						if (c instanceof JTextField) {
+							if (((MyBorder) ((JTextField) c).getBorder()).getColor().equals(invalid)) {
+								return; // return hvis et felt er r¿dt
+							}
+						}
+					}
+					editSheep();
+				} else if (text.equals("Regret")) {
+					editIdField.setText("" + editSheep.getId());
+					editAgeField.setText("" + editSheep.getAge());
+					editWeightField.setText("" + editSheep.getWeight());
+					editSexField.setText("" + editSheep.getGender());
+					editShepherdField.setText("" + editSheep.getShepherd());
+
+					clearAllButton.setBounds(width / 12, 110 * height / 200, width / 6, 3 * height / 40);
+					regretButton.setVisible(false);
+				} else if (text.equals("DONT CLICK")) {
+					delete++;
+					if (delete % 4 == 1) {
+						changeMySheepButtonColors(1);
+					} else if (delete % 4 == 2) {
+						changeMySheepButtonColors(2);
+					} else if (delete % 4 == 2) {
+						changeMySheepButtonColors(3);
+					} else if (delete % 4 == 3) {
+						changeMySheepButtonColors(4);
+					} else {
+						changeMySheepButtonColors(5);
+					}
 				}
 			} else if (arg.getSource() instanceof JTextField) {
 				// System.out.println(((JTextField) arg.getSource()).getName());
@@ -1391,9 +1883,13 @@ public class GUI extends JFrame {
 	private JTextField editShepherdField;
 	private JButton clearAllButton;
 	private JButton updateButton;
+	private JButton regretButton;
 
 	// list components
 	private JButton sheepy;
+	private DefaultListModel sheepListModel;
+	private JList sheepList;
+	private JScrollPane sheepScrollPane;
 
 	// register sheep components
 	private JTextField regIDField;
@@ -1404,6 +1900,26 @@ public class GUI extends JFrame {
 
 	// Sheep button list
 	private ArrayList<MySheepButton> mySheepButtons;
+
+	// lower panel
+	private JLabel lwEditLabel;
+	private JTextField lwEditIdField;
+	private JTextField lwEditAgeField;
+	private JTextField lwEditWeightField;
+	private JTextField lwEditOwnerField;
+	private JTextField lwEditShepherdField;
+	private JTextField lwEditHeartrateField;
+	private JTextField lwEditTemperatureField;
+	private JTextField lwEditBirthyearField;
+
+	private JLabel lwEditIdLabel;
+	private JLabel lwEditAgeLabel;
+	private JLabel lwEditWeightLabel;
+	private JLabel lwEditOwnerLabel;
+	private JLabel lwEditShepherdLabel;
+	private JLabel lwEditHeartrateLabel;
+	private JLabel lwEditTemperatureLabel;
+	private JLabel lwEditBirthyearLabel;
 
 	// List over the different components
 	private ArrayList<JComponent> buttonComps;
@@ -1416,6 +1932,7 @@ public class GUI extends JFrame {
 	private ArrayList<JComponent> editComps;
 	private ArrayList<JComponent> listComps;
 	private ArrayList<JComponent> regSheepComps;
+	private ArrayList<JComponent> lwEditComps;
 
 	private ArrayList<JComponent> fieldComps;
 }

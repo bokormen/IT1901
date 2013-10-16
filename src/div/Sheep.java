@@ -1,11 +1,14 @@
 package div;
+
 import java.util.ArrayList;
 import java.util.Date;
 
 /**
- * Sheep-klassen representerer en sau i systemet og lagrer og validerer generell informasjon om den. 
+ * Sheep-klassen representerer en sau i systemet og lagrer og validerer generell
+ * informasjon om den.
+ * 
  * @author Ragnhild
- *
+ * 
  */
 public class Sheep {
 
@@ -16,37 +19,41 @@ public class Sheep {
 	private double temperature;
 	private int heartrate;
 	private String shepherd;
-	private ArrayList<SheepLocation> locations; 
-	
+	private ArrayList<SheepLocation> locations;
+
 	public Sheep(int id, int age, int weight, char gender, String shepherd) throws Exception {
 		this.id = id;
 		setAge(age);
 		setWeight(weight);
 		setShepherd(shepherd);
 		locations = new ArrayList<SheepLocation>();
-		if(gender == 'f' || gender == 'm') {
+		if (gender == 'f' || gender == 'm') {
 			this.gender = gender;
 		} else {
-			throw new Exception("Gender not valid");			
+			throw new Exception("Gender not valid");
 		}
 	}
-	
+
+	public Sheep() {
+
+	}
+
 	public int getId() {
 		return id;
 	}
-
 
 	public int getAge() {
 		return age;
 	}
 
 	/**
-	 * Setter alderen til en sau. Kan være fra 0 til 40. 
-	 * @throws Exception 
+	 * Setter alderen til en sau. Kan være fra 0 til 40.
+	 * 
+	 * @throws Exception
 	 */
 	public void setAge(int age) throws Exception {
-		if(age >= 0 && age < 40) {
-			this.age = age;			
+		if (age >= 0 && age < 40) {
+			this.age = age;
 		} else {
 			throw new Exception("Age is not valid");
 		}
@@ -57,24 +64,24 @@ public class Sheep {
 	}
 
 	public void setWeight(int weight) throws Exception {
-		if(weight >= 0) {
-			this.weight = weight;			
+		if (weight >= 0) {
+			this.weight = weight;
 		} else {
 			throw new Exception("Weight is not valid");
 		}
 	}
 
 	public SheepLocation getLocation() {
-		return locations.get(locations.size()-1);
+		return locations.get(locations.size() - 1);
 	}
-	
+
 	/**
-	 * Legger til ny posisjon til sau. Dato må være på formen dd/mm/yyyy. 
+	 * Legger til ny posisjon til sau. Dato må være på formen dd/mm/yyyy.
 	 */
 	public void newLocation(String position, String date) throws Exception {
 		locations.add(new SheepLocation(position, date));
 	}
-	
+
 	public ArrayList<SheepLocation> getLocationLog() {
 		return locations;
 	}
@@ -84,7 +91,7 @@ public class Sheep {
 	}
 
 	public void setTemperature(double temperature) {
-		if(temperature < 35 || temperature > 40) {
+		if (temperature < 35 || temperature > 40) {
 			SheepAttackMail.sendMail("rakrogh@msn.com", "Sheep number " + getId() + " may be under attack");
 		}
 		this.temperature = temperature;
@@ -95,12 +102,12 @@ public class Sheep {
 	}
 
 	public void setHeartrate(int heartrate) throws Exception {
-		if(heartrate > 0) {
-			this.heartrate = heartrate;			
+		if (heartrate > 0) {
+			this.heartrate = heartrate;
 		} else {
 			throw new Exception("Heartrate not valid");
 		}
-		if(heartrate < 50 || heartrate > 100) {
+		if (heartrate < 50 || heartrate > 100) {
 			SheepAttackMail.sendMail("rakrogh@msn.com", "Sheep number " + getId() + " may be under attack.");
 		}
 	}
@@ -123,7 +130,4 @@ public class Sheep {
 		}
 	}
 
-
-	
-	
 }

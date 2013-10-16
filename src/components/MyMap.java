@@ -1,66 +1,60 @@
 package components;
 
+import gui.GUI;
 import gui.GoogleStaticMap;
 
-import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.LayoutManager;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Random;
 
-import javax.swing.JButton;
-import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 import div.MyPoint;
-import div.Sheep;
 import div.User;
 
-public class MyMap extends JPanel implements MouseListener, MouseMotionListener {
+public class MyMap extends JPanel implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener {
 
 	private int width;
 	private int height;
-	private int zoom;
-	private BufferedImage image;
-	private JLayeredPane lp;
-	private Color color;
 
-	private double numh;
-	private double numw;
-
-	// private double num = 0.0171;
-	private double num = 0.02745;
+	private int zw;
+	private int zh;
 
 	private User user;
-	private ArrayList<Sheep> sheeps;
+	private Image image;
+	private Image scaledImg;
+	private Image savedImg;
+	private GUI gui;
 
-	private ArrayList<MySheepButton> sheepButton;
+	private int x;
+	private int y;
 
-	public MyMap(int width, int height, JLayeredPane lp) {
+	public MyMap(int width, int height, GUI gui) {
 		System.out.println(width + " " + height);
-		this.lp = lp;
 		this.width = width;
 		this.height = height;
-		this.lp = lp;
-		this.color = Color.BLACK;
-		this.sheeps = new ArrayList<Sheep>();
-		this.sheepButton = new ArrayList<MySheepButton>();
-		this.zoom = 15;
-		this.numw = width / 2 / num;
-		this.numh = height / 2 / num;
+		this.gui = gui;
 		this.setVisible(false);
+
+		this.x = width / 2;
+		this.y = height / 2;
+
+		this.zw = 1280;
+		this.zh = 1280;
+
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
+		this.addKeyListener(this);
+		this.addMouseWheelListener(this);
 		// this.setOpaque(true);
-	}
-
-	public ArrayList<MySheepButton> getSheepButtons() {
-		return sheepButton;
 	}
 
 	public void setUser(User u) {
@@ -69,16 +63,25 @@ public class MyMap extends JPanel implements MouseListener, MouseMotionListener 
 			this.setVisible(false);
 		} else {
 			this.setVisible(true);
-			// System.out.println("coords: " + u.getLatitudeDouble() + " " +
-			// u.getLongitudeDouble());
-			this.image = getGoogleImage(u.getLatitudeDouble(), u.getLongitudeDouble());
+			this.image = getGoogleImage(u.getLatitudeDouble(), u.getLongitudeDouble(), 15);
+			this.savedImg = image;
 		}
-
 	}
 
-	private BufferedImage getGoogleImage(double latitude, double longitude) {
-		BufferedImage img = (BufferedImage) (GoogleStaticMap.getImage(latitude, longitude, this.zoom, width / 2,
-				height / 2, 2));
+	public void zoomInOnSheep(double latitude, double longitude) {
+		this.image = getGoogleImage(latitude, longitude, 17);
+		this.savedImg = image;
+		repaint();
+	}
+
+	public void bigMap() {
+		this.image = getGoogleImage(this.user.getLatitudeDouble(), this.user.getLongitudeDouble(), 15);
+		this.savedImg = image;
+		repaint();
+	}
+
+	private BufferedImage getGoogleImage(double latitude, double longitude, int zoom) {
+		BufferedImage img = (BufferedImage) (GoogleStaticMap.getImage(latitude, longitude, zoom, 640, 640, 2));
 		return img;
 	}
 
@@ -92,21 +95,29 @@ public class MyMap extends JPanel implements MouseListener, MouseMotionListener 
 		return null;
 	}
 
-	protected void drawBackground(Graphics g) {
-		if (image != null) {
-			g.drawImage(image, 0, 0, this);
-		}
+	private Image scaleImage(Image img, int width, int height) {
+		return img.getScaledInstance(width, height, Image.SCALE_FAST);
+	}
+
+	private void zoom(int dnum) {
+		this.zw += dnum;
+		this.zh += dnum;
+		this.x += 7 * dnum / 10;
+		this.y += 6 * dnum / 10;
+		this.image = scaleImage(savedImg, zw, zh);
+		System.out.println(x + "  " + y);
+		repaint();
 	}
 
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		drawBackground(g);
+		if (image != null) {
+			g.drawImage(image, -x, -y, this);
+		}
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-		// TODO
-
 	}
 
 	@Override
@@ -124,51 +135,55 @@ public class MyMap extends JPanel implements MouseListener, MouseMotionListener 
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO
-		Point l = e.getPoint();
-		// System.out.println(l.y + "  " + l.x);
-		for (Sheep s : sheeps) {
-			MyPoint p = null;
-			l = e.getPoint();
-			try {
-				p = getLocationPoint(s.getLocation().getPosition());
-			} catch (Exception exc) {
-				exc.printStackTrace();
-			}
-			double mylon = (user.getLongitudeDouble() - p.getLongitude()) * numw;
-			double mylat = (user.getLatitudeDouble() - p.getLatitude()) * numh;
-
-			int lon = width / 2 - (int) mylon;
-			int lat = height / 2 - (int) mylat;
-
-			// System.out.println(lat + "  " + lon);
-			// System.out.println(l.x + "  " + l.y);
-			// System.out.println(lon + "<" + (l.y + 5) + " , " + lon + ">" +
-			// (l.y - 5));
-			if (lon < l.x + 10 && lon > l.x - 10) {
-				if (lat < l.y + 10 && lat > l.y - 10) {
-					System.out.println(s.getLocation());
-				}
-			}
-		}
 
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+		skip = 0;
 
 	}
 
-	@Override
-	public void mouseDragged(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+	int skip = 0;
+	Point old = null;
 
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		System.out.println(e.getPoint());
+		if (skip == 1) {
+			this.x += (int) (old.getX() - e.getX());
+			this.y += (int) (old.getY() - e.getY());
+			repaint();
+		}
+		old = e.getPoint();
+		skip = 1;
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent arg) {
 		// TODO Auto-generated method stub
 		// System.out.println("asd: " + arg.getPoint().toString());
+	}
+
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		zoom(e.getWheelRotation());
+	}
+
+	@Override
+	public void keyPressed(KeyEvent arg) {
+		System.out.println(arg.getKeyChar());
+	}
+
+	@Override
+	public void keyReleased(KeyEvent arg0) {
+		System.out.println("asd");
+
+	}
+
+	@Override
+	public void keyTyped(KeyEvent arg0) {
+		System.out.println("asd");
 
 	}
 }
