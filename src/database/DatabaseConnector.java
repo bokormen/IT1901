@@ -237,9 +237,9 @@ public class DatabaseConnector {
 			ResultSet rs = st.executeQuery(query);
 			
 			while (rs.next()) {
-				if (rs.getString(1)==password) {
+				if (rs.getString(2).equals(password)) {
 					try {
-						farmer=new User(rs.getString(2),rs.getString(3),rs.getString(1),rs.getString(4),rs.getString(5));
+						farmer=new User(rs.getString(3),rs.getString(4),rs.getString(1),rs.getString(5),rs.getString(6));
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -453,7 +453,6 @@ public class DatabaseConnector {
 			e.printStackTrace();
 		}
 	}
-	
 	
 	/**
 	 * Sletter oppgitt bruker fra databasen
