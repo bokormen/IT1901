@@ -491,7 +491,7 @@ public class DatabaseConnector {
 	}
 	
 	/**
-	 * Sletter test sauer fra databasen
+	 * Sletter test sauer fra databasen, sjekker paa navnet til sauen, og sletter alle med navnet "testsau"
 	 * @author Oeyvind
 	 */
 	public static void deleteTestSheeps() {
