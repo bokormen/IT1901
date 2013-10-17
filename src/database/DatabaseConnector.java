@@ -163,7 +163,7 @@ public class DatabaseConnector {
 			int i=0;
 			while(rs.next()) {
 				
-				Sheep sau = new Sheep(rs.getInt(0),rs.getInt(6),rs.getInt(3),rs.getString(1).charAt(0), rs.getString(7));
+				Sheep sau = new Sheep(rs.getInt(0),rs.getInt(6),rs.getInt(3),rs.getString(1).charAt(0),owner, rs.getString(7));
 				
 				Sheeps.add(sau); //Maa sansynligvis endres litt da constructoren ikke ser ut til aa ta hensyn til all infoen
 				Statement st2 = con.createStatement();
@@ -354,7 +354,7 @@ public class DatabaseConnector {
 			ResultSet rs= st.executeQuery(query);
 			while(rs.next()) {
 				try {
-					sheep = new Sheep(rs.getInt(0),rs.getInt(6),rs.getInt(3),rs.getString(1).charAt(0), rs.getString(7));
+					sheep = new Sheep(rs.getInt(0),rs.getInt(6),rs.getInt(3),rs.getString(1).charAt(0),user, rs.getString(7));
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
