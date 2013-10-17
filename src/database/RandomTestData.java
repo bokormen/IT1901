@@ -90,8 +90,8 @@ public class RandomTestData {
 			time = 00;
 			day+=1;
 		}
-		if (day>30) {
-			day = 00;
+		if (day>daysInMonth(month, year)) {
+			day = 01;
 			month+=1;
 		}
 		if (month>12) {
@@ -116,5 +116,34 @@ public class RandomTestData {
 			return values()[random.nextInt(values().length)].name();
 			}
 		}
+	
+	public static boolean isLeapYear ( int year){
+	    boolean leapYear = false;
+	    if (year%4==0){
+	        leapYear = true;
+	        if(year>1582){
+	            if (year%100==0&&year%400!=0){
+	                leapYear=false;
+	            }
+	        }
+	    }
+	    return leapYear;
+	}
+	
+	public static int daysInMonth(int month, int year) {
+		int days = 0;
+		
+		if (month == 2 && isLeapYear(year)) {
+			days = 29;
+		} else if (month == 2) {
+			days = 28;
+		} else if (month == 4 || month == 6 || month == 9 || month == 11) {
+			days = 30;
+		} else {
+			days = 31;
+		}
+		
+		return days;
+	}
 	
 }
