@@ -527,6 +527,7 @@ public class DatabaseConnector {
 	/**
 	 * Returnerer en liste med e-postadressen til alle brukerene med navnet "testuser"
 	 * @return
+	 * @author Oeyvind
 	 */
 	public static ArrayList<String> getAllTestUserEmail() {
 		ArrayList<String> testUsers = new ArrayList<String>( );
@@ -550,6 +551,11 @@ public class DatabaseConnector {
 		return testUsers;
 	}
 	
+	/**
+	 * Denne funkjsonen returnerer en liste med id'en til alle eksisterende sauer, uavhegig av eier
+	 * @return
+	 * @author Oeyvind
+	 */
 	public static ArrayList<String> getAllSheepIDs() {
 		ArrayList<String> IDs = new ArrayList<String>( );
 		
@@ -572,6 +578,11 @@ public class DatabaseConnector {
 		return IDs;
 	}
 	
+	/**
+	 * Denne funksjonen returnerer den seneste datoen som er lagt inn i databasen
+	 * @return
+	 * @author Oeyvind
+	 */
 	public static String getLatetsDate() {
 		String date = null;
 		try {
