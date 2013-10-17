@@ -77,6 +77,13 @@ public class Sheep implements Serializable {
 	public SheepLocation getLocation() {
 		return locations.get(locations.size() - 1);
 	}
+	
+	/**
+	 * Returnerer de 3 siste posisjonene til sauen. 
+	 */
+	public ArrayList<SheepLocation> getLastLocations() {
+		return (ArrayList<SheepLocation>) locations.subList(locations.size()-3, locations.size());
+	}
 
 	/**
 	 * Legger til ny posisjon til sau. Dato må være på formen dd/mm/yyyy.
