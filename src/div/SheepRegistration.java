@@ -38,20 +38,18 @@ public class SheepRegistration implements Serializable {
 
 	}
 
-	/*
-	 * public void editSheep(int id, String owner, String shepherd, String
-	 * gender, int weight, int heartrate, int temperature, int age) throws
-	 * Exception { Sheep s = new Sheep(id, age, weight, gender, shepherd);
-	 * String query = id + "||" + owner + "||" + shepherd + "||" + gender + "||"
-	 * + weight + "||" + heartrate + "||" + temperature;
-	 * 
-	 * String serverRespons = ClientConnection.sendServerQuery("editsheep",
-	 * query);
-	 * 
-	 * if (serverRespons.equals("err")) {
-	 * System.out.println("Error. Can't change sheep information"); } }
-	 */
-
+	 public void editSheep(int id, String shepherd, int weight, int age) throws Exception {
+		 Sheep s = sheepSearch(id);
+		 s.setShepherd(shepherd);
+		 s.setWeight(weight);
+		 s.setAge(age);
+		 /*
+		 String query = id + "||" + shepherd + "||" + age + "||" + weight;
+		 String serverRespons = ClientConnection.sendServerQuery("editsheep",query); 
+		 if (serverRespons.equals("err")) {
+			 System.out.println("Error. Can't change sheep information"); } 
+		  */
+	 }
 	public boolean deleteSheep(Sheep s) {
 		/*
 		 * String query = "" + s.getId();

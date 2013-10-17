@@ -188,8 +188,8 @@ public class User implements Serializable {
 	}
 	
 	
-	public void registerSheep(String id, String age, String weight, String gender, String shepherd) throws NumberFormatException, Exception {
-		sheepReg.registerSheep(Integer.parseInt(id), Integer.parseInt(age), Integer.parseInt(weight), gender.charAt(0), shepherd);
+	public void registerSheep(String id, String age, String weight, String gender, String owner, String shepherd) throws NumberFormatException, Exception {
+		sheepReg.registerSheep(Integer.parseInt(id), Integer.parseInt(age), Integer.parseInt(weight), gender.charAt(0), owner, shepherd);
 	}
 	
 	public boolean deleteSheep(Sheep sheep) {
