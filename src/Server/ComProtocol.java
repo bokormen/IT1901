@@ -25,6 +25,8 @@ public class ComProtocol {
 
     private static final int REGISTERUSER = 2001;
     private static final int GETUSER = 2002;
+    private static final int CHANGEUSER = 2003;
+    private static final int CHANGEPASSWORD = 2004;
 
     private static final int REGISTERSHEEP = 3001;
     private static final int DELETESHEEP = 3002;
@@ -64,6 +66,19 @@ public class ComProtocol {
                 state = REGISTERUSER;
                 theOutput = "done";
 
+            } else if (theInput.equals("getuser")) { //bruker vil registrere sau
+                state = GETUSER;
+                theOutput = "done";
+
+            } else if (theInput.equals("changeuser")) { //bruker vil forandre paa profil sau
+                state = CHANGEUSER;
+                theOutput = "done";
+
+            } else if (theInput.equals("changepassword")) { //bruker vil forandre passord
+                state = CHANGEPASSWORD;
+                theOutput = "done";
+
+
             } else if (theInput.equals("registersheep")) { //bruker vil registrere sau
                 state = REGISTERSHEEP;
                 theOutput = "done";
@@ -76,15 +91,32 @@ public class ComProtocol {
                 state = FINDSHEEP;
                 theOutput = "done";
 
-            } else if (theInput.equals("getuser")) { //bruker vil registrere sau
-                state = GETUSER;
-                theOutput = "done";
+
+
 
             } else if (theInput.equals("quit")) { // bruker vil avslutte
                 theOutput = "bye";
             } else {
                 theOutput = "command no exists";
             }
+
+
+        //ANDRE STATES
+
+        //Venter paa login
+        //Input: "email||password"
+        } else if (state == LOGIN) {
+
+            if (theInput != null) {
+                theOutput = userLogin(theInput);
+            } else {
+                theOutput = "login null input";
+            }
+
+            state = WAIT;
+
+
+
 
         // I denne staten venter server paa input fra bruker med info om registrering
         //Input: "email||firstName||lastName||phoneNumber||password||location"
@@ -97,6 +129,25 @@ public class ComProtocol {
             }
 
             state = WAIT;
+
+        //Venter paa input for getuser
+        //input: "email"
+        } else if (state == GETUSER) {
+
+            if (theInput != null) {
+                if (isLoggedIn) {
+                    theOutput = "object sending";
+                    oout.writeObject(DatabaseConnector.getUser(theInput));
+
+                } else {
+                    theOutput = "getuser no login";
+                }
+            } else {
+                theOutput = "getuser null input";
+            }
+
+            state = WAIT;
+
 
         // I denne staten venter server paa input fra bruker med info om registrering av sau
         //Input: "id||Eiernavn||shepherd||weight||75||39||age"
@@ -149,33 +200,6 @@ public class ComProtocol {
             state = WAIT;
 
 
-        } else if (state == GETUSER) {
-
-                if (theInput != null) {
-                    if (isLoggedIn) {
-                        theOutput = "object sending";
-                        oout.writeObject(DatabaseConnector.getUser(theInput));
-
-                    } else {
-                        theOutput = "getuser no login";
-                    }
-                } else {
-                    theOutput = "getuser null input";
-                }
-
-                state = WAIT;
-
-        //Venter paa login
-        //Input: "email||password"
-        } else if (state == LOGIN) {
-
-            if (theInput != null) {
-                theOutput = userLogin(theInput);
-            } else {
-                theOutput = "login null input";
-            }
-
-            state = WAIT;
         } else {
             theOutput = "err";
         }

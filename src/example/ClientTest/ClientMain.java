@@ -38,10 +38,27 @@ public class ClientMain {
         }
         */
 
+        /*
         div.User suser;
 
         suser = div.UserRegistration.login("lala@gmail.com", "random");
         System.out.println(suser.getLastName());
+
+        */
+
+        div.Sheep ssheep;
+
+        try {
+            div.UserRegistration.login("test0@test.test", "78831129");
+            Object sheepobj = div.ClientConnection.sendObjectQuery("findsheep", "351");
+            ssheep = (div.Sheep)sheepobj;
+            System.out.println(ssheep.getOwner());
+        } catch (Exception e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+
+
         ClientConnection.close();  //close connection
     }
 }
