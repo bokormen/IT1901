@@ -26,6 +26,8 @@ public class ComProtocol {
 
     private static final int GETUSER = 2002;
 
+    private static final int DELETESHEEP = 3002;
+
     private static final int LOGIN = 1004;
 
     private static final int TESTING = 9999;
@@ -63,6 +65,10 @@ public class ComProtocol {
                 theOutput = "done";
 
             } else if (theInput.equals("registersheep")) { //bruker vil registrere sau
+                state = REGISTERSHEEP;
+                theOutput = "done";
+
+            } else if (theInput.equals("delsheep")) { //bruker vil registrere sau
                 state = REGISTERSHEEP;
                 theOutput = "done";
 
@@ -104,6 +110,22 @@ public class ComProtocol {
 
             state = WAIT;
 
+        //wait for deleting sheep
+        // input: "id"
+        } else if (state == DELETESHEEP) {
+
+            if (theInput != null) {
+                if (isLoggedIn) {
+                    theOutput = delSheep(theInput);
+                } else {
+                    theOutput = "delsheep no login";
+                }
+            } else {
+                theOutput = "delsheep null input";
+            }
+
+            state = WAIT;
+
         } else if (state == GETUSER) {
 
                 if (theInput != null) {
@@ -137,7 +159,6 @@ public class ComProtocol {
 
         return theOutput;
     }
-
 
 
     // =============================================
@@ -188,6 +209,17 @@ public class ComProtocol {
 
     }
 
+    //sletter en sau i databaen
+    //typisk input er: "id"
+    //eksempel "3"
+
+    private String delSheep(String theInput) {
+        if (DatabaseConnector.doesSheepExsist(theInput)) {
+            DatabaseConnector.deleteSheep(theInput);
+            return "delsheep success";
+        }
+        return "delsheep no exists";
+    }
 
     //logger inn en bruker
     //typisk input string er: "email||passord"
