@@ -19,14 +19,14 @@ public class SheepRegistration implements Serializable {
 		sheepList = new ArrayList<Sheep>();
 	}
 
-	public static void registerSheep(int id, int age, int weight, char gender, String shepherd) throws Exception {
+	public static void registerSheep(int id, int age, int weight, char gender, String owner, String shepherd) throws Exception {
 
-		sheepList.add(new Sheep(id, age, weight, gender, shepherd));
+		sheepList.add(new Sheep(id, age, weight, gender, owner, shepherd));
 
 		// Lager en foresp0rsel til server.
 		// retiningslinjer for kommunikasjon med server vil til en hver tid
 		// ligge i server.ComProtocol klassen
-		String query = id + "||" + "Eiernavn" + "||" + shepherd + "||" + weight + "||" + 75 + "||" + 39 + "||" + age;
+		String query = id + "||" + owner + "||" + shepherd + "||" + weight + "||" + 75 + "||" + 39 + "||" + age;
 
 		// sender foresp0rselen til serveren og faar tilbake respons
 		String serverRespons = ClientConnection.sendServerQuery("registersheep", query);
@@ -76,8 +76,8 @@ public class SheepRegistration implements Serializable {
 	}
 
 	/*
-	 * public Sheep findSheep(String user, String id) { String query = user +
-	 * "||" + id;
+	 * public Sheep findSheep(String user, String id) { 
+	 * String query = user + "||" + id;
 	 * 
 	 * String serverRespons = ClientConnection.sendServerQuery("findsheep",
 	 * query);

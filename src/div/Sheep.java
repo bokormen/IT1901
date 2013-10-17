@@ -18,13 +18,15 @@ public class Sheep {
 	private char gender;
 	private double temperature;
 	private int heartrate;
+	private String owner;
 	private String shepherd;
 	private ArrayList<SheepLocation> locations;
 
-	public Sheep(int id, int age, int weight, char gender, String shepherd) throws Exception {
+	public Sheep(int id, int age, int weight, char gender, String owner, String shepherd) throws Exception {
 		this.id = id;
 		setAge(age);
 		setWeight(weight);
+		setOwner(owner);
 		setShepherd(shepherd);
 		locations = new ArrayList<SheepLocation>();
 		if (gender == 'f' || gender == 'm') {
@@ -121,13 +123,32 @@ public class Sheep {
 	}
 
 	public void setShepherd(String shepherd) throws Exception {
-		String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-				+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-		if (shepherd.matches(emailPattern)) {
+		if (emailIsValid(shepherd)) {
 			this.shepherd = shepherd;
 		} else {
-			throw new Exception("Email not valid");
+			throw new Exception("Shepherd not valid");
 		}
+	}
+
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) throws Exception {
+		if(emailIsValid(owner)) {
+			this.owner = owner;
+		} else {
+			throw new Exception("Owner not valid");
+		}
+	}
+	
+	public boolean emailIsValid(String email) {
+		String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+				+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+		if (email.matches(emailPattern)) {
+			return true;
+		}
+		return false;
 	}
 
 }
