@@ -54,18 +54,18 @@ public class DatabaseConnector {
 		}
 	}
 	
-//	public static void main(String[] args) {
-//		open();
+	public static void main(String[] args) {
+		open();
 //		deleteTestSheeps();
 //		deleteTestUsers();
 //		RandomTestData.fillDatabaseWithUsers(3);
 //		RandomTestData.sheepsForTestUsers(4);
-//		
-//		for (int i=0;i<10;i++) {
-//			RandomTestData.moveSheeps("10.00000000,60.00000000", "10.0000000,60.00000000");
-//		}
-//		close();
-//	}
+		
+		for (int i=0;i<4;i++) {
+			RandomTestData.moveSheeps("1.00000000,2.00000000", "1.0000000,2.00000000");
+		}
+		close();
+	}
 	
 	/**
 	 * Denne funksjonen sjekker om det eksisterer en bruker i databasen med e-posten som sendes til funksjonen
@@ -172,7 +172,7 @@ public class DatabaseConnector {
 				Sheeps.get(i).setHeartrate(rs.getInt(4));
 				Sheeps.get(i).setTemperature(rs.getInt(5));
 				while(rs2.next()) {
-					Sheeps.get(0).newLocation(rs2.getString(0), rs2.getString(1));
+					Sheeps.get(i).newLocation(rs2.getString(0), rs2.getString(1));
 				}
 				i++;
 			}
@@ -600,6 +600,30 @@ public class DatabaseConnector {
 			date="2013.04.01.00.00";
 		}
 		return date;
+	}
+	
+	/**
+	 * testbrukerene faar et tall som etternavn, denne funksjonen returnerer det etternavnet med stoerst verdi
+	 * @return
+	 * @author Oeyvind
+	 */
+	public static int getLatestTestUser() {
+		String lastname = null;
+		try {
+			Statement st = con.createStatement();
+			String query = "Select max(LastName) From User Where FirstName=\"testuser\";";
+			ResultSet rs= st.executeQuery(query);
+			while(rs.next()) {
+				lastname = rs.getString(1);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (lastname==null) {
+			return -1;
+		}
+		return Integer.parseInt(lastname);
 	}
 	
 }

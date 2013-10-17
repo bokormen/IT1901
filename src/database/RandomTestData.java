@@ -8,14 +8,16 @@ public class RandomTestData {
 	static Random generator = new Random();
 	
 	/**
-	 * Fuller databasen med en oppgitt mengde brukere, det maa ikke eksistere testbrukere i databasen fra foer av
+	 * Fuller databasen med en oppgitt mengde brukere, det kan eksistere testbrukere i databasen fra foer av
 	 * @param numberOfNewUsers
 	 */
 	public static void fillDatabaseWithUsers(int numberOfNewUsers) {
+		int exsistingUsers = DatabaseConnector.getLatestTestUser()+1;
 		for (int i=0;i<numberOfNewUsers;i++) {
-			String user = "test"+i+"@test.test";
+			int lastname = i+exsistingUsers;
+			String user = "test"+lastname+"@test.test";
 			String firstName = "testuser";
-			String lastName = Integer.toString(i);
+			String lastName = Integer.toString(lastname);
 			String tlf = Integer.toString(generator.nextInt(89999999)+10000000);
 			String password = Integer.toString(generator.nextInt(89999999)+10000000);
 			String location = Double.toString(90*generator.nextDouble())+","+Double.toString(90*generator.nextDouble());
@@ -62,7 +64,7 @@ public class RandomTestData {
 		
 		String[] latitude = confinementsLatitude.split(",");
 		maxLatitude = Double.parseDouble(latitude[0]);
-		minLatitude = Double.parseDouble(latitude[0]);
+		minLatitude = Double.parseDouble(latitude[1]);
 		
 		ArrayList<String> IDs = DatabaseConnector.getAllSheepIDs();
 		
@@ -86,9 +88,9 @@ public class RandomTestData {
 		int day = Integer.parseInt(splitDate[2]);
 		int month = Integer.parseInt(splitDate[1]);
 		int year = Integer.parseInt(splitDate[0]);
-		if (time>16) {
+		if (time>23) {
 			time = 00;
-			day+=1;
+			day++;
 		}
 		if (day>daysInMonth(month, year)) {
 			day = 01;
@@ -96,7 +98,7 @@ public class RandomTestData {
 		}
 		if (month>12) {
 			month = 01;
-			year+=1;
+			year++;
 		}
 		String format = String.format("%%0%dd", 2);
 		String timeFinished = String.format(format, time);
