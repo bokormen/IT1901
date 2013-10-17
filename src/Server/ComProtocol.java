@@ -21,14 +21,14 @@ public class ComProtocol {
     private ObjectInputStream oin = null;
 
     private static final int WAIT = 1001;
-    private static final int REGISTERUSER = 1002;
-    private static final int REGISTERSHEEP = 1003;
+    private static final int LOGIN = 1002;
 
+    private static final int REGISTERUSER = 2001;
     private static final int GETUSER = 2002;
 
+    private static final int REGISTERSHEEP = 3001;
     private static final int DELETESHEEP = 3002;
-
-    private static final int LOGIN = 1004;
+    private static final int FINDSHEEP = 3003;
 
     private static final int TESTING = 9999;
 
@@ -68,8 +68,12 @@ public class ComProtocol {
                 state = REGISTERSHEEP;
                 theOutput = "done";
 
-            } else if (theInput.equals("delsheep")) { //bruker vil registrere sau
-                state = REGISTERSHEEP;
+            } else if (theInput.equals("delsheep")) { //bruker vil slette sau
+                state = DELETESHEEP;
+                theOutput = "done";
+
+            } else if (theInput.equals("findsheep")) { //bruker vil finne sau
+                state = FINDSHEEP;
                 theOutput = "done";
 
             } else if (theInput.equals("getuser")) { //bruker vil registrere sau
@@ -110,7 +114,7 @@ public class ComProtocol {
 
             state = WAIT;
 
-        //wait for deleting sheep
+        //venter paa input for sletting av sheep
         // input: "id"
         } else if (state == DELETESHEEP) {
 
@@ -125,6 +129,25 @@ public class ComProtocol {
             }
 
             state = WAIT;
+
+        //venter paa input for aa finne sheep
+        //input: "id"
+        } else if (state == FINDSHEEP) {
+
+            if (theInput != null) {
+                if (isLoggedIn) {
+                    theOutput = "object sending";
+                    oout.writeObject(DatabaseConnector.findSheep(UserName, theInput));
+
+                } else {
+                    theOutput = "findsheep no login";
+                }
+            } else {
+                theOutput = "findsheep null input";
+            }
+
+            state = WAIT;
+
 
         } else if (state == GETUSER) {
 
