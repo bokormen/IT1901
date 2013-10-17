@@ -72,16 +72,23 @@ public class SheepRegistration implements Serializable {
 		return null;
 	}
 
-	/*
-	 * public Sheep findSheep(String user, String id) { 
-	 * String query = user + "||" + id;
-	 * 
-	 * String serverRespons = ClientConnection.sendServerQuery("findsheep",
-	 * query);
-	 * 
-	 * if (serverRespons.equals("err")) {
-	 * System.out.println("Error. Cannot find sheep"); } return serverRespons; }
-	 */
+
+	 public Sheep findSheep(String user, String id) throws Exception { 
+	 String query = user + "||" + id;
+	  
+	 Object serverRespons = ClientConnection.sendObjectQuery("findsheep", query);
+	 
+	 if(serverRespons instanceof Sheep) {
+		 return (Sheep) serverRespons;
+	 } else if(serverRespons instanceof String) {
+		 if(serverRespons.equals("findsheep no login")) {
+			 throw new Exception("Not logged in");
+		 } else if(serverRespons.equals("findsheep null input")) {
+			 throw new Exception("Null input");
+		 }
+	 }
+	 return null;
+	 }
 
 	public ArrayList<Sheep> getSheepList() {
 		return sheepList;
