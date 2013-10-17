@@ -51,15 +51,14 @@ public class SheepRegistration implements Serializable {
 		  */
 	 }
 	public boolean deleteSheep(Sheep s) {
-		/*
-		 * String query = "" + s.getId();
-		 * 
-		 * String serverRespons =
-		 * ClientConnection.sendServerQuery("deletesheep", query);
-		 * 
-		 * if (serverRespons.equals("err")) {
-		 * System.out.println("Error. Can't delete sheep"); }
-		 */
+		String query = "" + s.getId();
+
+		String serverRespons = ClientConnection.sendServerQuery("delsheep", query);
+		
+		if (serverRespons.equals("err")) {
+			System.out.println("Error. Can't delete sheep");
+			return false;
+		}
 
 		return sheepList.remove(s);
 	}

@@ -1,5 +1,6 @@
 package div;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -10,7 +11,7 @@ import java.util.Date;
  * @author Ragnhild
  * 
  */
-public class Sheep {
+public class Sheep implements Serializable {
 
 	private int id;
 	private int age;
@@ -22,7 +23,7 @@ public class Sheep {
 	private String shepherd;
 	private ArrayList<SheepLocation> locations;
 
-	public Sheep(int id, int age, int weight, char gender, String owner, String shepherd) throws Exception {
+	public Sheep(int id, int age, int weight, char gender, String owner, String shepherd) throws Exception  {
 		this.id = id;
 		setAge(age);
 		setWeight(weight);
@@ -36,7 +37,7 @@ public class Sheep {
 		}
 	}
 
-	public Sheep() {
+	public Sheep()  {
 
 	}
 
