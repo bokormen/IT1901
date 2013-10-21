@@ -54,7 +54,7 @@ import div.UserRegistration;
  * 
  */
 
-//asdasdassdasd
+// asdasdassdasd
 public class GUI extends JFrame {
 
 	public static void main(String args[]) {
@@ -606,28 +606,28 @@ public class GUI extends JFrame {
 		try {
 			for (int i = 0; i < quantity; i++) {
 				char c = (i % 2 == 1) ? 'f' : 'm';
-				sheeps.add(new Sheep(i, 1, 10, c, "Andy@hotmail.com"));
+				sheeps.add(new Sheep(i, 1, 10, c, "Andy@hotmail.com", "Shepherd@hotmail.com"));
 				sheeps.get(sheeps.size() - 1).newLocation(locs.get(i), "01/01/2000");
 			}
 
 			String cord = "63.43,10.39";
-			sheeps.add(new Sheep(1337, 1, 10, 'm', "Andy@hotmail.com"));
+			sheeps.add(new Sheep(1337, 1, 10, 'm', "Andy@hotmail.com", "Shepherd@hotmail.com"));
 			sheeps.get(sheeps.size() - 1).newLocation(cord, "01/01/2000");
 
 			cord = "63.43," + (10.39 + numw / 2);
-			sheeps.add(new Sheep(1338, 1, 10, 'm', "Andy@hotmail.com"));
+			sheeps.add(new Sheep(1338, 1, 10, 'm', "Andy@hotmail.com", "Shepherd@hotmail.com"));
 			sheeps.get(sheeps.size() - 1).newLocation(cord, "01/01/2000");
 
 			cord = "63.43," + (10.39 - numw / 2);
-			sheeps.add(new Sheep(1339, 1, 10, 'm', "Andy@hotmail.com"));
+			sheeps.add(new Sheep(1339, 1, 10, 'm', "Andy@hotmail.com", "Shepherd@hotmail.com"));
 			sheeps.get(sheeps.size() - 1).newLocation(cord, "01/01/2000");
 
 			cord = (63.43 + numh / 2) + ",10.39";
-			sheeps.add(new Sheep(1340, 1, 10, 'm', "Andy@hotmail.com"));
+			sheeps.add(new Sheep(1340, 1, 10, 'm', "Andy@hotmail.com", "Shepherd@hotmail.com"));
 			sheeps.get(sheeps.size() - 1).newLocation(cord, "01/01/2000");
 
 			cord = (63.43 - numh / 2) + ",10.39";
-			sheeps.add(new Sheep(1341, 1, 10, 'm', "Andy@hotmail.com"));
+			sheeps.add(new Sheep(1341, 1, 10, 'm', "Andy@hotmail.com", "Shepherd@hotmail.com"));
 			sheeps.get(sheeps.size() - 1).newLocation(cord, "01/01/2000");
 
 			return sheeps;
@@ -1193,7 +1193,7 @@ public class GUI extends JFrame {
 
 				try {
 					for (int i = 0; i < quantity; i++) {
-						user.registerSheep("" + i, "" + 1, "" + 10, "m", "Andy@hotmail.com");
+						user.registerSheep("" + i, "" + 1, "" + 10, "m", "Andy@hotmail.com", "Shepherd@hotmail.com");
 						user.getSheepList().get(user.getSheepList().size() - 1).newLocation(locs.get(i), "01/01/2000");
 					}
 				} catch (Exception e) {
@@ -1278,7 +1278,7 @@ public class GUI extends JFrame {
 
 		try {
 			SheepRegistration.registerSheep(Integer.parseInt(id), Integer.parseInt(age), Integer.parseInt(weight),
-					gender.charAt(0), shepherd);
+					gender.charAt(0), user.getEmail(), shepherd);
 			return true;
 		} catch (NumberFormatException e) {
 			System.out.println("hey wrong");
