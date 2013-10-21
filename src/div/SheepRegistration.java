@@ -15,8 +15,9 @@ public class SheepRegistration implements Serializable {
 
 	private static ArrayList<Sheep> sheepList;
 
-	public SheepRegistration() {
-		sheepList = new ArrayList<Sheep>();
+	public SheepRegistration(String user) throws Exception {
+		sheepList = getSheepList(user);
+		
 	}
 
 	public static void registerSheep(int id, int birthyear, int weight, char gender, String owner, String shepherd) throws Exception {
