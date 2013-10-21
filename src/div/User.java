@@ -196,6 +196,10 @@ public class User implements Serializable {
 		return sheepReg.deleteSheep(sheep);
 	}
 	
+	public ArrayList<Sheep> getSheepList() {
+		return sheepReg.getSheepList();
+	}
+	
 
 
 }

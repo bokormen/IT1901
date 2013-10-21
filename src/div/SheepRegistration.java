@@ -6,21 +6,21 @@ import java.util.ArrayList;
 import database.DatabaseConnector;
 
 /**
- * Klassen h�ndterer registrering, sletting og s�k av sauer.
+ * Klassen handterer registrering, sletting og sok av sauer.
  * 
  * @author Ragnhild
  * 
  */
 public class SheepRegistration implements Serializable {
 
-	private static ArrayList<Sheep> sheepList;
+	private ArrayList<Sheep> sheepList;
 
 	public SheepRegistration(String user) throws Exception {
 		sheepList = updateSheepList(user);
 		
 	}
 
-	public static void registerSheep(int id, int birthyear, int weight, char gender, String owner, String shepherd) throws Exception {
+	public void registerSheep(int id, int birthyear, int weight, char gender, String owner, String shepherd) throws Exception {
 
 		sheepList.add(new Sheep(id, birthyear, weight, gender, owner, shepherd));
 
