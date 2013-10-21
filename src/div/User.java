@@ -28,7 +28,7 @@ public class User implements Serializable {
 	private SheepRegistration sheepReg;
 
 	public User(String firstName, String lastName, String email, String phoneNr, String location) throws Exception {
-		sheepReg = new SheepRegistration();
+		sheepReg = new SheepRegistration(email);
 
 		setFirstName(firstName);
 		setLastName(lastName);
@@ -196,17 +196,6 @@ public class User implements Serializable {
 		return sheepReg.deleteSheep(sheep);
 	}
 	
-	public ArrayList<Sheep> getSheepList() {
-		/*String query = email;
 
-        String serverRespons = ClientConnection.sendServerQuery("getsheeplist", query);
-
-        if (serverRespons.equals("err")) {
-            System.out.println("Error. Cannot get list of sheep");
-        }*/
-		
-		return sheepReg.getSheepList();
-	
-	}
 
 }
