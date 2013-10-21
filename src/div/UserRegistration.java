@@ -15,7 +15,7 @@ public class UserRegistration {
 
         //Lager en foresp0rsel til server.
         //retiningslinjer for kommunikasjon med server vil til en hver tid ligge i server.ComProtocol klassen
-        String query = email + "||" + firstName + "||" + lastName + "||" + phoneNr + "||" + password  + "||" + "63.43,10.39";
+        String query = email + "||" + firstName + "||" + lastName + "||" + phoneNr + "||" + password  + "||" + location;
 
         //sender foresp0rselen til serveren og faar tilbake respons
         String serverResponse = ClientConnection.sendServerQuery("registeruser", query);
