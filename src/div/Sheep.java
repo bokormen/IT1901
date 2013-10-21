@@ -14,7 +14,7 @@ import java.util.Date;
 public class Sheep implements Serializable {
 
 	private int id;
-	private int age;
+	private int birthyear;
 	private int weight;
 	private char gender;
 	private double temperature;
@@ -23,9 +23,9 @@ public class Sheep implements Serializable {
 	private String shepherd;
 	private ArrayList<SheepLocation> locations;
 
-	public Sheep(int id, int age, int weight, char gender, String owner, String shepherd) throws Exception  {
+	public Sheep(int id, int birthyear, int weight, char gender, String owner, String shepherd) throws Exception  {
 		this.id = id;
-		setAge(age);
+		setBirthyear(birthyear);
 		setWeight(weight);
 		setOwner(owner);
 		setShepherd(shepherd);
@@ -45,18 +45,18 @@ public class Sheep implements Serializable {
 		return id;
 	}
 
-	public int getAge() {
-		return age;
+	public int getBirthyear() {
+		return birthyear;
 	}
 
 	/**
-	 * Setter alderen til en sau. Kan være fra 0 til 40.
+	 * Setter fødselsåret til en sau. 
 	 * 
 	 * @throws Exception
 	 */
-	public void setAge(int age) throws Exception {
-		if (age >= 0 && age < 40) {
-			this.age = age;
+	public void setBirthyear(int birthyear) throws Exception {
+		if (birthyear >= 1900) {
+			this.birthyear = birthyear;
 		} else {
 			throw new Exception("Age is not valid");
 		}
@@ -79,10 +79,10 @@ public class Sheep implements Serializable {
 	}
 	
 	/**
-	 * Returnerer de 3 siste posisjonene til sauen. 
+	 * Returnerer de siste posisjonene til sauen. Antall er avhengig av parameteren num.  
 	 */
-	public ArrayList<SheepLocation> getLastLocations() {
-		return (ArrayList<SheepLocation>) locations.subList(locations.size()-3, locations.size());
+	public ArrayList<SheepLocation> getLastLocations(int num) {
+		return (ArrayList<SheepLocation>) locations.subList(locations.size()-num, locations.size());
 	}
 
 	/**
