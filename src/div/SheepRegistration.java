@@ -26,7 +26,7 @@ public class SheepRegistration implements Serializable {
 		// Lager en foresp0rsel til server.
 		// retiningslinjer for kommunikasjon med server vil til en hver tid
 		// ligge i server.ComProtocol klassen
-		String query = id + "||" + owner + "||" + shepherd + "||" + weight + "||" + 75 + "||" + 39 + "||" + birthyear;
+		String query = id + "||" + owner + "||" + shepherd + "||" + gender + "||" + weight + "||" + 75 + "||" + 39 + "||" + birthyear;
 
 		// sender foresp0rselen til serveren og faar tilbake respons
 		String serverRespons = ClientConnection.sendServerQuery("registersheep", query);
