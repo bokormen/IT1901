@@ -111,8 +111,6 @@ public class GUI extends JFrame {
 
 		kartverketStaticMap = new KartverketStaticMap();
 
-		Server.addUsers(); // Legger til brukere til testing
-
 		this.lp = getLayeredPane();
 
 		createLowerPanel();
@@ -1217,8 +1215,7 @@ public class GUI extends JFrame {
 			}
 			return true;
 		}
-
-		User user = Server.sendInformationLogin(email, password);
+		User user = UserRegistration.login(email, password);
 
 		if (user != null) {
 			changeToLoginInterface(false);
@@ -1245,7 +1242,7 @@ public class GUI extends JFrame {
 		boolean sendmail = true;
 		if (sendmail) { // you know
 			if (emailField.getText() != null) {
-				return Server.sendInformationSendEmail(emailField.getText());
+				// TODO finnes email, og sende og bytte passord.
 			}
 		}
 		return false;
