@@ -168,8 +168,25 @@ public class ComProtocol {
 
             state = WAIT;
 
+        //Venter paa input for changepassword
+        //Input: "email||newpassword"
+        } else if (state == CHANGEUSER) {
 
-            // I denne staten venter server paa input fra bruker med info om registrering av sau
+            if (theInput != null) {
+                if (isLoggedIn) {
+                    theOutput = changePassword(theInput);
+                } else {
+                    theOutput = "changepassword no login";
+                }
+            } else {
+                theOutput = "changepassword null input";
+            }
+
+            state = WAIT;
+
+
+
+        // I denne staten venter server paa input fra bruker med info om registrering av sau
         //Input: "id||Eiernavn||shepherd||weight||75||39||age"
         } else if (state == REGISTERSHEEP) {
 
@@ -201,8 +218,8 @@ public class ComProtocol {
 
             state = WAIT;
 
-            //venter paa input for aa finne sheep
-            //input: "id"
+        //venter paa input for aa finne sheep
+        //input: "id"
         } else if (state == FINDSHEEP) {
 
             if (theInput != null) {
@@ -219,6 +236,8 @@ public class ComProtocol {
 
             state = WAIT;
 
+        //venter paa input for aa faa liste av sauer
+        //input: "email"
         } else if (state == GETOWNEDSHEEP) {
 
             if (theInput != null) {
@@ -285,9 +304,9 @@ public class ComProtocol {
 
         String[] temp = theInput.split("\\|\\|"); //splitter input ved ||
         if (temp.length == 5) {
-            if (isLoggedIn && temp[0].equals(UserName)) {
+            if (temp[0].equals(UserName)) {
                 DatabaseConnector.changeUser(temp[0], temp[1], temp[2], temp[3], temp[4]);
-                log.addEntry(ClientIP + "[" + UserName + "] Changed User Info.");
+                log.addEntry(ClientIP + "[" + UserName + "] Changed user info.");
                 return "changeuser success";
             } else {
                 return "changeuser different username";
@@ -297,6 +316,33 @@ public class ComProtocol {
         }
 
     }
+
+
+    //Forandre passord
+    //typisk input string er: "email||newpassword"
+    //eksempel "frodo@hotmail.com||mittpassord2"
+
+    private String changePassword(String theInput) {
+
+        String[] temp = theInput.split("\\|\\|"); //splitter input ved ||
+        if (temp.length == 2) {
+            if (temp[0].equals(UserName)) {
+                DatabaseConnector.changePassword(temp[0], temp[1]);
+                log.addEntry(ClientIP + "[" + UserName + "] Changed user password.");
+                return "changepassword success";
+            } else {
+                return "changepassword different username";
+            }
+        } else {
+            return "changepassword bad input";
+        }
+
+    }
+
+
+
+
+
 
     //registrere en sau i databasen
     //typisk input string er: "id||Eiernavn||shepherd||weight||75||39||age"
