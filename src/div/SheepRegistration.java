@@ -16,7 +16,7 @@ public class SheepRegistration implements Serializable {
 	private static ArrayList<Sheep> sheepList;
 
 	public SheepRegistration(String user) throws Exception {
-		sheepList = getSheepList(user);
+		sheepList = updateSheepList(user);
 		
 	}
 
@@ -91,7 +91,7 @@ public class SheepRegistration implements Serializable {
 	 return null;
 	 }
 
-	public ArrayList<Sheep> getSheepList(String user) throws Exception {
+	public ArrayList<Sheep> updateSheepList(String user) throws Exception {
 		String query = user;
 		  
 		 Object serverRespons = ClientConnection.sendObjectQuery("getownedsheep", query);
@@ -106,6 +106,10 @@ public class SheepRegistration implements Serializable {
 			 }
 		 }
 		 return null;
+	}
+	
+	public ArrayList<Sheep> getSheepList() {
+		return sheepList;
 	}
 
 }

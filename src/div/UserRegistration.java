@@ -81,14 +81,14 @@ public class UserRegistration {
         }
     }*/
 	
-	/*
+	
 	public void changePassword(String user, String password) {
 		String query = user + "||" + password;
 
         String serverRespons = ClientConnection.sendServerQuery("changepassword", query);
 
-        if (serverRespons.equals("err")) {
-            System.out.println("Error. Cannot change password");
+        if (!serverRespons.equals("changepassword success")) {
+            System.out.println(serverRespons);
         }
-	}*/
+	}
 }
