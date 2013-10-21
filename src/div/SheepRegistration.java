@@ -33,7 +33,7 @@ public class SheepRegistration implements Serializable {
 
 		// sjekke at melding ble mottatt
 		if (serverRespons.equals("err")) {
-			System.out.println("Error. Can't register user.");
+			System.out.println("Error. Can't register sheep.");
 		}
 
 	}
@@ -90,8 +90,21 @@ public class SheepRegistration implements Serializable {
 	 return null;
 	 }
 
-	public ArrayList<Sheep> getSheepList() {
-		return sheepList;
+	public ArrayList<Sheep> getSheepList(String user) throws Exception {
+		String query = user;
+		  
+		 Object serverRespons = ClientConnection.sendObjectQuery("getownedsheep", query);
+		 
+		 if(serverRespons instanceof ArrayList) {
+			 return (ArrayList<Sheep>) serverRespons;
+		 } else if(serverRespons instanceof String) {
+			 if(serverRespons.equals("getownedsheep no login")) {
+				 throw new Exception("Not logged in");
+			 } else if(serverRespons.equals("getownedsheep null input")) {
+				 throw new Exception("Null input");
+			 }
+		 }
+		 return null;
 	}
 
 }
