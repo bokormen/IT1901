@@ -31,6 +31,7 @@ public class ComProtocol {
     private static final int REGISTERSHEEP = 3001;
     private static final int DELETESHEEP = 3002;
     private static final int FINDSHEEP = 3003;
+    private static final int GETOWNEDSHEEP = 3004;
 
     private static final int TESTING = 9999;
 
@@ -91,6 +92,9 @@ public class ComProtocol {
                 state = FINDSHEEP;
                 theOutput = "done";
 
+            } else if (theInput.equals("getownedsheep")) { //bruker vil ha en liste over alle sauer
+                state = GETOWNEDSHEEP;
+                theOutput = "done";
 
 
 
@@ -148,8 +152,24 @@ public class ComProtocol {
 
             state = WAIT;
 
+        //Venter paa input for changeuser
+        //Input: "email||firstName||lastName||phoneNumber||password||location"
+        } else if (state == CHANGEUSER) {
 
-        // I denne staten venter server paa input fra bruker med info om registrering av sau
+            if (theInput != null) {
+                if (isLoggedIn) {
+                    theOutput = changeUser(theInput);
+                } else {
+                    theOutput = "changeuser no login";
+                }
+            } else {
+                theOutput = "changeuser null input";
+            }
+
+            state = WAIT;
+
+
+            // I denne staten venter server paa input fra bruker med info om registrering av sau
         //Input: "id||Eiernavn||shepherd||weight||75||39||age"
         } else if (state == REGISTERSHEEP) {
 
@@ -181,8 +201,8 @@ public class ComProtocol {
 
             state = WAIT;
 
-        //venter paa input for aa finne sheep
-        //input: "id"
+            //venter paa input for aa finne sheep
+            //input: "id"
         } else if (state == FINDSHEEP) {
 
             if (theInput != null) {
@@ -199,10 +219,33 @@ public class ComProtocol {
 
             state = WAIT;
 
+        } else if (state == GETOWNEDSHEEP) {
+
+            if (theInput != null) {
+                if (isLoggedIn) {
+                    theOutput = "object sending";
+                    try {
+                        oout.writeObject(DatabaseConnector.getAllSheepsToOwner(UserName));
+                        log.addEntry(ClientIP + "[" + UserName + "] Requested Sheep List.");
+                    } catch (Exception e) {
+                        theOutput = "getownedsheep database error";
+                    }
+
+                } else {
+                    theOutput = "getownedsheep no login";
+                }
+            } else {
+                theOutput = "getownedsheep null input";
+            }
+
+            state = WAIT;
+
 
         } else {
             theOutput = "err";
         }
+
+
 
         return theOutput;
     }
@@ -234,6 +277,26 @@ public class ComProtocol {
 
     }
 
+    //Redigere info om bruker i database
+    //typisk input string er: "email||firstName||lastName||phoneNumber||location"
+    //eksempel "frodo@hotmail.com||frodo||baggins||12345678||19.2,19.3"
+
+    private String changeUser(String theInput) {
+
+        String[] temp = theInput.split("\\|\\|"); //splitter input ved ||
+        if (temp.length == 5) {
+            if (isLoggedIn && temp[0].equals(UserName)) {
+                DatabaseConnector.changeUser(temp[0], temp[1], temp[2], temp[3], temp[4]);
+                log.addEntry(ClientIP + "[" + UserName + "] Changed User Info.");
+                return "changeuser success";
+            } else {
+                return "changeuser different username";
+            }
+        } else {
+            return "changeuser bad input";
+        }
+
+    }
 
     //registrere en sau i databasen
     //typisk input string er: "id||Eiernavn||shepherd||weight||75||39||age"
@@ -263,6 +326,7 @@ public class ComProtocol {
     private String delSheep(String theInput) {
         if (DatabaseConnector.doesSheepExsist(theInput)) {
             DatabaseConnector.deleteSheep(theInput);
+            log.addEntry(ClientIP + "[" + UserName + "] deleted sheep (" + theInput + ").");
             return "delsheep success";
         }
         return "delsheep no exists";
