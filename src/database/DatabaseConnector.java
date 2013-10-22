@@ -56,19 +56,19 @@ public class DatabaseConnector {
 	
 	public static void main(String[] args) {
 		open();
-		ArrayList<String> testUsers = DatabaseConnector.getAllTestUserEmail();
-		for (String s : testUsers) {
-			System.out.println("testuser: " + s);
-		}
+//		ArrayList<String> testUsers = DatabaseConnector.getAllTestUserEmail();
+//		for (String s : testUsers) {
+//			System.out.println("testuser: " + s);
+//		}
 //		deleteTestSheeps();
 //		deleteTestUsers();
 //		RandomTestData.fillDatabaseWithUsers(3);
 //		RandomTestData.sheepsForTestUsers(100);
-//		String sheepBoundariesLongitude = "63.42423,63,43577";
-//		String sheepBoundariesLatitude = "10.3728,10.4072";
-//		for (int i=0;i<5;i++) {
-//			RandomTestData.moveSheeps(sheepBoundariesLongitude, sheepBoundariesLatitude);
-//		}
+		String sheepBoundariesLongitude = "63.42423,63,43577";
+		String sheepBoundariesLatitude = "10.3728,10.4072";
+		for (int i=0;i<10;i++) {
+			RandomTestData.moveSheeps(sheepBoundariesLongitude, sheepBoundariesLatitude);
+		}
 		close();
 	}
 	
@@ -180,9 +180,9 @@ public class DatabaseConnector {
 				
 				Sheep sau = new Sheep(rs.getInt(0),rs.getInt(6),rs.getInt(3),rs.getString(1).charAt(0),owner, rs.getString(7));
 				
-				Sheeps.add(sau); //Maa sansynligvis endres litt da constructoren ikke ser ut til aa ta hensyn til all infoen
+				Sheeps.add(sau);
 				
-				String query2 = "Select Date, Position From Location as L INNER JOIN Sheep as S ON (S.ID="+rs.getInt(1)+");";
+				String query2 = "Select Date, Position FROM Location WHERE SheepID = " + rs.getInt(1) + " ORDER BY Date DESC LIMIT 0,5;";
 
 				PreparedStatement ps2 = (PreparedStatement) con.prepareStatement(query2);
 				ResultSet rs2 = ps2.executeQuery();
