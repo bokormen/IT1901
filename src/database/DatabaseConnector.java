@@ -13,7 +13,6 @@ import div.*;
 
 import java.util.*;
 
-@SuppressWarnings("unused")
 public class DatabaseConnector {
 	public static Connection con;
 	
@@ -393,6 +392,19 @@ public class DatabaseConnector {
 			while(rs.next()) {
 				try {
 					sheep = new Sheep(rs.getInt(0),rs.getInt(6),rs.getInt(3),rs.getString(1).charAt(0),user, rs.getString(7));
+					String query2 = "Select Date, Position FROM Location WHERE SheepID = " + rs.getInt(1) + " ORDER BY Date DESC LIMIT 0,5;";
+
+					PreparedStatement ps2 = (PreparedStatement) con.prepareStatement(query2);
+					ResultSet rs2 = ps2.executeQuery();
+					
+//					Statement st2 = con.createStatement();
+//					ResultSet rs2 = st2.executeQuery(query2);
+					
+					sheep.setHeartrate(rs.getInt(4));
+					sheep.setTemperature(rs.getInt(5));
+					while(rs2.next()) {
+						sheep.newLocation(rs2.getString(0), rs2.getString(1));
+					}
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
