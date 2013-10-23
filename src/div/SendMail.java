@@ -11,7 +11,7 @@ import javax.mail.internet.MimeMessage;
 
 public class SendMail {
 
-	public boolean sendMailTo(String email, String newPassword)
+	public static boolean sendMailTo(String email, String newPassword)
 			throws Exception {
 
 		final String username = "sheepcontrolit1901@gmail.com";

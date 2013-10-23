@@ -3,16 +3,16 @@ package Server;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.math.BigInteger;
 import java.net.Socket;
-import java.util.StringTokenizer;
+import java.security.SecureRandom;
 
 import database.DatabaseConnector;
-import div.Sheep;
-import div.User;
 
 //handles the input from clients
 public class ComProtocol {
 
+    SecureRandom random = new SecureRandom();
     public boolean isLoggedIn = false;
     public String ClientIP = null;
     private ServerLog log = null;
@@ -22,6 +22,7 @@ public class ComProtocol {
 
     private static final int WAIT = 1001;
     private static final int LOGIN = 1002;
+    private static final int MAILPASSWORD = 1003;
 
     private static final int REGISTERUSER = 2001;
     private static final int GETUSER = 2002;
@@ -33,7 +34,7 @@ public class ComProtocol {
     private static final int FINDSHEEP = 3003;
     private static final int GETOWNEDSHEEP = 3004;
 
-    private static final int TESTING = 9999;
+    //private static final int TESTING = 9999;
 
     private int state = WAIT;
 
@@ -55,13 +56,18 @@ public class ComProtocol {
 
     //Haandterer input fra bruker
     public String processInput(String theInput) throws IOException {
-        String theOutput = "";
+        String theOutput;
 
         //hvis state er WAIT saa venter serveren paa et signal om hva den skal gj0re
         if (state == WAIT) {
             if (theInput.equals("login")) { //bruker vil logge inn, gaa til state LOGIN
                 state = LOGIN;
                 theOutput = "done";
+
+            } else if (theInput.equals("mailpassword")) {
+                state = LOGIN;
+                theOutput = "done";
+
 
             } else if (theInput.equals("registeruser")) { //bruker vil registrere seg
                 state = REGISTERUSER;
@@ -119,6 +125,18 @@ public class ComProtocol {
 
             state = WAIT;
 
+        //Venter paa input for mailing av passord
+        //Input: "email"
+        } else if (state == MAILPASSWORD) {
+
+            if (theInput != null) {
+                theOutput = mailPassword(theInput);
+            } else {
+                theOutput = "mailpassword null input";
+            }
+
+            state = WAIT;
+
 
 
 
@@ -170,7 +188,7 @@ public class ComProtocol {
 
         //Venter paa input for changepassword
         //Input: "email||newpassword"
-        } else if (state == CHANGEUSER) {
+        } else if (state == CHANGEPASSWORD) {
 
             if (theInput != null) {
                 if (isLoggedIn) {
@@ -401,6 +419,32 @@ public class ComProtocol {
         }
     }
 
+
+    //Auto-genererer et nytt passord og sender paa mail
+    //typisk input string er: "email"
+    //eksempel "frodo@hotmail.com"
+    private String mailPassword(String theInput) {
+
+        if (DatabaseConnector.doesUserExsist(theInput)) {
+
+            String newpassword = new BigInteger(80, random).toString(32);
+            
+            DatabaseConnector.changePassword(theInput, newpassword);
+
+            try {
+                div.SendMail.sendMailTo(theInput, newpassword);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "mailpassword mail error";
+            }
+        } else {
+            return "mailpassword no exists";
+        }
+
+        return "mailpassword success";
+    }
+
+    //lukker streams
     public void close() {
         try {
             oin.close();
