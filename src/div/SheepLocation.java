@@ -1,12 +1,13 @@
 package div;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 
 /**
- * SheepLocation representerer en sau sin posisjon på et gitt tidspunkt. 
+ * SheepLocation representerer en sau sin posisjon pï¿½ et gitt tidspunkt. 
  * @author Ragnhild
  *
  */
-public class SheepLocation {
+public class SheepLocation implements Serializable {
 
 	private final String position;
 	private final String date;
