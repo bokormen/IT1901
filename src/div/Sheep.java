@@ -136,7 +136,7 @@ public class Sheep implements Serializable {
 	}
 
 	public void setShepherd(String shepherd) throws Exception {
-		if (shepherd == null) {
+		if (shepherd.equals("")) {
 			this.shepherd = "";
 		} else if (emailIsValid(shepherd)) {
 			this.shepherd = shepherd;
