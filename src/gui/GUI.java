@@ -612,65 +612,6 @@ public class GUI extends JFrame {
 		lp.add(regShepherdField);
 	}
 
-	// FOR TESTING
-	// private ArrayList<Sheep> testingGetSheepList(double lat, double lon) {
-	// ArrayList<Sheep> sheeps = new ArrayList<Sheep>();
-	// ArrayList<String> locs = new ArrayList<String>();
-	// double numw = 0.0172;
-	// double numh = 0.00577;
-	// // double numw = 0.00855;
-	// // double numh = 0.00577;
-	// Random r = new Random();
-	// // System.out.println(xr + "  " + yr);
-	// int quantity = 200;
-	// for (int i = 0; i < quantity; i++) {
-	// double xi = (lon - numw / 2) + (numw) * r.nextDouble();
-	// double yi = (lat - numh / 2) + (numh) * r.nextDouble();
-	// locs.add("" + yi + "," + xi);
-	// System.out.println("" + xi + "," + yi);
-	// }
-	//
-	// try {
-	// for (int i = 0; i < quantity; i++) {
-	// char c = (i % 2 == 1) ? 'f' : 'm';
-	// sheeps.add(new Sheep(i, 2010, 10, c, "Andy@hotmail.com",
-	// "Shepherd@hotmail.com"));
-	// sheeps.get(sheeps.size() - 1).newLocation(locs.get(i), "01/01/2000");
-	// }
-	//
-	// String cord = "63.43,10.39";
-	// sheeps.add(new Sheep(1337, 2010, 10, 'm', "Andy@hotmail.com",
-	// "Shepherd@hotmail.com"));
-	// sheeps.get(sheeps.size() - 1).newLocation(cord, "01/01/2000");
-	//
-	// cord = "63.43," + (10.39 + numw / 2);
-	// sheeps.add(new Sheep(1338, 2010, 10, 'm', "Andy@hotmail.com",
-	// "Shepherd@hotmail.com"));
-	// sheeps.get(sheeps.size() - 1).newLocation(cord, "01/01/2000");
-	//
-	// cord = "63.43," + (10.39 - numw / 2);
-	// sheeps.add(new Sheep(1339, 2010, 10, 'm', "Andy@hotmail.com",
-	// "Shepherd@hotmail.com"));
-	// sheeps.get(sheeps.size() - 1).newLocation(cord, "01/01/2000");
-	//
-	// cord = (63.43 + numh / 2) + ",10.39";
-	// sheeps.add(new Sheep(1340, 2010, 10, 'm', "Andy@hotmail.com",
-	// "Shepherd@hotmail.com"));
-	// sheeps.get(sheeps.size() - 1).newLocation(cord, "01/01/2000");
-	//
-	// cord = (63.43 - numh / 2) + ",10.39";
-	// sheeps.add(new Sheep(1341, 2010, 10, 'm', "Andy@hotmail.com",
-	// "Shepherd@hotmail.com"));
-	// sheeps.get(sheeps.size() - 1).newLocation(cord, "01/01/2000");
-	//
-	// return sheeps;
-	// } catch (Exception e) {
-	// System.out.println("Fikk ikke lasted inn sauene");
-	// e.printStackTrace();
-	// return null;
-	// }
-	// }
-
 	// metode for ï¿½ fï¿½ ut et punkt fra en streng
 	private MyPoint getLocationPoint(String arg) throws Exception {
 		String[] list = arg.split(",");
@@ -692,22 +633,24 @@ public class GUI extends JFrame {
 
 		double nh = height / 2 / numh;
 		double nw = width / 3 / numw;
-		for (Sheep s : list) {
-			MyPoint p = null;
-			try {
-				p = getLocationPoint(s.getLocation().getPosition());
-			} catch (Exception e) {
-				e.printStackTrace();
+		System.out.println("lengden pŒ sauelisten: " + list.size());
+		if (!list.isEmpty()) {
+			for (Sheep s : list) {
+				MyPoint p = null;
+				try {
+					p = getLocationPoint(s.getLocation().getPosition());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				int x = (int) ((user.getLongitudeDouble() - p.getLongitude()) * nw);
+				int y = (int) ((user.getLatitudeDouble() - p.getLatitude()) * nh);
+
+				mySheepButtons.add(new MySheepButton(new JButton(), s, 2
+						* width / 3 - x, height / 2 + y, 10, this));
 			}
-			int x = (int) ((user.getLongitudeDouble() - p.getLongitude()) * nw);
-			int y = (int) ((user.getLatitudeDouble() - p.getLatitude()) * nh);
-
-			mySheepButtons.add(new MySheepButton(new JButton(), s, 2 * width
-					/ 3 - x, height / 2 + y, 10, this));
-		}
-
-		for (MySheepButton b : mySheepButtons) {
-			lp.add(b);
+			for (MySheepButton b : mySheepButtons) {
+				lp.add(b);
+			}
 		}
 	}
 
@@ -1235,9 +1178,10 @@ public class GUI extends JFrame {
 		// FOR TESTING
 		if (email.equals("")) {
 			try {
-				this.user = UserRegistration.login("test0@test.test", "random");
+				this.user = UserRegistration
+						.login("test0@test.test", "passord");
 				System.out.println(user);
-				// user.updateSheepList();
+				user.updateSheepList();
 
 				changeToLoginInterface(false);
 				changeToMainInterface(true);
