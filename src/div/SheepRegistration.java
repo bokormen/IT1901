@@ -16,7 +16,7 @@ public class SheepRegistration implements Serializable {
 	private ArrayList<Sheep> sheepList;
 
 	public SheepRegistration(String user) throws Exception {
-		sheepList = updateSheepList(user);
+		//sheepList = updateSheepList(user);
 		
 	}
 
@@ -91,21 +91,20 @@ public class SheepRegistration implements Serializable {
 	 return null;
 	 }
 
-	public ArrayList<Sheep> updateSheepList(String user) throws Exception {
+	public void updateSheepList(String user) throws Exception {
 		String query = user;
 		  
 		 Object serverRespons = ClientConnection.sendObjectQuery("getownedsheep", query);
 		 
 		 if(serverRespons instanceof ArrayList) {
-			 return (ArrayList<Sheep>) serverRespons;
-		 } else if(serverRespons instanceof String) {
+             this.sheepList = (ArrayList<Sheep>) serverRespons;
+         } else if(serverRespons instanceof String) {
 			 if(serverRespons.equals("getownedsheep no login")) {
 				 throw new Exception("Not logged in");
 			 } else if(serverRespons.equals("getownedsheep null input")) {
 				 throw new Exception("Null input");
 			 }
 		 }
-		 return null;
 	}
 	
 	public ArrayList<Sheep> getSheepList() {
