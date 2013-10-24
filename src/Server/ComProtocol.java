@@ -65,7 +65,7 @@ public class ComProtocol {
                 theOutput = "done";
 
             } else if (theInput.equals("mailpassword")) {
-                state = LOGIN;
+                state = MAILPASSWORD;
                 theOutput = "done";
 
 
@@ -433,6 +433,7 @@ public class ComProtocol {
 
             try {
                 div.SendMail.sendMailTo(theInput, newpassword);
+                log.addEntry(ClientIP + "requested password reset on (" + theInput + ").");
             } catch (Exception e) {
                 e.printStackTrace();
                 return "mailpassword mail error";
