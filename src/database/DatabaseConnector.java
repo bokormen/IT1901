@@ -13,6 +13,8 @@ import div.*;
 
 import java.util.*;
 
+import java.sql.Timestamp;
+
 public class DatabaseConnector {
 	public static Connection con;
 	
@@ -55,22 +57,26 @@ public class DatabaseConnector {
 	
 	public static void main(String[] args) {
 		open();
+		System.out.println(new Timestamp(System.currentTimeMillis()) + " Spørring etter alle sauene til test0@test.test startet");
 		try {
-			getAllSheepsToOwner("test0@test.test");
+			ArrayList<Sheep> Sheeps = getAllSheepsToOwner("test0@test.test");
+			System.out.println("Antall sauer: " + Sheeps.size());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.out.println(new Timestamp(System.currentTimeMillis()) + " Nå har alle sauene til test0@test.test blitt returnert");
 //		ArrayList<String> testUsers = DatabaseConnector.getAllTestUserEmail();
 //		for (String s : testUsers) {
 //			System.out.println("testuser: " + s);
 //		}
+//		deleteTestUsers();
 //		deleteTestSheeps();
 //		RandomTestData.fillDatabaseWithUsers(3);
-//		RandomTestData.sheepsForTestUsers(100);
+//		RandomTestData.sheepsForTestUsers(200);
 //		String sheepBoundariesLongitude = "63.42423,63,43577";
 //		String sheepBoundariesLatitude = "10.3728,10.4072";
-//		for (int i=0;i<10;i++) {
+//		for (int i=0;i<100;i++) {
 //			RandomTestData.moveSheeps(sheepBoundariesLongitude, sheepBoundariesLatitude);
 //		}
 		close();
@@ -161,13 +167,13 @@ public class DatabaseConnector {
 	}
 	
 	/**
-	 * Returnerer en ArrayList med Sheep elementer som inneholder alle sauene til oppgitt eier 
+	 * Returnerer en ArrayList med Sheep elementer som inneholder alle sauene til oppgitt eier, inkludert de siste fem posisjonene
 	 * @param owner
 	 * @return
 	 * @author Oeyvind
 	 * @throws Exception 
 	 */
-	public static ArrayList<Sheep> getAllSheepsToOwner(String owner) throws Exception {
+	public static ArrayList<Sheep> getAllSheepsToOwnerNoLongerInUse(String owner) throws Exception {
 		
 		ArrayList<Sheep> Sheeps = new ArrayList<Sheep>( );
 		
@@ -200,6 +206,56 @@ public class DatabaseConnector {
 					Sheeps.get(i).newLocation(rs2.getString(2), rs2.getString(1));
 				}
 				i++;
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return Sheeps;
+	}
+	
+	/**
+	 * Returnerer en ArrayList med Sheep elementer som inneholder alle sauene til oppgitt eier, inkludert de siste fem posisjonene
+	 * @param owner
+	 * @return
+	 * @author Oeyvind
+	 * @throws Exception 
+	 */
+	public static ArrayList<Sheep> getAllSheepsToOwner(String owner) throws Exception {
+		
+		ArrayList<Sheep> Sheeps = new ArrayList<Sheep>( );
+		
+		try {
+			String query = "SELECT S.ID, S.Gender, S.Weight, S.Heartrate, S.Temperature, S.Age, S.Shepherd, L.Date, L.Position From Sheep AS S JOIN (  SELECT SheepID, Date, Position FROM (SELECT SheepID, Date, Position,  @SheepID_rank := IF(@current_SheepID = SheepID, @SheepID_rank + 1, 1) AS SheepID_rank, @current_SheepID := SheepID FROM Location ORDER BY SheepID, Date DESC) ranked WHERE SheepID_rank < 6) AS L ON (S.ID=L.SheepID) WHERE S.Owner = \"" + owner + "\";";
+			
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
+			
+//			Statement st = con.createStatement();
+//			ResultSet rs = st.executeQuery(query);
+			int j=0;
+			
+			
+			int lastSheedID = -1;
+			int storedLocations = 0;
+			while(rs.next()) {
+				if (rs.getInt(1) != lastSheedID) {
+					Sheep sau = new Sheep(rs.getInt(1),rs.getInt(6),rs.getInt(4),rs.getString(2).charAt(0),owner, rs.getString(7));
+					
+					Sheeps.add(sau);
+					
+					Sheeps.get(j).setHeartrate(rs.getInt(4));
+					Sheeps.get(j).setTemperature(rs.getInt(5));
+					j++;
+					Sheeps.get(j-1).newLocation(rs.getString(9), rs.getString(8));
+					lastSheedID=rs.getInt(1);
+					storedLocations=1;
+				} else if (rs.getInt(1) == lastSheedID && storedLocations < 5) {
+					Sheeps.get(j-1).newLocation(rs.getString(9), rs.getString(8));
+					storedLocations++;
+				}
 			}
 			
 		} catch (SQLException e) {
