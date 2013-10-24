@@ -10,7 +10,8 @@ import javax.mail.internet.MimeMessage;
 
 /**
  * User-klassen representerer en brukers profil. Lagrer og validerer generell
- * info om brukeren, inkludert email og passord som er n�dvendig for innlogging.
+ * info om brukeren, inkludert email og passord som er n�dvendig for
+ * innlogging.
  * 
  * @author Ragnhild
  * 
@@ -24,20 +25,20 @@ public class User implements Serializable {
 	private String phoneNr;
 	private String latitude;
 	private String longitude;
-	
+
 	private SheepRegistration sheepReg;
 
-	public User(String firstName, String lastName, String email, String phoneNr, String location) throws Exception {
-		sheepReg = new SheepRegistration(email);
+	public User(String firstName, String lastName, String email,
+			String phoneNr, String location) throws Exception {
+		sheepReg = new SheepRegistration();
 
 		setFirstName(firstName);
 		setLastName(lastName);
 		setEmail(email);
-		//setPassword(password);
+		// setPassword(password);
 		setPhoneNr(phoneNr);
 		setPosition(location);
 	}
-
 
 	public User() {
 
@@ -176,30 +177,34 @@ public class User implements Serializable {
 			throw new Exception("Coordinate is not valid");
 		}
 	}
-	
+
 	public String getPosition() {
-		return latitude+longitude;
+		return latitude + longitude;
 	}
-	
+
 	public void setPosition(String position) {
 		String[] positionA = position.split(",");
 		latitude = positionA[0];
 		longitude = positionA[1];
 	}
-	
-	
-	public void registerSheep(String id, String age, String weight, String gender, String owner, String shepherd) throws NumberFormatException, Exception {
-		sheepReg.registerSheep(Integer.parseInt(id), Integer.parseInt(age), Integer.parseInt(weight), gender.charAt(0), owner, shepherd);
+
+	public void registerSheep(String id, String age, String weight,
+			String gender, String owner, String shepherd)
+			throws NumberFormatException, Exception {
+		sheepReg.registerSheep(Integer.parseInt(id), Integer.parseInt(age),
+				Integer.parseInt(weight), gender.charAt(0), owner, shepherd);
 	}
-	
+
 	public boolean deleteSheep(Sheep sheep) {
 		return sheepReg.deleteSheep(sheep);
 	}
-	
+
+	public void updateSheepList() throws Exception {
+		sheepReg.updateSheepList(this.email);
+	}
+
 	public ArrayList<Sheep> getSheepList() {
 		return sheepReg.getSheepList();
 	}
-	
-
 
 }

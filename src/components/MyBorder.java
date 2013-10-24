@@ -15,7 +15,8 @@ public class MyBorder extends AbstractBorder {
 		this.arc = arc;
 	}
 
-	public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+	public void paintBorder(Component c, Graphics g, int x, int y, int width,
+			int height) {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(color);
 		g2.drawRoundRect(x, y, width - 1, height - 1, arc, arc);
