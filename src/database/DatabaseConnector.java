@@ -55,6 +55,12 @@ public class DatabaseConnector {
 	
 	public static void main(String[] args) {
 		open();
+		try {
+			getAllSheepsToOwner("test0@test.test");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 //		ArrayList<String> testUsers = DatabaseConnector.getAllTestUserEmail();
 //		for (String s : testUsers) {
 //			System.out.println("testuser: " + s);
@@ -191,7 +197,7 @@ public class DatabaseConnector {
 				Sheeps.get(i).setHeartrate(rs.getInt(4));
 				Sheeps.get(i).setTemperature(rs.getInt(5));
 				while(rs2.next()) {
-					Sheeps.get(i).newLocation(rs2.getString(1), rs2.getString(2));
+					Sheeps.get(i).newLocation(rs2.getString(2), rs2.getString(1));
 				}
 				i++;
 			}

@@ -14,9 +14,9 @@ public class SheepLocation {
 	public SheepLocation(String position, String date) throws Exception {
 		this.position = position;
 		//Valider dato
-		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-		format.setLenient(false);
-		format.parse(date);
+//		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+//		format.setLenient(false);
+//		format.parse(date);
 		this.date = date;
 	}
 
