@@ -191,7 +191,7 @@ public class DatabaseConnector {
 				Sheeps.get(i).setHeartrate(rs.getInt(4));
 				Sheeps.get(i).setTemperature(rs.getInt(5));
 				while(rs2.next()) {
-					Sheeps.get(i).newLocation(rs2.getString(0), rs2.getString(1));
+					Sheeps.get(i).newLocation(rs2.getString(1), rs2.getString(2));
 				}
 				i++;
 			}
