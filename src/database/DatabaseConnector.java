@@ -506,6 +506,31 @@ public class DatabaseConnector {
 	}
 	
 	/**
+	 * Denne funksjonen tar inn en sau, og skriver de nye verdiene til databasen
+	 * @param id
+	 * @param name
+	 * @param owner
+	 * @param shepherd
+	 * @param weight
+	 * @param birthyear
+	 * @author Oeyvind
+	 */
+	public static void changeBasicSheep(String id, String name, String owner, String shepherd, String gender, String weight, String birthyear) {
+		try {
+			String linje ="UPDATE Sheep SET Sheep.Name = \""+name+"\", Sheep.Owner =\""+owner+"\", Sheep.Shepherd=\""+shepherd+"\", Sheep.Gender=\""+gender+"\", Sheep.Weight="+weight+", Sheep.Age="+birthyear+" WHERE Sheep.ID = "+id+";";
+
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement(linje);
+			ps.executeUpdate();
+			
+//			Statement st = con.createStatement();
+//			st.executeUpdate(linje);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
 	 * Endrer informasjonen om brukeren i databasen
 	 * @param user
 	 * @param firstName
@@ -601,6 +626,47 @@ public class DatabaseConnector {
 	public static void deleteSheep(String id) {
 		try {
 			String linje ="DELETE FROM `oyvilund_sheep`.`Sheep` WHERE `ID`="+id+";";
+
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement(linje);
+			ps.executeUpdate();
+			
+//			Statement st = con.createStatement();
+//			st.executeUpdate(linje);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Sletter all lokasjonsinformasjn tidligere enn oppgitt dato
+	 * @param date
+	 * @author Oeyvind
+	 */
+	public static void deleteLocatinDataEarlierThan(String date) {
+		try {
+			String linje ="DELETE FROM `oyvilund_sheep`.`Location` WHERE Date < \"" + date + "\";";
+
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement(linje);
+			ps.executeUpdate();
+			
+//			Statement st = con.createStatement();
+//			st.executeUpdate(linje);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Sletter all lokasjnsdata for en brukers sauer som er eldre enn oppgitt dato
+	 * @param date
+	 * @param user
+	 * author Oeyvind
+	 */
+	public static void deleteLocatinDataForUserEarlierThan(String date, String user) {
+		try {
+			String linje ="DELETE FROM Location WHERE SheepID IN (SELECT S.ID FROM Sheep AS S WHERE S.Owner = \"" +user+"\") AND Date < \"" + date + "\";";
 
 			PreparedStatement ps = (PreparedStatement) con.prepareStatement(linje);
 			ps.executeUpdate();
