@@ -107,6 +107,7 @@ public class Sheep implements Serializable {
 		this.temperature = temperature;
 	}
 
+
 	public int getHeartrate() {
 		return heartrate;
 	}
