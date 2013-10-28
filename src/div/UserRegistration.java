@@ -10,7 +10,16 @@ import java.util.ArrayList;
  */
 public class UserRegistration {
 
-
+	/**
+     *
+     * @param firstName
+     * @param lastName
+     * @param email
+     * @param password
+     * @param phoneNr
+     * @param location
+     * @return
+     */
 	public static boolean registerUser(String firstName, String lastName, String email, String password, String phoneNr, String location)  {
 
         //Lager en foresp0rsel til server.
@@ -29,7 +38,12 @@ public class UserRegistration {
             return true;
         }
 	}
-
+	/**
+     *
+     * @param email
+     * @param password
+     * @return
+     */
 	public static User login(String email, String password) {
 
         //Lager en foresp0rsel til server.
@@ -81,7 +95,11 @@ public class UserRegistration {
         }
     }
 	
-	
+	/**
+     *
+     * @param user
+     * @param password
+     */
 	public static void changePassword(String user, String password) {
 		String query = user + "||" + password;
 
