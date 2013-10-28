@@ -59,7 +59,7 @@ public class DatabaseConnector {
 		open();
 		System.out.println(new Timestamp(System.currentTimeMillis()) + " Spørring etter alle sauene til test0@test.test startet");
 		try {
-			ArrayList<Sheep> Sheeps = getAllSheepsToOwner("test0@test.test");
+			ArrayList<Sheep> Sheeps = getAllSheepsToOwnerWithOnlyOnePosition("test0@test.test");
 			System.out.println("Antall sauer: " + Sheeps.size());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -178,7 +178,7 @@ public class DatabaseConnector {
 		ArrayList<Sheep> Sheeps = new ArrayList<Sheep>( );
 		
 		try {
-			String query = "Select S.ID, S.Gender, S.Shepherd, S.Weight, S.Heartrate, S.Temperature, S.Age, S.Shepherd From Sheep as S WHERE S.Owner=\""+owner+"\";"; //spoer etter all informasjonen om sauen med untak av eier(Owner) og gjeter(Shepherd)
+			String query = "Select S.ID, S.Gender, S.Shepherd, S.Weight, S.Heartrate, S.Temperature, S.Age, S.Shepherd, S.Name From Sheep as S WHERE S.Owner=\""+owner+"\";"; //spoer etter all informasjonen om sauen med untak av eier(Owner) og gjeter(Shepherd)
 
 			PreparedStatement ps = (PreparedStatement) con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
@@ -187,8 +187,7 @@ public class DatabaseConnector {
 //			ResultSet rs = st.executeQuery(query);
 			int i=0;
 			while(rs.next()) {
-				
-				Sheep sau = new Sheep(rs.getInt(1),rs.getInt(7),rs.getInt(4),rs.getString(2).charAt(0),owner, rs.getString(8));
+				Sheep sau = new Sheep(rs.getInt(1), rs.getString(9), rs.getInt(6), rs.getInt(3), rs.getString(2).charAt(0),owner, rs.getString(7));
 				
 				Sheeps.add(sau);
 				
@@ -228,7 +227,7 @@ public class DatabaseConnector {
 		ArrayList<Sheep> Sheeps = new ArrayList<Sheep>( );
 		
 		try {
-			String query = "SELECT S.ID, S.Gender, S.Weight, S.Heartrate, S.Temperature, S.Age, S.Shepherd, L.Date, L.Position From Sheep AS S JOIN (  SELECT SheepID, Date, Position FROM (SELECT SheepID, Date, Position,  @SheepID_rank := IF(@current_SheepID = SheepID, @SheepID_rank + 1, 1) AS SheepID_rank, @current_SheepID := SheepID FROM Location ORDER BY SheepID, Date DESC) ranked WHERE SheepID_rank < 6) AS L ON (S.ID=L.SheepID) WHERE S.Owner = \"" + owner + "\";";
+			String query = "SELECT S.ID, S.Gender, S.Weight, S.Heartrate, S.Temperature, S.Age, S.Shepherd, L.Date, L.Position, S.Name FROM Sheep AS S JOIN Location AS L ON (S.ID = L.SheepID) WHERE S.Owner = " + owner + " ORDER BY L.Date DESC;";
 			
 			PreparedStatement ps = (PreparedStatement) con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
@@ -242,7 +241,7 @@ public class DatabaseConnector {
 			int storedLocations = 0;
 			while(rs.next()) {
 				if (rs.getInt(1) != lastSheedID) {
-					Sheep sau = new Sheep(rs.getInt(1),rs.getInt(6),rs.getInt(4),rs.getString(2).charAt(0),owner, rs.getString(7));
+					Sheep sau = new Sheep(rs.getInt(1), rs.getString(10), rs.getInt(6), rs.getInt(3), rs.getString(2).charAt(0),owner, rs.getString(7));
 					
 					Sheeps.add(sau);
 					
@@ -264,6 +263,75 @@ public class DatabaseConnector {
 		}
 		
 		return Sheeps;
+	}
+	
+	/**
+	 * Returnerer en ArrayList med Sheep elementer som inneholder alle sauene til oppgitt eier, inkludert den siste posisjonen
+	 * @param owner
+	 * @return
+	 * @author Oeyvind
+	 * @throws Exception 
+	 */
+	public static ArrayList<Sheep> getAllSheepsToOwnerWithOnlyOnePosition(String owner) throws Exception {
+		
+		ArrayList<Sheep> Sheeps = new ArrayList<Sheep>( );
+		
+		try {
+			String query = "SELECT S.ID, S.Name, S.Owner, S.Shepherd, S.Gender, S.Weight, S.Heartrate, S.Temperature, S.Age, L.Date, L.Position FROM Sheep AS S INNER JOIN Location AS L ON S.ID = L.SheepID LEFT JOIN Location L2 ON L.SheepID = L2.SheepID AND L.Date < L2.Date WHERE L2.Date IS NULL AND S.Owner=\"" + owner + "\";";
+			
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
+			
+//			Statement st = con.createStatement();
+//			ResultSet rs = st.executeQuery(query);
+			int j=0;
+			while(rs.next()) {
+					Sheep sau = new Sheep(rs.getInt(1),rs.getString(2),rs.getInt(9),rs.getInt(6),rs.getString(5).charAt(0),owner, rs.getString(4));
+					
+					Sheeps.add(sau);
+					
+					Sheeps.get(j).setHeartrate(rs.getInt(7));
+					Sheeps.get(j).setTemperature(rs.getInt(8));
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return Sheeps;
+	}
+	
+	/**
+	 * Legger til historik til sauen med opptil sizeOfHistory antall tidligere posisjoner, den foerste posisjonen som legges til er den siste registrerte posisjonen
+	 * @param sheep
+	 * @param sizeOfHistory
+	 * @return
+	 */
+	public static Sheep addNumberOfHistoricalLocations(Sheep sheep, int sizeOfHistory) {
+		try {
+			String query = "Select L.Date, L.Position From Location AS L WHERE L.SheepID = " + sheep.getId() + " ORDER BY L.Date DESC LIMIT 0," + sizeOfHistory + ";";
+			
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
+			
+//			Statement st = con.createStatement();
+//			ResultSet rs = st.executeQuery(query);
+			while(rs.next()) {
+				try {
+					sheep.newLocation(rs.getString(2), rs.getString(1));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return sheep; 
 	}
 	
 	/**
@@ -443,7 +511,7 @@ public class DatabaseConnector {
 	public static Sheep findSheep(String user,String ID) {
 		Sheep sheep = null;
 		try {
-			String query = "SELECT S.ID, S.Gender, S.Shepherd, S.Weight, S.Heartrate, S.Temperature, S.Age, S.Shepherd FROM Sheep AS S WHERE S.Owner = '" + user + "' AND S.ID = "+ID;
+			String query = "SELECT S.ID, S.Name, S.Gender, S.Shepherd, S.Weight, S.Heartrate, S.Temperature, S.Age FROM Sheep AS S WHERE S.Owner = '" + user + "' AND S.ID = "+ID;
 
 			PreparedStatement ps = (PreparedStatement) con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
@@ -452,7 +520,7 @@ public class DatabaseConnector {
 //			ResultSet rs= st.executeQuery(query);
 			while(rs.next()) {
 				try {
-					sheep = new Sheep(rs.getInt(0),rs.getInt(6),rs.getInt(3),rs.getString(1).charAt(0),user, rs.getString(7));
+					sheep = new Sheep(rs.getInt(1), rs.getString(2), rs.getInt(8),rs.getInt(5),rs.getString(3).charAt(0),user, rs.getString(4));
 					String query2 = "Select Date, Position FROM Location WHERE SheepID = " + rs.getInt(1) + " ORDER BY Date DESC LIMIT 0,5;";
 
 					PreparedStatement ps2 = (PreparedStatement) con.prepareStatement(query2);
