@@ -33,6 +33,7 @@ public class ComProtocol {
     private static final int DELETESHEEP = 3002;
     private static final int FINDSHEEP = 3003;
     private static final int GETOWNEDSHEEP = 3004;
+    private static final int CHANGESHEEP = 3005;
 
     //private static final int TESTING = 9999;
 
@@ -102,7 +103,9 @@ public class ComProtocol {
                 state = GETOWNEDSHEEP;
                 theOutput = "done";
 
-
+            } else if (theInput.equals("changesheep")) { //bruker vil forandre paa en sau
+                state = CHANGESHEEP;
+                theOutput = "done";
 
             } else if (theInput.equals("quit")) { // bruker vil avslutte
                 theOutput = "bye";
@@ -244,6 +247,7 @@ public class ComProtocol {
                 if (isLoggedIn) {
                     theOutput = "object sending";
                     oout.writeObject(DatabaseConnector.findSheep(UserName, theInput));
+                    log.addEntry(ClientIP + "[" + UserName + "] Searched for sheep: " + theInput + ".");
 
                 } else {
                     theOutput = "findsheep no login";
@@ -273,6 +277,23 @@ public class ComProtocol {
                 }
             } else {
                 theOutput = "getownedsheep null input";
+            }
+
+            state = WAIT;
+
+        //Venter paa input for changesheep
+        //typisk input string er: "id||name||owner||shepherd||gender||weight||birthyear"
+        //eksempel "101||Ole||frodo@hotmail.com||gandalf@hotmail.com||f||10||2003"
+        } else if (state == CHANGESHEEP) {
+
+            if (theInput != null) {
+                if (isLoggedIn) {
+                    theOutput = changeSheep(theInput);
+                } else {
+                    theOutput = "changesheep no login";
+                }
+            } else {
+                theOutput = "changesheep null input";
             }
 
             state = WAIT;
@@ -394,6 +415,28 @@ public class ComProtocol {
             return "delsheep success";
         }
         return "delsheep no exists";
+    }
+
+
+    //Redigere info om bruker i database
+    //typisk input string er: "id||name||owner||shepherd||gender||weight||birthyear"
+    //eksempel "101||Ole||frodo@hotmail.com||gandalf@hotmail.com||f||10||2003"
+
+    private String changeSheep(String theInput) {
+
+        String[] temp = theInput.split("\\|\\|"); //splitter input ved ||
+        if (temp.length == 7) {
+            if (temp[0].equals(UserName)) {
+                DatabaseConnector.changeBasicSheep(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5], temp[6]);
+                log.addEntry(ClientIP + "[" + UserName + "] Changed sheep info for sheep: " + temp[0] + ".");
+                return "changesheep success";
+            } else {
+                return "changesheep different username";
+            }
+        } else {
+            return "changesheep bad input";
+        }
+
     }
 
     //logger inn en bruker
