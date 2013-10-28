@@ -14,6 +14,7 @@ import java.util.Date;
 public class Sheep implements Serializable {
 
 	private int id;
+	private String name;
 	private int birthyear;
 	private int weight;
 	private char gender;
@@ -23,9 +24,9 @@ public class Sheep implements Serializable {
 	private String shepherd;
 	private ArrayList<SheepLocation> locations;
 
-	public Sheep(int id, int birthyear, int weight, char gender, String owner,
+	public Sheep(String name, int birthyear, int weight, char gender, String owner,
 			String shepherd) throws Exception {
-		this.id = id;
+		this.name = name;
 		setBirthyear(birthyear);
 		setWeight(weight);
 		setOwner(owner);
@@ -37,13 +38,32 @@ public class Sheep implements Serializable {
 			throw new Exception("Gender not valid");
 		}
 	}
+	public Sheep(int id, String name, int birthyear, int weight, char gender, String owner,
+			String shepherd) throws Exception {
+		this.id = id;
+		this.name = name;
+		setBirthyear(birthyear);
+		setWeight(weight);
+		setOwner(owner);
+		setShepherd(shepherd);
+		locations = new ArrayList<SheepLocation>();
+		if (gender == 'f' || gender == 'm') {
+			this.gender = gender;
+		} else {
+			throw new Exception("Gender not valid");
+		}
+	}
+	
 
 	public Sheep() {
 
 	}
 
-	public int getId() {
-		return id;
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public int getBirthyear() {
@@ -165,6 +185,14 @@ public class Sheep implements Serializable {
 			return true;
 		}
 		return false;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 }

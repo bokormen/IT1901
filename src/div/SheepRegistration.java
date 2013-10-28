@@ -20,16 +20,15 @@ public class SheepRegistration implements Serializable {
 
 	}
 
-	public void registerSheep(int id, int birthyear, int weight, char gender,
+	public void registerSheep(String name, int birthyear, int weight, char gender,
 			String owner, String shepherd) throws Exception {
 
-		sheepList
-				.add(new Sheep(id, birthyear, weight, gender, owner, shepherd));
+		sheepList.add(new Sheep(name, birthyear, weight, gender, owner, shepherd));
 
 		// Lager en foresp0rsel til server.
 		// retiningslinjer for kommunikasjon med server vil til en hver tid
 		// ligge i server.ComProtocol klassen
-		String query = id + "||" + owner + "||" + shepherd + "||" + gender
+		String query = name + "||" + owner + "||" + shepherd + "||" + gender
 				+ "||" + weight + "||" + 75 + "||" + 39 + "||" + birthyear;
 
 		// sender foresp0rselen til serveren og faar tilbake respons
@@ -43,19 +42,19 @@ public class SheepRegistration implements Serializable {
 
 	}
 
-	public void editSheep(int id, String shepherd, int weight, int birthyear)
+	public void editSheep(int id, String name, String owner, String shepherd, char gender, int weight, int birthyear)
 			throws Exception {
 		Sheep s = sheepSearch(id);
+		s.setName(name);
 		s.setShepherd(shepherd);
 		s.setWeight(weight);
 		s.setBirthyear(birthyear);
-		/*
-		 * String query = id + "||" + shepherd + "||" + age + "||" + weight;
-		 * String serverRespons =
-		 * ClientConnection.sendServerQuery("editsheep",query); if
-		 * (serverRespons.equals("err")) {
-		 * System.out.println("Error. Can't change sheep information"); }
-		 */
+		 String query = id + "||" + name + "||" + owner + "||" + shepherd + "||" + gender + "||" + weight + "||" + birthyear;
+		 String serverRespons = ClientConnection.sendServerQuery("changesheep",query);
+		 if(!serverRespons.equals("changesheep success")) {
+			 System.out.println("Error. Can't change sheep information"); 
+		 }
+		 
 	}
 
 	public boolean deleteSheep(Sheep s) {

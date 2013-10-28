@@ -188,10 +188,10 @@ public class User implements Serializable {
 		longitude = positionA[1];
 	}
 
-	public void registerSheep(String id, String age, String weight,
+	public void registerSheep(String name, String age, String weight,
 			String gender, String owner, String shepherd)
 			throws NumberFormatException, Exception {
-		sheepReg.registerSheep(Integer.parseInt(id), Integer.parseInt(age),
+		sheepReg.registerSheep(name, Integer.parseInt(age),
 				Integer.parseInt(weight), gender.charAt(0), owner, shepherd);
 	}
 
