@@ -106,7 +106,7 @@ public class Sheep implements Serializable {
 	public void setTemperature(double temperature) {
 		if (temperature < 35 || temperature > 40) {
 			SheepAttackMail.sendMail("rakrogh@msn.com", "Sheep number "
-					+ getId() + " may be under attack");
+					+ getId() + " may be under attack.");
 		}
 		this.temperature = temperature;
 	}
