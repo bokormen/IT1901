@@ -17,9 +17,9 @@ public class RandomTestData {
 			int lastname = i+exsistingUsers;
 			String user = "test"+lastname+"@test.test";
 			String firstName = "testuser";
-			String lastName = Integer.toString(lastname);
+			String lastName = uppercaseFirstLetters(EnglishNumberToWords.convert(lastname)).replaceAll("\\W", "");
 			String tlf = Integer.toString(generator.nextInt(89999999)+10000000);
-			String password = Integer.toString(generator.nextInt(89999999)+10000000);
+			String password = "passord";
 			String location = Double.toString(90*generator.nextDouble())+","+Double.toString(90*generator.nextDouble());
 			DatabaseConnector.newUser(user, firstName, lastName, tlf, password, location);
 		}
@@ -37,10 +37,10 @@ public class RandomTestData {
 				String name = "testSheep";
 				String owner = s;
 				String gender = Gender.getRandomGender();
-				int weight = generator.nextInt(30)+40;
-				int heartrate = generator.nextInt(100)+50;
+				int weight = generator.nextInt(10)+20;
+				int heartrate = generator.nextInt(30)+60;
 				int birthyear = generator.nextInt(12)+2001;
-				int temperature = generator.nextInt(7)+30;
+				int temperature = generator.nextInt(2)+38;
 				DatabaseConnector.newSheep(name, owner, "", gender, Integer.toString(weight), Integer.toString(heartrate), Integer.toString(temperature), Integer.toString(birthyear));
 			}
 		}
@@ -146,6 +146,23 @@ public class RandomTestData {
 		}
 		
 		return days;
+	}
+	
+	public static String uppercaseFirstLetters(String str) 
+	{
+	    boolean prevWasWhiteSp = true;
+	    char[] chars = str.toCharArray();
+	    for (int i = 0; i < chars.length; i++) {
+	        if (Character.isLetter(chars[i])) {
+	            if (prevWasWhiteSp) {
+	                chars[i] = Character.toUpperCase(chars[i]);    
+	            }
+	            prevWasWhiteSp = false;
+	        } else {
+	            prevWasWhiteSp = Character.isWhitespace(chars[i]);
+	        }
+	    }
+	    return new String(chars);
 	}
 	
 }

@@ -20,7 +20,8 @@ public class MyLabel extends JLabel {
 
 		try {
 			if (icon != null) {
-				this.icon = new ImageIcon(ImageIO.read(this.getClass().getClassLoader()
+				this.icon = new ImageIcon(ImageIO.read(this.getClass()
+						.getClassLoader()
 						.getResource("images/" + icon + ".png")));
 			}
 		} catch (IOException e) {

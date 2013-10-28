@@ -49,10 +49,9 @@ public class ClientMain {
         div.Sheep ssheep;
 
         try {
-            div.UserRegistration.login("test0@test.test", "78831129");
-            Object sheepobj = div.ClientConnection.sendObjectQuery("findsheep", "351");
-            ssheep = (div.Sheep)sheepobj;
-            System.out.println(ssheep.getOwner());
+            //div.UserRegistration.login("test2@test.test", "passord");
+            String str = ClientConnection.sendServerQuery("mailpassword", "test2@test.test");
+            System.out.println(str);
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }

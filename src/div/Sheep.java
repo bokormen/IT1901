@@ -23,7 +23,8 @@ public class Sheep implements Serializable {
 	private String shepherd;
 	private ArrayList<SheepLocation> locations;
 
-	public Sheep(int id, int birthyear, int weight, char gender, String owner, String shepherd) throws Exception  {
+	public Sheep(int id, int birthyear, int weight, char gender, String owner,
+			String shepherd) throws Exception {
 		this.id = id;
 		setBirthyear(birthyear);
 		setWeight(weight);
@@ -37,7 +38,7 @@ public class Sheep implements Serializable {
 		}
 	}
 
-	public Sheep()  {
+	public Sheep() {
 
 	}
 
@@ -50,7 +51,7 @@ public class Sheep implements Serializable {
 	}
 
 	/**
-	 * Setter fødselsåret til en sau. 
+	 * Setter fødselsåret til en sau.
 	 * 
 	 * @throws Exception
 	 */
@@ -77,12 +78,14 @@ public class Sheep implements Serializable {
 	public SheepLocation getLocation() {
 		return locations.get(locations.size() - 1);
 	}
-	
+
 	/**
-	 * Returnerer de siste posisjonene til sauen. Antall er avhengig av parameteren num.  
+	 * Returnerer de siste posisjonene til sauen. Antall er avhengig av
+	 * parameteren num.
 	 */
 	public ArrayList<SheepLocation> getLastLocations(int num) {
-		return (ArrayList<SheepLocation>) locations.subList(locations.size()-num, locations.size());
+		return (ArrayList<SheepLocation>) locations.subList(locations.size()
+				- num, locations.size());
 	}
 
 	/**
@@ -102,7 +105,8 @@ public class Sheep implements Serializable {
 
 	public void setTemperature(double temperature) {
 		if (temperature < 35 || temperature > 40) {
-			SheepAttackMail.sendMail("rakrogh@msn.com", "Sheep number " + getId() + " may be under attack");
+			SheepAttackMail.sendMail("rakrogh@msn.com", "Sheep number "
+					+ getId() + " may be under attack");
 		}
 		this.temperature = temperature;
 	}
@@ -119,7 +123,8 @@ public class Sheep implements Serializable {
 			throw new Exception("Heartrate not valid");
 		}
 		if (heartrate < 50 || heartrate > 100) {
-			SheepAttackMail.sendMail("rakrogh@msn.com", "Sheep number " + getId() + " may be under attack.");
+			SheepAttackMail.sendMail("rakrogh@msn.com", "Sheep number "
+					+ getId() + " may be under attack.");
 		}
 	}
 
@@ -132,7 +137,9 @@ public class Sheep implements Serializable {
 	}
 
 	public void setShepherd(String shepherd) throws Exception {
-		if (emailIsValid(shepherd)) {
+		if (shepherd.equals("")) {
+			this.shepherd = "";
+		} else if (emailIsValid(shepherd)) {
 			this.shepherd = shepherd;
 		} else {
 			throw new Exception("Shepherd not valid");
@@ -144,13 +151,13 @@ public class Sheep implements Serializable {
 	}
 
 	public void setOwner(String owner) throws Exception {
-		if(emailIsValid(owner)) {
+		if (emailIsValid(owner)) {
 			this.owner = owner;
 		} else {
 			throw new Exception("Owner not valid");
 		}
 	}
-	
+
 	public boolean emailIsValid(String email) {
 		String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
 				+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";

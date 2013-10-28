@@ -156,6 +156,7 @@ public class ClientConnection {
         } catch (IOException e) {
             System.out.println("Error closing connection");
         } catch (NullPointerException e) {
+            System.out.println("Error closing connection");
         }
     }
 }
