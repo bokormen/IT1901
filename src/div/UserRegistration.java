@@ -11,6 +11,16 @@ import java.util.ArrayList;
 public class UserRegistration {
 
 
+    /**
+     *
+     * @param firstName
+     * @param lastName
+     * @param email
+     * @param password
+     * @param phoneNr
+     * @param location
+     * @return
+     */
 	public static boolean registerUser(String firstName, String lastName, String email, String password, String phoneNr, String location)  {
 
         //Lager en foresp0rsel til server.
@@ -30,6 +40,12 @@ public class UserRegistration {
         }
 	}
 
+    /**
+     *
+     * @param email
+     * @param password
+     * @return
+     */
 	public static User login(String email, String password) {
 
         //Lager en foresp0rsel til server.
@@ -53,35 +69,19 @@ public class UserRegistration {
             return null;
         }
     }
-	
+
+
 	public ArrayList<User> getUsers() {
         ArrayList<User> users = new ArrayList<User>();
 		return users;
 	}
-/*
-    public void deleteUser(User user) {
-    	String query = user.getEmail();
 
-        String serverRespons = ClientConnection.sendServerQuery("deleteuser", query);
 
-        if (serverRespons.equals("err")) {
-            System.out.println("Error. Cannot delete user");
-        }
-    }*/
-    /*
-    public void editUser(String email, String firstName, String lastName, String phoneNumber, String location ) {
-    	
-    	
-    	String query = email + "||" + firstName + "||" + lastName + "||" + phoneNumber + "||" + location;
-
-        String serverRespons = ClientConnection.sendServerQuery("edituser", query);
-
-        if (serverRespons.equals("err")) {
-            System.out.println("Error. Can't change user information");
-        }
-    }*/
-	
-	
+    /**
+     *
+     * @param user
+     * @param password
+     */
 	public void changePassword(String user, String password) {
 		String query = user + "||" + password;
 
