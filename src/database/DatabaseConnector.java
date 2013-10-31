@@ -62,7 +62,7 @@ public class DatabaseConnector {
 			ArrayList<Sheep> Sheeps = getAllSheepsToOwner("test0@test.test");
 			System.out.println("Antall sauer: " + Sheeps.size());
 			for (int i=0;i<Sheeps.size();i++) {
-				System.out.println(Sheeps.get(i).getId());
+				System.out.println(Sheeps.get(i).getId() + " Lokasjon: " + Sheeps.get(i).getLocation().getPosition());
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -295,6 +295,7 @@ public class DatabaseConnector {
 					
 					Sheeps.get(j).setHeartrate(rs.getInt(7));
 					Sheeps.get(j).setTemperature(rs.getInt(8));
+					Sheeps.get(j).newLocation(rs.getString(11), rs.getString(10));
 			}
 			
 		} catch (SQLException e) {
