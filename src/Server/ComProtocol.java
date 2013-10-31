@@ -6,8 +6,10 @@ import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.net.Socket;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 
 import database.DatabaseConnector;
+import div.Sheep;
 
 //handles the input from clients
 public class ComProtocol {
@@ -35,7 +37,7 @@ public class ComProtocol {
     private static final int GETOWNEDSHEEP = 3004;
     private static final int CHANGESHEEP = 3005;
 
-    //private static final int TESTING = 9999;
+    private static final int TESTING = 9999;
 
     private int state = WAIT;
 
@@ -105,6 +107,14 @@ public class ComProtocol {
 
             } else if (theInput.equals("changesheep")) { //bruker vil forandre paa en sau
                 state = CHANGESHEEP;
+                theOutput = "done";
+                
+                
+                
+                
+                
+            } else if (theInput.equals("testing")) { //bruker vil forandre paa en sau
+                state = TESTING;
                 theOutput = "done";
 
             } else if (theInput.equals("quit")) { // bruker vil avslutte
@@ -294,6 +304,32 @@ public class ComProtocol {
                 }
             } else {
                 theOutput = "changesheep null input";
+            }
+
+            state = WAIT;
+
+
+        //venter paa input for aa faa liste av sauer
+        //input: "email"
+        } else if (state == TESTING) {
+
+            if (theInput != null) {
+                theOutput = "object sending";
+                try {
+                    ArrayList<Sheep> sl = new ArrayList<Sheep>();
+                    for (int i = 0; i < 109; i++) {
+                        Sheep s = new Sheep(i, "testsheep", 2008-i, 20, (char)'m', "test0@test.test", "test2@test.test");
+                        s.newLocation(i + "," + i, "00/00/0000");
+                        sl.add(s);
+                    }
+                    oout.writeObject(sl);
+                    log.addEntry(ClientIP + "[" + UserName + "] Requested Sheep List.");
+                } catch (Exception e) {
+                    theOutput = "getownedsheep database error";
+                }
+
+            } else {
+                theOutput = "getownedsheep null input";
             }
 
             state = WAIT;
