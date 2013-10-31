@@ -59,8 +59,11 @@ public class DatabaseConnector {
 		open();
 		System.out.println(new Timestamp(System.currentTimeMillis()) + " Spørring etter alle sauene til test0@test.test startet");
 		try {
-			ArrayList<Sheep> Sheeps = getAllSheepsToOwnerWithOnlyOnePosition("test0@test.test");
+			ArrayList<Sheep> Sheeps = getAllSheepsToOwner("test0@test.test");
 			System.out.println("Antall sauer: " + Sheeps.size());
+			for (int i=0;i<Sheeps.size();i++) {
+				System.out.println(Sheeps.get(i).getId());
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -222,7 +225,7 @@ public class DatabaseConnector {
 	 * @author Oeyvind
 	 * @throws Exception 
 	 */
-	public static ArrayList<Sheep> getAllSheepsToOwner(String owner) throws Exception {
+	public static ArrayList<Sheep> getAllSheepsToOwnerWithHistory(String owner, int numberOfHistoryEvents) throws Exception {
 		
 		ArrayList<Sheep> Sheeps = new ArrayList<Sheep>( );
 		
@@ -251,7 +254,7 @@ public class DatabaseConnector {
 					Sheeps.get(j-1).newLocation(rs.getString(9), rs.getString(8));
 					lastSheedID=rs.getInt(1);
 					storedLocations=1;
-				} else if (rs.getInt(1) == lastSheedID && storedLocations < 5) {
+				} else if (rs.getInt(1) == lastSheedID && storedLocations < numberOfHistoryEvents) {
 					Sheeps.get(j-1).newLocation(rs.getString(9), rs.getString(8));
 					storedLocations++;
 				}
@@ -272,7 +275,7 @@ public class DatabaseConnector {
 	 * @author Oeyvind
 	 * @throws Exception 
 	 */
-	public static ArrayList<Sheep> getAllSheepsToOwnerWithOnlyOnePosition(String owner) throws Exception {
+	public static ArrayList<Sheep> getAllSheepsToOwner(String owner) throws Exception {
 		
 		ArrayList<Sheep> Sheeps = new ArrayList<Sheep>( );
 		
