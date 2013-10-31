@@ -23,6 +23,7 @@ public class Sheep implements Serializable {
 	private String owner;
 	private String shepherd;
 	private ArrayList<SheepLocation> locations;
+	private boolean attackStatus;
 
 	public Sheep(String name, int birthyear, int weight, char gender, String owner,
 			String shepherd) throws Exception {
@@ -37,6 +38,7 @@ public class Sheep implements Serializable {
 		} else {
 			throw new Exception("Gender not valid");
 		}
+		attackStatus = false;
 	}
 	public Sheep(int id, String name, int birthyear, int weight, char gender, String owner,
 			String shepherd) throws Exception {
@@ -205,6 +207,11 @@ public class Sheep implements Serializable {
 		if(shepherd != "") {
 			SheepAttackMail.sendMail(shepherd, id, getLocation().getPosition());
 		}
+		attackStatus = true;
+	}
+	
+	public boolean getAttackStatus() {
+		return attackStatus;
 	}
 
 }
