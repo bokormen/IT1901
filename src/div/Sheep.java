@@ -71,7 +71,7 @@ public class Sheep implements Serializable {
 	}
 
 	/**
-	 * Setter fødselsåret til en sau.
+	 * Setter fï¿½dselsï¿½ret til en sau.
 	 * 
 	 * @throws Exception
 	 */
@@ -96,8 +96,14 @@ public class Sheep implements Serializable {
 	}
 
 	public SheepLocation getLocation() {
-		return locations.get(locations.size() - 1);
-	}
+        try {
+		    return locations.get(locations.size() - 1);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            //throw new Exception("No location");
+            System.err.println("No location available on sheep");
+            return null;
+        }
+    }
 
 	/**
 	 * Returnerer de siste posisjonene til sauen. Antall er avhengig av
@@ -109,7 +115,7 @@ public class Sheep implements Serializable {
 	}
 
 	/**
-	 * Legger til ny posisjon til sau. Dato må være på formen dd/mm/yyyy.
+	 * Legger til ny posisjon til sau. Dato mï¿½ vï¿½re pï¿½ formen dd/mm/yyyy.
 	 */
 	public void newLocation(String position, String date) throws Exception {
 		locations.add(new SheepLocation(position, date));
