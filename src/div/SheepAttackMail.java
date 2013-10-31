@@ -15,7 +15,7 @@ public class SheepAttackMail {
 	
 
 	
-	public static void sendMail(String email, String description)    {
+	public static void sendMail(String email, int id, String position)    {
 		final String username = "sheepcontrolit1901@gmail.com";
 		final String password = "manuer123";
 
@@ -37,7 +37,7 @@ public class SheepAttackMail {
 			message.setRecipients(Message.RecipientType.TO,
 					InternetAddress.parse(email));
 			message.setSubject("Sheep attack");
-			message.setText(description);
+			message.setText("Sheep " + id + " may be under attack. Position: " + position);
 
 			Transport.send(message);
 		} catch(MessagingException e) {

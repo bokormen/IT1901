@@ -19,7 +19,7 @@ public class SheepRegistration implements Serializable {
 		// sheepList = updateSheepList(user);
 
 	}
-
+	
 	public void registerSheep(String name, int birthyear, int weight, char gender,
 			String owner, String shepherd) throws Exception {
 
