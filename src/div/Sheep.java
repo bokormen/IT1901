@@ -118,8 +118,10 @@ public class Sheep implements Serializable {
 	 * Legger til ny posisjon til sau. Dato m� v�re p� formen dd/mm/yyyy.
 	 */
 	public void newLocation(String position, String date) throws Exception {
-		locations.add(new SheepLocation(position, date));
-	}
+        SheepLocation sl = new SheepLocation(position, date);
+        System.out.println(this.getId() + " - " + sl.getPosition());
+        locations.add(sl);
+    }
 
 	public ArrayList<SheepLocation> getLocationLog() {
 		return locations;
