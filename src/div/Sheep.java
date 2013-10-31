@@ -119,7 +119,6 @@ public class Sheep implements Serializable {
 	 */
 	public void newLocation(String position, String date) throws Exception {
         SheepLocation sl = new SheepLocation(position, date);
-        System.out.println(this.getId() + " - " + sl.getPosition());
         locations.add(sl);
     }
 

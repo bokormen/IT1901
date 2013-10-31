@@ -62,7 +62,7 @@ public class DatabaseConnector {
 			ArrayList<Sheep> Sheeps = getAllSheepsToOwner("test0@test.test");
 			System.out.println("Antall sauer: " + Sheeps.size());
 			for (int i=0;i<Sheeps.size();i++) {
-				System.out.println(Sheeps.get(i).getId() + " Lokasjon: " + Sheeps.get(i).getLocation().getPosition());
+				System.out.println(Sheeps.get(i).getId() + " Lokasjon: " + Sheeps.get(i).getLocationLog().get(0));
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -219,7 +219,7 @@ public class DatabaseConnector {
 	}
 	
 	/**
-	 * Returnerer en ArrayList med Sheep elementer som inneholder alle sauene til oppgitt eier, inkludert de siste fem posisjonene
+	 * Returnerer en ArrayList med Sheep elementer som inneholder alle sauene til oppgitt eier, inkludert de siste antall etterspurte posisjonene
 	 * @param owner
 	 * @return
 	 * @author Oeyvind
@@ -278,6 +278,7 @@ public class DatabaseConnector {
 	public static ArrayList<Sheep> getAllSheepsToOwner(String owner) throws Exception {
 		
 		ArrayList<Sheep> Sheeps = new ArrayList<Sheep>( );
+		int j=0;
 		
 		try {
 			String query = "SELECT S.ID, S.Name, S.Owner, S.Shepherd, S.Gender, S.Weight, S.Heartrate, S.Temperature, S.Age, L.Date, L.Position FROM Sheep AS S INNER JOIN Location AS L ON S.ID = L.SheepID LEFT JOIN Location L2 ON L.SheepID = L2.SheepID AND L.Date < L2.Date WHERE L2.Date IS NULL AND S.Owner=\"" + owner + "\";";
@@ -287,7 +288,6 @@ public class DatabaseConnector {
 			
 //			Statement st = con.createStatement();
 //			ResultSet rs = st.executeQuery(query);
-			int j=0;
 			while(rs.next()) {
 					Sheep sau = new Sheep(rs.getInt(1),rs.getString(2),rs.getInt(9),rs.getInt(6),rs.getString(5).charAt(0),owner, rs.getString(4));
 					
@@ -296,10 +296,13 @@ public class DatabaseConnector {
 					Sheeps.get(j).setHeartrate(rs.getInt(7));
 					Sheeps.get(j).setTemperature(rs.getInt(8));
 					Sheeps.get(j).newLocation(rs.getString(11), rs.getString(10));
+					j++;
 			}
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
