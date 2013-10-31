@@ -12,7 +12,7 @@ public class SheepLocation implements Serializable {
 	private final String position;
 	private final String date;
 	
-	public SheepLocation(String position, String date) throws Exception {
+	public SheepLocation(String position, String date) {
 		this.position = position;
 		//Valider dato
 //		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");

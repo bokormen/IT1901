@@ -101,7 +101,7 @@ public class Sheep implements Serializable {
         } catch (ArrayIndexOutOfBoundsException e) {
             //throw new Exception("No location");
             System.err.println("No location available on sheep");
-            return null;
+            return new SheepLocation("0,0", "00/00/0000");
         }
     }
 
