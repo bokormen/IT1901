@@ -332,9 +332,10 @@ public class DatabaseConnector {
 	
 	/**
 	 * Legger til historik til sauen med opptil sizeOfHistory antall tidligere posisjoner, den foerste posisjonen som legges til er den siste registrerte posisjonen
-	 * @param sheep
+	 * @param id
 	 * @param sizeOfHistory
 	 * @return
+	 * @author Oeyvind
 	 */
 	public static Sheep addNumberOfHistoricalLocationsToSheep(int id, int sizeOfHistory) {
 		Sheep sheep = null;
@@ -411,6 +412,7 @@ public class DatabaseConnector {
 	 * Denne funksjonen tar inn en e-postadresse og et passord og sjekker om brukeren eksisterer og at passordet til brukeren er riktig, hvis alt er der og alt stemmer, saa returners brukeren
 	 * @param user
 	 * @param password
+	 * @author Oeyvind
 	 * @return
 	 */
 	public static User loginUser(String user, String password) {
@@ -511,6 +513,7 @@ public class DatabaseConnector {
 	 * Denne funksjonen tar inn en e-postadresse og en saue id og sjekker foerst om sauen eksisterer og saa om sauen er eid av e-postadressen som blir sent med. Returnerer true om sauen eksisterer og e-postadressen som er oppgitt er satt som owner hos sauen
 	 * @param user
 	 * @param ID
+	 * @author Oeyvind
 	 * @return
 	 */
 	public static boolean doesUserOwnSheep(String user,String ID) {
