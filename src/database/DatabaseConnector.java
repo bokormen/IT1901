@@ -15,6 +15,7 @@ import java.util.*;
 
 import java.sql.Timestamp;
 
+@SuppressWarnings("unused")
 public class DatabaseConnector {
 	public static Connection con;
 	
@@ -55,20 +56,26 @@ public class DatabaseConnector {
 		}
 	}
 	
+	/**
+	 * Laget for aa teste kode skrevet i denne klassen for feil
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		open();
-		System.out.println(new Timestamp(System.currentTimeMillis()) + " Spørring etter alle sauene til test0@test.test startet");
-		try {
-			ArrayList<Sheep> Sheeps = getAllSheepsToOwner("test0@test.test");
-			System.out.println("Antall sauer: " + Sheeps.size());
-			for (int i=0;i<Sheeps.size();i++) {
-				System.out.println(Sheeps.get(i).getId() + " Lokasjon: " + Sheeps.get(i).getLocationLog().get(0));
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println(new Timestamp(System.currentTimeMillis()) + " Nå har alle sauene til test0@test.test blitt returnert");
+		Sheep sheep = addNumberOfHistoricalLocationsToSheep(1012384, 3);
+		System.out.println(sheep.getLocationLog().get(2));
+//		System.out.println(new Timestamp(System.currentTimeMillis()) + " Spørring etter alle sauene til test0@test.test startet");
+//		try {
+//			ArrayList<Sheep> Sheeps = getAllSheepsToOwner("test0@test.test");
+//			System.out.println("Antall sauer: " + Sheeps.size());
+//			for (int i=0;i<Sheeps.size();i++) {
+//				System.out.println(Sheeps.get(i).getId() + " Lokasjon: " + Sheeps.get(i).getLocationLog().get(0));
+//			}
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		System.out.println(new Timestamp(System.currentTimeMillis()) + " Nå har alle sauene til test0@test.test blitt returnert");
 //		ArrayList<String> testUsers = DatabaseConnector.getAllTestUserEmail();
 //		for (String s : testUsers) {
 //			System.out.println("testuser: " + s);
@@ -76,7 +83,7 @@ public class DatabaseConnector {
 //		deleteTestUsers();
 //		deleteTestSheeps();
 //		RandomTestData.fillDatabaseWithUsers(3);
-//		RandomTestData.sheepsForTestUsers(200);
+//		RandomTestData.sheepsForTestUsers(2);
 //		String sheepBoundariesLongitude = "63.42423,63,43577";
 //		String sheepBoundariesLatitude = "10.3728,10.4072";
 //		for (int i=0;i<100;i++) {
@@ -142,7 +149,7 @@ public class DatabaseConnector {
 	}
 	
 	/**
-	 * Denne koden oppretteren en sau i databasen
+	 * Denne koden oppretteren en sau i databasen og returnerer id'en til denne sauen
 	 * @param name
 	 * @param owner
 	 * @param shepherd
@@ -152,14 +159,27 @@ public class DatabaseConnector {
 	 * @param temperature
 	 * @param birthyear
 	 * @author Oeyvind
+	 * @return Returnerer id'en til den sist innsate sauen i databasen fra maskinen som brukes til aa kalle denne funksjonen
 	 */
-	public static void newSheep(String name, String owner, String shepherd, String gender, String weight, String heartrate, String temperature, String birthyear) {
+	public static int newSheep(String name, String owner, String shepherd, String gender, String weight, String heartrate, String temperature, String birthyear) {
+		int i = -1;
 		try {
 			String linje ="INSERT INTO `Sheep` (`Name`, `Owner`, `Shepherd`, `Gender`, `Weight`,`Heartrate`,`Temperature`,`Age`) VALUES "+
-			String.format("(\"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")", name,owner,shepherd,gender,weight,heartrate,temperature,birthyear);
+			String.format("(\"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\");", name,owner,shepherd,gender,weight,heartrate,temperature,birthyear);
 
 			PreparedStatement ps = (PreparedStatement) con.prepareStatement(linje);
 			ps.executeUpdate();
+			
+			String query = "SELECT LAST_INSERT_ID();";
+			
+			PreparedStatement ps2 = (PreparedStatement) con.prepareStatement(query);
+			ResultSet rs = ps2.executeQuery();
+			
+			
+			
+			while (rs.next()) {
+				i=rs.getInt(1);
+			}
 			
 //			Statement st = con.createStatement();
 //			st.executeUpdate(linje);
@@ -167,6 +187,7 @@ public class DatabaseConnector {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return i;
 	}
 	
 	/**
@@ -240,10 +261,10 @@ public class DatabaseConnector {
 			int j=0;
 			
 			
-			int lastSheedID = -1;
+			int lastSheepID = -1;
 			int storedLocations = 0;
 			while(rs.next()) {
-				if (rs.getInt(1) != lastSheedID) {
+				if (rs.getInt(1) != lastSheepID) {
 					Sheep sau = new Sheep(rs.getInt(1), rs.getString(10), rs.getInt(6), rs.getInt(3), rs.getString(2).charAt(0),owner, rs.getString(7));
 					
 					Sheeps.add(sau);
@@ -252,9 +273,9 @@ public class DatabaseConnector {
 					Sheeps.get(j).setTemperature(rs.getInt(5));
 					j++;
 					Sheeps.get(j-1).newLocation(rs.getString(9), rs.getString(8));
-					lastSheedID=rs.getInt(1);
+					lastSheepID=rs.getInt(1);
 					storedLocations=1;
-				} else if (rs.getInt(1) == lastSheedID && storedLocations < numberOfHistoryEvents) {
+				} else if (rs.getInt(1) == lastSheepID && storedLocations < numberOfHistoryEvents) {
 					Sheeps.get(j-1).newLocation(rs.getString(9), rs.getString(8));
 					storedLocations++;
 				}
@@ -315,18 +336,28 @@ public class DatabaseConnector {
 	 * @param sizeOfHistory
 	 * @return
 	 */
-	public static Sheep addNumberOfHistoricalLocations(Sheep sheep, int sizeOfHistory) {
+	public static Sheep addNumberOfHistoricalLocationsToSheep(int id, int sizeOfHistory) {
+		Sheep sheep = null;
 		try {
-			String query = "Select L.Date, L.Position From Location AS L WHERE L.SheepID = " + sheep.getId() + " ORDER BY L.Date DESC LIMIT 0," + sizeOfHistory + ";";
+//			String query = "Select L.Date, L.Position From Location AS L WHERE L.SheepID = " + id + " ORDER BY L.Date DESC LIMIT 0," + sizeOfHistory + ";";
+			
+			String query = "SELECT S.ID, S.Gender, S.Weight, S.Heartrate, S.Temperature, S.Age, S.Shepherd, L.Date, L.Position, S.Name, S.Owner FROM Sheep AS S JOIN Location AS L ON (S.ID = L.SheepID) WHERE S.ID = " + id + " ORDER BY L.Date DESC LIMIT 0," + sizeOfHistory + ";";
 			
 			PreparedStatement ps = (PreparedStatement) con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			
 //			Statement st = con.createStatement();
 //			ResultSet rs = st.executeQuery(query);
+			boolean sheepAdded = false;
 			while(rs.next()) {
 				try {
-					sheep.newLocation(rs.getString(2), rs.getString(1));
+					if (!sheepAdded){
+						sheep = new Sheep(rs.getInt(1), rs.getString(10), rs.getInt(6), rs.getInt(3), rs.getString(2).charAt(0),rs.getString(11), rs.getString(7));
+						sheep.setHeartrate(rs.getInt(4));
+						sheep.setTemperature(rs.getInt(5));
+						sheepAdded = true;
+					}
+					sheep.newLocation(rs.getString(9), rs.getString(8));
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
