@@ -55,10 +55,6 @@ public class ClientMain {
             //div.UserRegistration.login("test2@test.test", "passord");
             ClientConnection.sendServerQuery("login", "test0@test.test||passord");
             Object user0 = ClientConnection.sendObjectQuery("getuser", "test0@test.test");
-            ClientConnection.sendServerQuery("login", "test1@test.test||passord");
-            Object user1 = ClientConnection.sendObjectQuery("getuser", "test1@test.test");
-            ClientConnection.sendServerQuery("login", "test2@test.test||passord");
-            Object user2 = ClientConnection.sendObjectQuery("getuser", "test2@test.test");
 
             System.out.println(((User) user0).getPhoneNr());
             Object sl = ClientConnection.sendObjectQuery("testing", "hei");
@@ -67,6 +63,11 @@ public class ClientMain {
                 ArrayList<Sheep> sll = (ArrayList<Sheep>) sl;
                 for (int i = 0; i < sll.size(); i++) {
                     System.out.println(sll.get(i).getLocation().getPosition());
+                }
+            } else if (sl instanceof Sheep[]) {
+                Sheep[] sll = (Sheep[]) sl;
+                for (int i = 0; i < sll.length; i++) {
+                    System.out.println(sll[i].getLocation().getPosition());
                 }
             }
 
