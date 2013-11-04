@@ -48,6 +48,10 @@ public class DatabaseConnector {
 		}
 	}
 	
+	/**
+	 * Denne funksjonen lukker tilkoblingen til databsen
+	 * @author Oeyvind
+	 */
 	public static void close() {
 		try {
 			if (con != null) con.close();

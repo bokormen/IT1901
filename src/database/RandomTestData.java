@@ -5,11 +5,16 @@ import java.util.*;
 //import div.Sheep;
 
 public class RandomTestData {
+	
+	/**
+	 * En funksjon for aa generere tilfeldige verdier
+	 */
 	static Random generator = new Random();
 	
 	/**
 	 * Fuller databasen med en oppgitt mengde brukere, det kan eksistere testbrukere i databasen fra foer av
 	 * @param numberOfNewUsers
+	 * @author Oeyvind
 	 */
 	public static void fillDatabaseWithUsers(int numberOfNewUsers) {
 		int exsistingUsers = DatabaseConnector.getLatestTestUser()+1;
@@ -28,6 +33,7 @@ public class RandomTestData {
 	/**
 	 * Gir alle testbrukerene en vilkaarlig mednge sauer som ikke overstiger maxNumberOfSheepsPrUser
 	 * @param maxNumberOfSheepsPrUser
+	 * @author Oeyvind
 	 */
 	public static void sheepsForTestUsers (int maxNumberOfSheepsPrUser) {
 		ArrayList<String> testUsers = DatabaseConnector.getAllTestUserEmail();
@@ -50,6 +56,7 @@ public class RandomTestData {
 	 * Oppretter en ny posisjon til en sau innenfor et kvadratisk omraade
 	 * @param confinementsLongitude
 	 * @param confinementsLatitude
+	 * @author Oeyvind
 	 */
 	public static void moveSheeps(String confinementsLongitude, String confinementsLatitude)  {
 		String date = nextDate();
@@ -79,6 +86,7 @@ public class RandomTestData {
 	/**
 	 * Returner en dato 8 timer senere enn den siste datoen i databasen;
 	 * @return
+	 * @author Oeyvind
 	 */
 	public static String nextDate() {
 		String date = DatabaseConnector.getLatetsDate();
@@ -109,16 +117,32 @@ public class RandomTestData {
 		return date;
 	}
 	
+	/**
+	 * En enum med verdier for kjoenn, med en funksjon for aa generere et tilfeldig kjoenn
+	 * @author Oeyvind
+	 *
+	 */
 	private enum Gender {       
 		f,
 		m;
-
+		
+		/**
+		 * Denne funksjonen genrerere et tilfeldig kjoenn som det returnerer
+		 * @return
+		 * @author Oeyvind
+		 */
 		public static String getRandomGender() {            
 			Random random = new Random();
 			return values()[random.nextInt(values().length)].name();
 			}
 		}
 	
+	/**
+	 * Sjekker om det er skuddaar, returnerer true hvis det er skuddaar
+	 * @param year
+	 * @return
+	 * @author Oeyvind
+	 */
 	public static boolean isLeapYear ( int year){
 	    boolean leapYear = false;
 	    if (year%4==0){
@@ -132,6 +156,13 @@ public class RandomTestData {
 	    return leapYear;
 	}
 	
+	/**
+	 * Sjekker hvor mange dager det er i en den insendte maanden og returnerer en int med antall dager.
+	 * @param month
+	 * @param year
+	 * @return
+	 * @author Oeyvind
+	 */
 	public static int daysInMonth(int month, int year) {
 		int days = 0;
 		
@@ -148,6 +179,12 @@ public class RandomTestData {
 		return days;
 	}
 	
+	/**
+	 * Gjoer alle de foerste bokstavene i hvert ord en en string til en stor bokstav
+	 * @param str
+	 * @return
+	 * @author Oeyvind
+	 */
 	public static String uppercaseFirstLetters(String str) 
 	{
 	    boolean prevWasWhiteSp = true;
