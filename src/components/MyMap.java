@@ -27,6 +27,9 @@ public class MyMap extends JPanel implements MouseListener,
 	private int width;
 	private int height;
 
+	private double latitude;
+	private double longitude;
+
 	private int zw;
 	private int zh;
 
@@ -38,26 +41,38 @@ public class MyMap extends JPanel implements MouseListener,
 	private Image image2;
 	private Image scaledImg2;
 	private Image savedImg2;
+
+	private Image image3;
+	private Image scaledImg3;
+	private Image savedImg3;
+
+	private Image image4;
+	private Image scaledImg4;
+	private Image savedImg4;
+
 	private ArrayList<MyImage> images;
 
 	private GUI gui;
 
-	private double numw = 0.0172;
-	private double numh = 0.00577;
+	private double numw = 0.0123;
+	private double numh = 0.0275;
 
-	private int x;
-	private int y;
+	private int dx;
+	private int dy;
 
-	public MyMap(int width, int height, GUI gui) {
+	public MyMap(int width, int height, double latitude, double longitude,
+			GUI gui) {
 		System.out.println(width + " " + height);
 		images = new ArrayList<MyImage>();
 		this.width = width;
 		this.height = height;
+		this.latitude = latitude;
+		this.longitude = longitude;
 		this.gui = gui;
 		this.setVisible(false);
 
-		this.x = width / 2;
-		this.y = height / 2;
+		this.dx = width / 2;
+		this.dy = height / 2;
 
 		this.zw = 1280;
 		this.zh = 1280;
@@ -75,13 +90,7 @@ public class MyMap extends JPanel implements MouseListener,
 			this.setVisible(false);
 		} else {
 			this.setVisible(true);
-			this.image = getGoogleImage(u.getLatitudeDouble(),
-					u.getLongitudeDouble(), 15);
-			this.image2 = getGoogleImage(
-					u.getLatitudeDouble() /* + 0.00577 */,
-					u.getLongitudeDouble() + (0.0275), 15);
-			this.savedImg = image;
-			this.savedImg2 = image2;
+			images.add(new MyImage(0, 0, latitude, longitude));
 		}
 	}
 
@@ -123,29 +132,82 @@ public class MyMap extends JPanel implements MouseListener,
 	private void zoom(int dnum) {
 		this.zw += dnum;
 		this.zh += dnum;
-		this.x += 7 * dnum / 10;
-		this.y += 6 * dnum / 10;
-		this.image = scaleImage(savedImg, zw, zh);
-		this.image2 = scaleImage(savedImg2, zw, zh);
-		System.out.println(x + "  " + y);
+		this.dx += 7 * dnum / 10;
+		this.dy += 6 * dnum / 10;
+
+		if (!images.isEmpty()) {
+			for (MyImage i : images) {
+				i.scaleImage(zw, zh);
+			}
+		}
 		repaint();
 	}
 
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		if (image != null) {
-			g.drawImage(image, -x, -y, this);
-			g.drawImage(image2, -x + image.getWidth(this), -y, this);
+		if (!images.isEmpty()) {
+			for (MyImage i : images) {
+				int width = i.getImage().getWidth(this);
+				int height = i.getImage().getHeight(this);
+				g.drawImage(i.getImage(), i.getX() * width - dx, i.getY()
+						* height - dy, this);
+			}
 		}
 	}
 
-	private void updateMap() {
-		// width
-		// height
-		System.out.println(x + "  " + y);
-		image.getWidth(this);
-		image.getHeight(this);
+	int wi = 0;
+	int wj = 0;
 
+	int si = 0;
+	int sj = 0;
+
+	int ei = 0;
+	int ej = 0;
+
+	int ni = 0;
+	int nj = 0;
+
+	private void updateMap() {
+		if (dx < wi * -1280) {
+			if (wi > wj) {
+				wj++;
+			}
+			if (wi == wj) {
+				images.add(new MyImage(-wi - 1, 0, latitude, longitude));
+				wi++;
+			}
+		}
+
+		if (dy > 750 + si * 1280) {
+			if (si > sj) {
+				sj++;
+			}
+			if (si == sj) {
+				images.add(new MyImage(0, si + 1, latitude, longitude));
+				si++;
+			}
+		}
+
+		if (dx > 470 + ei * 1280) {
+			if (ei > ej) {
+				ej++;
+			}
+			if (ei == ej) {
+				images.add(new MyImage(ei + 1, 0, latitude, longitude));
+				ei++;
+			}
+		}
+
+		if (dy < ni * -1280) {
+			if (ni > nj) {
+				nj++;
+			}
+			if (ni == nj) {
+				images.add(new MyImage(0, -ni - 1, latitude, longitude));
+				ni++;
+			}
+		}
+		System.out.println(ni + " " + si + " " + wi + " " + ei);
 	}
 
 	@Override
@@ -181,14 +243,15 @@ public class MyMap extends JPanel implements MouseListener,
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
+		System.out.println(dx + "  " + dy);
 		if (skip == 1) {
-			this.x += (int) (old.getX() - e.getX());
-			this.y += (int) (old.getY() - e.getY());
+			this.dx += (int) (old.getX() - e.getX());
+			this.dy += (int) (old.getY() - e.getY());
 			repaint();
 			updateMap();
 		}
 		gui.changeMySheepButtonBounds(user.getLatitudeDouble(),
-				user.getLongitudeDouble(), 15, -x, y);
+				user.getLongitudeDouble(), 15, -dx, dy);
 		old = e.getPoint();
 		skip = 1;
 	}

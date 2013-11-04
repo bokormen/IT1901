@@ -456,15 +456,15 @@ public class GUI extends JFrame {
 		editButton.setBounds(width / 12, 120 * height / 200, cw, ch);
 		editButton.addActionListener(actionListener);
 
-		homeButton = new MyButton(new JButton(), "Home", null);
-		homeButton.setBounds(width / 12, 110 * height / 200, cw, ch);
-		homeButton.addActionListener(actionListener);
+		// homeButton = new MyButton(new JButton(), "Home", null);
+		// homeButton.setBounds(width / 12, 110 * height / 200, cw, ch);
+		// homeButton.addActionListener(actionListener);
 
 		lp.add(sheepRegButton);
 		lp.add(listButton);
 		lp.add(searchButton);
 		lp.add(editButton);
-		lp.add(homeButton);
+		// lp.add(homeButton);
 	}
 
 	private void createSearchInterfaceComponents() {
@@ -628,7 +628,7 @@ public class GUI extends JFrame {
 		mySheepButtons = new ArrayList<MySheepButton>();
 		ArrayList<Sheep> list = user.getSheepList();
 		int zoom = 15;
-		double numw = 0.0172 / 2;
+		double numw = 0.0275 / 2;
 		double numh = 0.00577 / 2;
 
 		double nh = height / 2 / numh;
@@ -639,6 +639,7 @@ public class GUI extends JFrame {
 				MyPoint p = null;
 				try {
 					p = getLocationPoint(s.getLocation().getPosition());
+					System.out.println(p);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -663,10 +664,10 @@ public class GUI extends JFrame {
 
 	public void changeMySheepButtonBounds(double lat, double lon, int zoom,
 			int x, int y) {
-		double numw = 0.0172 / 2;
+		double numw = 0.0275 / 2;
 		double numh = 0.00577 / 2;
 		if (zoom == 17) {
-			numw = 0.0172 / 8;
+			numw = 0.0275 / 8;
 			numh = 0.00577 / 8;
 		}
 
@@ -694,7 +695,8 @@ public class GUI extends JFrame {
 	}
 
 	private void createMap() {
-		myMap = new MyMap(2 * width / 3, 85 * height / 100, this);
+		myMap = new MyMap(2 * width / 3, 85 * height / 100,
+				user.getLatitudeDouble(), user.getLongitudeDouble(), this);
 		myMap.setBounds(width / 3, 0, 2 * width / 3, 85 * height / 100);
 		lp.add(myMap);
 	}
@@ -785,6 +787,17 @@ public class GUI extends JFrame {
 			lwEditBirthyearLabel.setBounds(51 * width / 60, 85 * height / 100,
 					cw, ch);
 
+			lwEditButton = new MyButton(new JButton(), "", "redgearicon");
+			lwEditButton.setBounds(56 * width / 60, 85 * height / 100, cw, cw);
+			lwEditButton.setBorder(null);
+			lwEditButton.setName("lwEditButton");
+			lwEditButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					editSheep();
+				}
+			});
+
+			lp.add(lwEditButton);
 			lp.add(lwEditIdField);
 			// lp.add(lwEditAgeField);
 			lp.add(lwEditWeightField);
@@ -850,7 +863,7 @@ public class GUI extends JFrame {
 		mainComps.add(sheepRegButton);
 		mainComps.add(listButton);
 		mainComps.add(searchButton);
-		mainComps.add(homeButton);
+		// mainComps.add(homeButton);
 		mainComps.add(backButton);
 		mainComps.add(exitButton);
 
@@ -917,6 +930,7 @@ public class GUI extends JFrame {
 		lwEditComps.add(lwEditHeartrateLabel);
 		lwEditComps.add(lwEditTemperatureLabel);
 		lwEditComps.add(lwEditBirthyearLabel);
+		lwEditComps.add(lwEditButton);
 	}
 
 	/**
@@ -1154,7 +1168,7 @@ public class GUI extends JFrame {
 			try {
 				// Registrer bruker
 				UserRegistration.registerUser(firstName, lastName, email,
-						password2, phoneNr, "0");
+						password2, phoneNr, latitude + "," + longitude);
 				System.out.println("User registered.");
 				return true;
 			} catch (Exception e) {
@@ -1181,12 +1195,16 @@ public class GUI extends JFrame {
 				this.user = UserRegistration
 						.login("test0@test.test", "passord");
 				System.out.println(user);
-				user.updateSheepList();
-
+				try {
+					user.updateSheepList();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				changeToLoginInterface(false);
 				changeToMainInterface(true);
 				System.out.println("Logged in: " + user.getFirstName());
 				rightPanel.setVisible(false);
+
 				addMySheepButtons();
 				createMap();
 				myMap.setUser(user);
@@ -1197,13 +1215,14 @@ public class GUI extends JFrame {
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
+				System.out.println(e.getLocalizedMessage());
 				System.out.println("Noe galt med admin bruker");
 			}
 			return true;
 		}
 		User user = UserRegistration.login(email, password);
-
 		if (user != null) {
+			this.user = user;
 			try {
 				user.updateSheepList();
 			} catch (Exception e) {
@@ -1212,7 +1231,6 @@ public class GUI extends JFrame {
 			changeToLoginInterface(false);
 			changeToMainInterface(true);
 			System.out.println("Logged in: " + user.getEmail());
-			this.user = user;
 			rightPanel.setVisible(false);
 
 			addMySheepButtons();
@@ -1246,12 +1264,26 @@ public class GUI extends JFrame {
 	 * Metode der en kan endre paa saue informasjonen
 	 */
 	private Sheep editSheep() {
-		editIdField.setText("" + editSheep.getId());
-		editAgeField.setText("" + editSheep.getBirthyear());
-		editWeightField.setText("" + editSheep.getWeight());
-		editSexField.setText("" + editSheep.getGender());
-		editShepherdField.setText("" + editSheep.getShepherd());
+		// editIdField.setText("" + editSheep.getId());
+		// editAgeField.setText("" + editSheep.getBirthyear());
+		// editWeightField.setText("" + editSheep.getWeight());
+		// editSexField.setText("" + editSheep.getGender());
+		// editShepherdField.setText("" + editSheep.getShepherd());
+		String id = lwEditIdField.getText();
+		String age = lwEditAgeField.getText();
+		String weight = lwEditWeightField.getText();
+		String owner = lwEditOwnerField.getText();
+		String shepherd = lwEditShepherdField.getText();
+		String heartrate = lwEditHeartrateField.getText();
+		String temperature = lwEditTemperatureField.getText();
+		String birthyear = lwEditBirthyearField.getText();
 
+		try {
+			// user.editSheep(owner, shepherd, weight);
+		} catch (Exception e) {
+			System.out.println("something wrong!");
+			e.printStackTrace();
+		}
 		return null;
 	}
 
@@ -1321,12 +1353,14 @@ public class GUI extends JFrame {
 						.getLongitude());
 				editSheep = sheep;
 				try {
+					myMap = new MyMap(2 * width / 3, 85 * height / 100,
+							latitude, longitude, this);
 					myMap.zoomInOnSheep(latitude, longitude);
 					double lat = Double.parseDouble(editSheep.getLocation()
 							.getLatitude());
 					double lon = Double.parseDouble(editSheep.getLocation()
 							.getLongitude());
-					changeMySheepButtonBounds(lat, lon, 17, 0, 0);
+					changeMySheepButtonBounds(lat, lon, 15, 0, 0);
 				} catch (Exception e) {
 					System.out.println("no internet");
 				}
@@ -1354,7 +1388,7 @@ public class GUI extends JFrame {
 	 */
 	private void changeMySheepButtonColors(int num) {
 		// 1 = m/f, 2
-		System.out.println(num);
+		// System.out.println(num);
 		if (num == 1) {
 			for (MySheepButton b : mySheepButtons) {
 				Sheep s = b.getSheep();
@@ -1399,6 +1433,7 @@ public class GUI extends JFrame {
 		lwEditHeartrateField.setText("" + s.getHeartrate());
 		lwEditTemperatureField.setText("" + s.getTemperature());
 		lwEditBirthyearField.setText("" + s.getBirthyear());
+		System.out.println(s.getLocation());
 	}
 
 	private void updateSheepList() {
@@ -1943,6 +1978,8 @@ public class GUI extends JFrame {
 	private ArrayList<MySheepButton> mySheepButtons;
 
 	// lower panel
+	private JButton lwEditButton;
+
 	private JLabel lwEditLabel;
 	private JTextField lwEditIdField;
 	private JTextField lwEditAgeField;
