@@ -22,10 +22,8 @@ public class SheepRegistration implements Serializable {
 	/**
 	 * Registrerer en sau i databasen med navn, fodselsar, vekt, kjonn, eier og gjeter. 
 	 */
-	public void registerSheep(String name, int birthyear, int weight, char gender,
+	public int registerSheep(String name, int birthyear, int weight, char gender,
 			String owner, String shepherd) throws Exception {
-
-		sheepList.add(new Sheep(name, birthyear, weight, gender, owner, shepherd));
 
 		// Lager en foresp0rsel til server.
 		// retiningslinjer for kommunikasjon med server vil til en hver tid
@@ -34,13 +32,21 @@ public class SheepRegistration implements Serializable {
 				+ "||" + weight + "||" + 75 + "||" + 39 + "||" + birthyear;
 
 		// sender foresp0rselen til serveren og faar tilbake respons
-		String serverRespons = ClientConnection.sendServerQuery(
+		Object serverRespons = ClientConnection.sendObjectQuery(
 				"registersheep", query);
 
+		int id = 0;
 		// sjekke at melding ble mottatt
-		if (serverRespons.equals("err")) {
-			System.out.println("Error. Can't register sheep.");
+		if(serverRespons instanceof Integer) {
+			id = (int) serverRespons;
+		} else if(serverRespons instanceof String) {
+			throw new Exception((String) serverRespons);
 		}
+		
+		sheepList.add(new Sheep(id, name, birthyear, weight, gender, owner, shepherd));
+		
+		return id;
+		
 
 	}
 	/**
