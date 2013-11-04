@@ -31,14 +31,14 @@ public class RandomTestData {
 	}
 	
 	/**
-	 * Gir alle testbrukerene en vilkaarlig mednge sauer som ikke overstiger maxNumberOfSheepsPrUser
+	 * Gir alle testbrukerene en vilkaarlig mengde sauer som ikke overstiger maxNumberOfSheepsPrUser
 	 * @param maxNumberOfSheepsPrUser
 	 * @author Oeyvind
 	 */
-	public static void sheepsForTestUsers (int maxNumberOfSheepsPrUser) {
+	public static void randomSheepsForTestUsers (int maxNumberOfSheepsPrUser) {
 		ArrayList<String> testUsers = DatabaseConnector.getAllTestUserEmail();
 		for (String s : testUsers) {
-			int numberOfSheeps=generator.nextInt(maxNumberOfSheepsPrUser);
+			int numberOfSheeps= maxNumberOfSheepsPrUser; //generator.nextInt(maxNumberOfSheepsPrUser);
 			for (int i=0;i<numberOfSheeps;i++) {
 				String name = "testSheep";
 				String owner = s;
@@ -50,6 +50,45 @@ public class RandomTestData {
 				DatabaseConnector.newSheep(name, owner, "", gender, Integer.toString(weight), Integer.toString(heartrate), Integer.toString(temperature), Integer.toString(birthyear));
 			}
 		}
+	}
+	
+	/**
+	 * Fyller databsesn med antall sauer
+	 * @param numberOfSheep
+	 * @author Oeyvind
+	 */
+	public static void sheepsForTestUsers (int numberOfSheep) {
+		ArrayList<String> testUsers = DatabaseConnector.getAllTestUserEmail();
+		for (String s : testUsers) {
+			for (int i=0;i<numberOfSheep;i++) {
+				String name = "testSheep";
+				String owner = s;
+				String gender = Gender.getRandomGender();
+				int weight = generator.nextInt(10)+20;
+				int heartrate = generator.nextInt(30)+60;
+				int birthyear = generator.nextInt(12)+2001;
+				int temperature = generator.nextInt(2)+38;
+				DatabaseConnector.newSheep(name, owner, "", gender, Integer.toString(weight), Integer.toString(heartrate), Integer.toString(temperature), Integer.toString(birthyear));
+			}
+		}
+	}
+	
+	/**
+	 * Tar inn en e-post og en int og generer det antall sauer som inten angir til brukeren av e-posten
+	 * @param owner
+	 * @param numberOfSheep
+	 * @author Oeyvind
+	 */
+	public static void sheepsForTestUser (String owner, int numberOfSheep) {
+			for (int i=0;i<numberOfSheep;i++) {
+				String name = "testSheep";
+				String gender = Gender.getRandomGender();
+				int weight = generator.nextInt(10)+20;
+				int heartrate = generator.nextInt(30)+60;
+				int birthyear = generator.nextInt(12)+2001;
+				int temperature = generator.nextInt(2)+38;
+				DatabaseConnector.newSheep(name, owner, "", gender, Integer.toString(weight), Integer.toString(heartrate), Integer.toString(temperature), Integer.toString(birthyear));
+			}
 	}
 	
 	/**
@@ -66,12 +105,12 @@ public class RandomTestData {
 		double minLatitude;
 		
 		String[] longitude = confinementsLongitude.split(",");
-		maxLongitude = Double.parseDouble(longitude[0]);
-		minLongitude = Double.parseDouble(longitude[1]);
+		maxLongitude = Double.parseDouble(longitude[1]);
+		minLongitude = Double.parseDouble(longitude[0]);
 		
 		String[] latitude = confinementsLatitude.split(",");
-		maxLatitude = Double.parseDouble(latitude[0]);
-		minLatitude = Double.parseDouble(latitude[1]);
+		maxLatitude = Double.parseDouble(latitude[1]);
+		minLatitude = Double.parseDouble(latitude[0]);
 		
 		ArrayList<String> IDs = DatabaseConnector.getAllSheepIDs();
 		

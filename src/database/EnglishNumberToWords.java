@@ -2,6 +2,11 @@ package database;
 
 import java.text.DecimalFormat;
 
+/**
+ * gjoer en int om til et tall skrevet med bokstaver/ord og ikke tall
+ * @author En kar paa internett
+ *
+ */
 public class EnglishNumberToWords {
 
   private static final String[] tensNames = {
