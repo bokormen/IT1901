@@ -66,8 +66,8 @@ public class DatabaseConnector {
 	 */
 	public static void main(String[] args) {
 		open();
-		Sheep sheep = addNumberOfHistoricalLocationsToSheep(1012384, 3);
-		System.out.println(sheep.getLocationLog().get(2));
+//		Sheep sheep = addNumberOfHistoricalLocationsToSheep(1012384, 3);
+//		System.out.println(sheep.getLocationLog().get(2));
 //		System.out.println(new Timestamp(System.currentTimeMillis()) + " Spørring etter alle sauene til test0@test.test startet");
 //		try {
 //			ArrayList<Sheep> Sheeps = getAllSheepsToOwner("test0@test.test");
@@ -87,10 +87,11 @@ public class DatabaseConnector {
 //		deleteTestUsers();
 //		deleteTestSheeps();
 //		RandomTestData.fillDatabaseWithUsers(3);
-//		RandomTestData.sheepsForTestUsers(2);
-//		String sheepBoundariesLongitude = "63.42423,63,43577";
-//		String sheepBoundariesLatitude = "10.3728,10.4072";
-//		for (int i=0;i<100;i++) {
+//		RandomTestData.sheepsForTestUsers(10);
+//		RandomTestData.sheepsForTestUser("test2@test.test", 10000-10);
+//		String sheepBoundariesLongitude = "63.4025,63.4575";
+//		String sheepBoundariesLatitude = "10.3777,10.4023";
+//		for (int i=0;i<10;i++) {
 //			RandomTestData.moveSheeps(sheepBoundariesLongitude, sheepBoundariesLatitude);
 //		}
 		close();
