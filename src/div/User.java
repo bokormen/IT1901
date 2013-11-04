@@ -209,6 +209,10 @@ public class User implements Serializable {
 		sheepReg.registerSheep(name, Integer.parseInt(age),
 				Integer.parseInt(weight), gender.charAt(0), owner, shepherd);
 	}
+	
+	public void editSheep(int id, String name, String owner, String shepherd, char gender, int weight, int birthyear) throws Exception {
+		sheepReg.editSheep(id, name, owner, shepherd, gender, weight, birthyear);
+	}
 
 	public boolean deleteSheep(Sheep sheep) {
 		return sheepReg.deleteSheep(sheep);
