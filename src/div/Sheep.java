@@ -60,6 +60,14 @@ public class Sheep implements Serializable {
 	public Sheep() {
 
 	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public String getName() {
 		return name;
@@ -73,8 +81,7 @@ public class Sheep implements Serializable {
 	}
 
 	/**
-	 * Setter fï¿½dselsï¿½ret til en sau.
-	 * 
+	 * Setter fodselsaret til en sau. Må være over 1900. 
 	 * @throws Exception
 	 */
 	public void setBirthyear(int birthyear) throws Exception {
@@ -96,42 +103,18 @@ public class Sheep implements Serializable {
 			throw new Exception("Weight is not valid");
 		}
 	}
-
-	public SheepLocation getLocation() {
-        try {
-		    return locations.get(locations.size() - 1);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            //throw new Exception("No location");
-            System.err.println("No location available on sheep");
-            return new SheepLocation("0,0", "00/00/0000");
-        }
-    }
-
-	/**
-	 * Returnerer de siste posisjonene til sauen. Antall er avhengig av
-	 * parameteren num.
-	 */
-	public ArrayList<SheepLocation> getLastLocations(int num) {
-		return (ArrayList<SheepLocation>) locations.subList(locations.size()
-				- num, locations.size());
+	
+	public char getGender() {
+		return gender;
 	}
-
-	/**
-	 * Legger til ny posisjon til sau. Dato mï¿½ vï¿½re pï¿½ formen dd/mm/yyyy.
-	 */
-	public void newLocation(String position, String date) throws Exception {
-        SheepLocation sl = new SheepLocation(position, date);
-        locations.add(sl);
-    }
-
-	public ArrayList<SheepLocation> getLocationLog() {
-		return locations;
-	}
-
+	
 	public double getTemperature() {
 		return temperature;
 	}
-
+	/**
+	 * Setter temperaturen. Dersom temperaturen ikke er mellom 35 og 40, så blir melding om angrep sendt. 
+	 * @param temperature
+	 */
 	public void setTemperature(double temperature) {
 		if (temperature < 35 || temperature > 40) {
 			attackSheep();
@@ -143,7 +126,10 @@ public class Sheep implements Serializable {
 	public int getHeartrate() {
 		return heartrate;
 	}
-
+	/**
+	 * Setter pulsen til en sau. Dersom den er ikke er mellom 50 og 100, så blir melding om angrep sendt. 
+	 * @throws Exception
+	 */
 	public void setHeartrate(int heartrate) throws Exception {
 		if (heartrate > 0) {
 			this.heartrate = heartrate;
@@ -154,11 +140,7 @@ public class Sheep implements Serializable {
 			attackSheep();
 		}
 	}
-
-	public char getGender() {
-		return gender;
-	}
-
+	
 	public String getShepherd() {
 		return shepherd;
 	}
@@ -184,7 +166,45 @@ public class Sheep implements Serializable {
 			throw new Exception("Owner not valid");
 		}
 	}
+	
+	/**
+	 * Returnerer den siste posisjonen til sauen. 
+	 */
+	public SheepLocation getLocation() {
+        try {
+		    return locations.get(locations.size() - 1);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            //throw new Exception("No location");
+            System.err.println("No location available on sheep");
+            return new SheepLocation("0,0", "00/00/0000");
+        }
+    }
 
+	/**
+	 * Returnerer de siste posisjonene til sauen. Antall er avhengig av
+	 * parameteren num.
+	 */
+	public ArrayList<SheepLocation> getLastLocations(int num) {
+		return (ArrayList<SheepLocation>) locations.subList(locations.size()
+				- num, locations.size());
+	}
+
+	/**
+	 * Legger til ny posisjon til sau.
+	 */
+	public void newLocation(String position, String date) throws Exception {
+        SheepLocation sl = new SheepLocation(position, date);
+        locations.add(sl);
+    }
+
+	public ArrayList<SheepLocation> getLocationLog() {
+		return locations;
+	}
+
+	
+	/**
+	 * Sjekker om parameteren email er en valid email. 
+	 */
 	public boolean emailIsValid(String email) {
 		String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
 				+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
@@ -194,14 +214,10 @@ public class Sheep implements Serializable {
 		return false;
 	}
 
-	public int getId() {
-		return id;
-	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
-	
+	/**
+	 * Sender mail til eier og eventuelt shepherd om at en sau blir angrepet. 
+	 */
 	public void attackSheep() {
 		SheepAttackMail.sendMail(owner, id, getLocation().getPosition());
 		if(shepherd != "") {

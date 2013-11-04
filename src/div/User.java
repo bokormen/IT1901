@@ -10,7 +10,7 @@ import javax.mail.internet.MimeMessage;
 
 /**
  * User-klassen representerer en brukers profil. Lagrer og validerer generell
- * info om brukeren, inkludert email og passord som er nï¿½dvendig for
+ * info om brukeren, inkludert email og passord som er nodvendig for
  * innlogging.
  * 
  * @author Ragnhild
@@ -106,6 +106,9 @@ public class User implements Serializable {
 
 	}
 
+	/**
+	 * Validerer navn. True dersom det bare inneholder bokstaver og mellomrom. 
+	 */
 	private boolean nameIsValid(String name) {
 		if (name.matches("^[a-zA-Z ]+$")) {
 			return true;
@@ -113,6 +116,9 @@ public class User implements Serializable {
 		return false;
 	}
 
+	/**
+	 * Validerer telefonnummer. Må minst være 8 tall. 
+	 */
 	private boolean phoneNumberIsValid(String phoneNr) {
 		if (phoneNr.length() < 8) {
 			return false;
@@ -125,7 +131,10 @@ public class User implements Serializable {
 		}
 		return true;
 	}
-
+	
+	/**
+	 * Validerer emailadresse. 
+	 */
 	public boolean emailAddressIsValid(String email) {
 		String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
 				+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
@@ -133,6 +142,9 @@ public class User implements Serializable {
 
 	}
 
+	/**
+	 * Validerer passord. Returnerer true dersom det bare inneholder bokstaver, tall og mellomrom. 
+	 */
 	private boolean passwordIsValid(String pass) {
 		if (pass.matches("^[a-zA-Z0-9 ]+$")) {
 			return true;
@@ -188,6 +200,9 @@ public class User implements Serializable {
 		longitude = positionA[1];
 	}
 
+	/**
+	 * Registrer en sau på denne brukeren. 
+	 */
 	public void registerSheep(String name, String age, String weight,
 			String gender, String owner, String shepherd)
 			throws NumberFormatException, Exception {

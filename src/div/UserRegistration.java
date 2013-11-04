@@ -4,21 +4,21 @@ import java.util.ArrayList;
 
 
 /**
- * Klassen h�ndterer registrering, sletting og innlogging av brukere. 
+ * Klassen handterer registrering, sletting og innlogging av brukere. 
  * @author Ragnhild
  *
  */
 public class UserRegistration {
 
 	/**
-     *
+     * Registrerer en bruker i databasen. 
      * @param firstName
      * @param lastName
      * @param email
      * @param password
      * @param phoneNr
-     * @param location
-     * @return
+     * @param location Posisjonen til garden til bonden. 
+     * @return True dersom registreringen gikk bra, false ellers. 
      */
 	public static boolean registerUser(String firstName, String lastName, String email, String password, String phoneNr, String location)  {
 
@@ -39,10 +39,10 @@ public class UserRegistration {
         }
 	}
 	/**
-     *
+     * Sjekker om brukeren eksisterer og om passordet matcher. 
      * @param email
      * @param password
-     * @return
+     * @return Brukeren som er logget inn. 
      */
 	public static User login(String email, String password) {
 
@@ -73,6 +73,10 @@ public class UserRegistration {
 		return users;
 	}
 
+	/**
+	 * Slett bruker fra databasen. 
+	 * @param user
+	 */
     public static void deleteUser(String user) {
     	String query = user;
 
@@ -83,6 +87,14 @@ public class UserRegistration {
         }
     }
     
+    /**
+     * Endre en bruker. 
+     * @param email
+     * @param firstName
+     * @param lastName
+     * @param phoneNumber
+     * @param location
+     */
     public static void editUser(String email, String firstName, String lastName, String phoneNumber, String location ) {
     	
     	
@@ -96,7 +108,7 @@ public class UserRegistration {
     }
 	
 	/**
-     *
+     * Endre passord. 
      * @param user
      * @param password
      */

@@ -3,7 +3,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 
 /**
- * SheepLocation representerer en sau sin posisjon pï¿½ et gitt tidspunkt. 
+ * SheepLocation representerer en sau sin posisjon pa et gitt tidspunkt. 
  * @author Ragnhild
  *
  */
@@ -12,12 +12,13 @@ public class SheepLocation implements Serializable {
 	private final String position;
 	private final String date;
 	
+	/**
+	 * 
+	 * @param position Posisjon på formen <latitude>,<longitude>
+	 * @param date
+	 */
 	public SheepLocation(String position, String date) {
 		this.position = position;
-		//Valider dato
-//		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-//		format.setLenient(false);
-//		format.parse(date);
 		this.date = date;
 	}
 

@@ -15,11 +15,13 @@ public class SheepRegistration implements Serializable {
 
 	private ArrayList<Sheep> sheepList;
 
-	public SheepRegistration() throws Exception {
-		// sheepList = updateSheepList(user);
+	public SheepRegistration() {
 
 	}
 	
+	/**
+	 * Registrerer en sau i databasen med navn, fodselsar, vekt, kjonn, eier og gjeter. 
+	 */
 	public void registerSheep(String name, int birthyear, int weight, char gender,
 			String owner, String shepherd) throws Exception {
 
@@ -41,7 +43,9 @@ public class SheepRegistration implements Serializable {
 		}
 
 	}
-
+	/**
+	 * Endrer en sau sine data. Kan endre navn, gjeter, kjønn og fødselsår. 
+	 */
 	public void editSheep(int id, String name, String owner, String shepherd, char gender, int weight, int birthyear)
 			throws Exception {
 		Sheep s = sheepSearch(id);
@@ -56,7 +60,9 @@ public class SheepRegistration implements Serializable {
 		 }
 		 
 	}
-
+	/**
+	 * Seltter en sau fra databasen. Returnerer true dersom alt gikk bra, false ellers. 
+	 */
 	public boolean deleteSheep(Sheep s) {
 		String query = "" + s.getId();
 
@@ -70,7 +76,9 @@ public class SheepRegistration implements Serializable {
 
 		return sheepList.remove(s);
 	}
-
+	/**
+	 * Soker og returnerer sauen med en viss id. 
+	 */
 	public Sheep sheepSearch(int id) {
 		for (Sheep s : sheepList) {
 			if (s.getId() == id) {
@@ -79,7 +87,9 @@ public class SheepRegistration implements Serializable {
 		}
 		return null;
 	}
-
+	/**
+	 * Finner en sau i databasen med en gitt eier og id på sau. 
+	 */
 	public Sheep findSheep(String user, String id) throws Exception {
 		String query = user + "||" + id;
 
@@ -97,7 +107,9 @@ public class SheepRegistration implements Serializable {
 		}
 		return null;
 	}
-
+	/**
+	 * Fyller opp sheepList med sauer fra databasen. 
+	 */
 	public void updateSheepList(String user) throws Exception {
 		String query = user;
 

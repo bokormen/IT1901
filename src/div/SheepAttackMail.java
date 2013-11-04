@@ -14,7 +14,9 @@ import javax.mail.internet.MimeMessage;
 public class SheepAttackMail {
 	
 
-	
+	/**
+	 * Sender mail om angrep av sau på en viss posisjon. 
+	 */
 	public static void sendMail(String email, int id, String position)    {
 		final String username = "sheepcontrolit1901@gmail.com";
 		final String password = "manuer123";
