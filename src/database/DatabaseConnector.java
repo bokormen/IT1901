@@ -323,6 +323,8 @@ public class DatabaseConnector {
 					Sheeps.get(j).setTemperature(rs.getInt(8));
 					Sheeps.get(j).newLocation(rs.getString(11), rs.getString(10));
 					j++;
+					
+					System.out.println("hentet ny sau nr:" + j + " fra databasen");
 			}
 			
 		} catch (SQLException e) {
