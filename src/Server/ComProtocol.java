@@ -316,13 +316,16 @@ public class ComProtocol {
             if (theInput != null) {
                 theOutput = "object sending";
                 try {
-                    ArrayList<Sheep> sl = new ArrayList<Sheep>();
-                    for (int i = 0; i < 109; i++) {
+                    int size = 110;
+                    //ArrayList<Sheep> sl = new ArrayList<Sheep>();
+                    Sheep[] sa = new Sheep[size];
+                    for (int i = 0; i < size; i++) {
                         Sheep s = new Sheep(i, "testsheep", 2008-i, 20, (char)'m', "test0@test.test", "test2@test.test");
                         s.newLocation(i + "," + i, "00/00/0000");
-                        sl.add(s);
+                        //sl.add(s);
+                        sa[i] = s;
                     }
-                    oout.writeObject(sl);
+                    oout.writeObject(sa);
                     log.addEntry(ClientIP + "[" + UserName + "] Requested Sheep List.");
                 } catch (Exception e) {
                     theOutput = "getownedsheep database error";
@@ -428,9 +431,13 @@ public class ComProtocol {
         String[] temp = theInput.split("\\|\\|"); //splitter input ved ||
         if (temp.length == 8) {
             if (!DatabaseConnector.doesSheepExsist(temp[0])) {
-                DatabaseConnector.newSheep(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5], temp[6], temp[7]);
+                try {
+                    oout.writeObject(DatabaseConnector.newSheep(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5], temp[6], temp[7]));
+                } catch (IOException e) {
+                    return "regsheep database error";
+                }
                 log.addEntry(ClientIP + "[" + UserName + "] registered new sheep (" + temp[0] + ").");
-                return "regsheep success";
+                return "object sending";
             } else {
                 return "regsheep exists";
             }
