@@ -1,5 +1,7 @@
 package Server;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.math.BigInteger;
@@ -18,7 +20,7 @@ public class ComProtocol {
     public String ClientIP = null;
     private ServerLog log = null;
     private String UserName = null;
-    private ObjectOutputStream oout = null;
+    private DataOutputStream oout = null;
 
     private static final int WAIT = 1001;
     private static final int LOGIN = 1002;
@@ -43,7 +45,7 @@ public class ComProtocol {
     public ComProtocol(String IP, Socket osocket, boolean login, ServerLog clientlog) {
 
         try {
-            oout = new ObjectOutputStream(osocket.getOutputStream());
+            oout = new DataOutputStream(osocket.getOutputStream());
         } catch (IOException e) {
             System.err.println("Could not open object streams");
         }
@@ -313,7 +315,7 @@ public class ComProtocol {
             if (theInput != null) {
                 theOutput = "object sending";
                 try {
-                    int size = 297;
+                    int size = 805;
                     ArrayList<Sheep> sl = new ArrayList<Sheep>();
                     //Sheep[] sa = new Sheep[size];
                     for (int i = 0; i < size; i++) {
@@ -530,23 +532,33 @@ public class ComProtocol {
 
 
     private void sendObject(Object o) throws IOException {
-        if (o instanceof ArrayList) {
-            ArrayList al = (ArrayList) o;
-            if (al.get(0) instanceof Sheep) {
-                int size = al.size();
-                int i = 0;
-                while (i < size) {
-                    oout.writeObject(al.get(i));
-                    oout.flush();
-                    System.out.println("Current itteration: " + i);
 
-                    i++;
-                }
-            }
-        } else {
-            oout.writeObject(o);
+            byte[] b = Serialize(o);
+            sendBytes(b);
+    }
+
+    public static byte[] Serialize(Object obj) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ObjectOutputStream os = new ObjectOutputStream(out);
+        os.writeObject(obj);
+        return out.toByteArray();
+    }
+
+    public void sendBytes(byte[] myByteArray) throws IOException {
+        sendBytes(myByteArray, 0, myByteArray.length);
+    }
+
+    public void sendBytes(byte[] myByteArray, int start, int len) throws IOException {
+        if (len < 0)
+            throw new IllegalArgumentException("Negative length not allowed");
+        if (start < 0 || start >= myByteArray.length)
+            throw new IndexOutOfBoundsException("Out of bounds: " + start);
+        // Other checks if needed.
+
+        oout.writeInt(len);
+        if (len > 0) {
+            oout.write(myByteArray, start, len);
         }
-        oout.writeObject(null);
     }
 
     //lukker streams

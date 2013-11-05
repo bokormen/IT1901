@@ -12,7 +12,7 @@ public class ClientConnection {
     private static Socket ObjectSocket = null;
     private static PrintWriter out = null;
     private static BufferedReader in = null;
-    private static ObjectInputStream oin = null;
+    private static DataInputStream oin = null;
     public static boolean ConnectedToServer;
 
 
@@ -63,25 +63,23 @@ public class ClientConnection {
     }
 
     private static Object getObject() throws IOException, ClassNotFoundException {
-        ArrayList al = new ArrayList();
+
         Object o;
+        int length = 0;
 
 
-        while ((o = oin.readObject()) != null) {
-            al.add(o);
-//            if (o instanceof Sheep) {
-//                System.out.println(((Sheep) o).getId());
-//            }
-        }
+        length = oin.readInt();
+        byte[] data = new byte[length];
+        oin.readFully(data);
+        o = deSerialize(data);
 
-        int size = al.size();
-        if (size == 0) {
-            return null;
-        } else if (size == 1) {
-            return al.get(0);
-        } else {
-            return al;
-        }
+        return o;
+    }
+
+    public static Object deSerialize(byte[] data) throws IOException, ClassNotFoundException {
+        ByteArrayInputStream in = new ByteArrayInputStream(data);
+        ObjectInputStream is = new ObjectInputStream(in);
+        return is.readObject();
     }
 
     //send en melding til server og få respons
@@ -150,7 +148,7 @@ public class ClientConnection {
             }
             out = new PrintWriter(ClientSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(ClientSocket.getInputStream()));
-            oin = new ObjectInputStream(ObjectSocket.getInputStream());
+            oin = new DataInputStream(ObjectSocket.getInputStream());
             ConnectedToServer = true;
         } catch (UnknownHostException e) {
             System.err.println("Could not find host.");
