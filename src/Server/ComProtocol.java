@@ -1,7 +1,6 @@
 package Server;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.net.Socket;
@@ -20,7 +19,6 @@ public class ComProtocol {
     private ServerLog log = null;
     private String UserName = null;
     private ObjectOutputStream oout = null;
-    private ObjectInputStream oin = null;
 
     private static final int WAIT = 1001;
     private static final int LOGIN = 1002;
@@ -46,7 +44,6 @@ public class ComProtocol {
 
         try {
             oout = new ObjectOutputStream(osocket.getOutputStream());
-            oin = new ObjectInputStream(osocket.getInputStream());
         } catch (IOException e) {
             System.err.println("Could not open object streams");
         }
@@ -172,7 +169,7 @@ public class ComProtocol {
             if (theInput != null) {
                 if (isLoggedIn) {
                     theOutput = "object sending";
-                    oout.writeObject(DatabaseConnector.getUser(theInput));
+                    sendObject(DatabaseConnector.getUser(theInput));
 
                 } else {
                     theOutput = "getuser no login";
@@ -256,7 +253,7 @@ public class ComProtocol {
             if (theInput != null) {
                 if (isLoggedIn) {
                     theOutput = "object sending";
-                    oout.writeObject(DatabaseConnector.findSheep(UserName, theInput));
+                    sendObject(DatabaseConnector.findSheep(UserName, theInput));
                     log.addEntry(ClientIP + "[" + UserName + "] Searched for sheep: " + theInput + ".");
 
                 } else {
@@ -276,7 +273,7 @@ public class ComProtocol {
                 if (isLoggedIn) {
                     theOutput = "object sending";
                     try {
-                        oout.writeObject(DatabaseConnector.getAllSheepsToOwner(UserName));
+                        sendObject(DatabaseConnector.getAllSheepsToOwner(UserName));
                         log.addEntry(ClientIP + "[" + UserName + "] Requested Sheep List.");
                     } catch (Exception e) {
                         theOutput = "getownedsheep database error";
@@ -316,16 +313,16 @@ public class ComProtocol {
             if (theInput != null) {
                 theOutput = "object sending";
                 try {
-                    int size = 110;
-                    //ArrayList<Sheep> sl = new ArrayList<Sheep>();
-                    Sheep[] sa = new Sheep[size];
+                    int size = 297;
+                    ArrayList<Sheep> sl = new ArrayList<Sheep>();
+                    //Sheep[] sa = new Sheep[size];
                     for (int i = 0; i < size; i++) {
-                        Sheep s = new Sheep(i, "testsheep", 2008-i, 20, (char)'m', "test0@test.test", "test2@test.test");
-                        s.newLocation(i + "," + i, "00/00/0000");
-                        //sl.add(s);
-                        sa[i] = s;
+                        Sheep s = new Sheep(i, "testsheep", 2008, 20, 'm', "test0@test.test", "test2@test.test");
+                        s.newLocation(10 + "," + 9, "00/00/0000");
+                        sl.add(s);
+                        //sa[i] = s;
                     }
-                    oout.writeObject(sa);
+                    sendObject(sl);
                     log.addEntry(ClientIP + "[" + UserName + "] Requested Sheep List.");
                 } catch (Exception e) {
                     theOutput = "getownedsheep database error";
@@ -432,7 +429,7 @@ public class ComProtocol {
         if (temp.length == 8) {
             if (!DatabaseConnector.doesSheepExsist(temp[0])) {
                 try {
-                    oout.writeObject(DatabaseConnector.newSheep(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5], temp[6], temp[7]));
+                    sendObject(DatabaseConnector.newSheep(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5], temp[6], temp[7]));
                 } catch (IOException e) {
                     return "regsheep database error";
                 }
@@ -531,14 +528,38 @@ public class ComProtocol {
         return "mailpassword success";
     }
 
+
+    private void sendObject(Object o) throws IOException {
+        if (o instanceof ArrayList) {
+            ArrayList al = (ArrayList) o;
+            if (al.get(0) instanceof Sheep) {
+                int size = al.size();
+                int i = 0;
+                while (i < size) {
+                    oout.writeObject(al.get(i));
+                    oout.flush();
+                    System.out.println("Current itteration: " + i);
+
+                    i++;
+                }
+            }
+        } else {
+            oout.writeObject(o);
+        }
+        oout.writeObject(null);
+    }
+
     //lukker streams
     public void close() {
         try {
-            oin.close();
             oout.close();
         } catch (IOException e) {
             System.err.println("Error closing object streams.");
         }
     }
+
+
+
+
 
 }

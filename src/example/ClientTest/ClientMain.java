@@ -62,7 +62,7 @@ public class ClientMain {
             if (sl instanceof ArrayList) {
                 ArrayList<Sheep> sll = (ArrayList<Sheep>) sl;
                 for (int i = 0; i < sll.size(); i++) {
-                    System.out.println(sll.get(i).getLocation().getPosition());
+                    System.out.println(sll.get(i).getId());
                 }
             } else if (sl instanceof Sheep[]) {
                 Sheep[] sll = (Sheep[]) sl;

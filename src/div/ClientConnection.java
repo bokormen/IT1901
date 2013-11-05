@@ -2,6 +2,7 @@ package div;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 
 //opprette ny klient tilkoppling til server. Bruk getDataFromServer() for å sende/hente info fra server
 public class ClientConnection {
@@ -11,7 +12,6 @@ public class ClientConnection {
     private static Socket ObjectSocket = null;
     private static PrintWriter out = null;
     private static BufferedReader in = null;
-    private static ObjectOutputStream oout = null;
     private static ObjectInputStream oin = null;
     public static boolean ConnectedToServer;
 
@@ -50,7 +50,7 @@ public class ClientConnection {
         response = sendServerMsg(query);
         if (response.equals("object sending")) {
             try {
-                return oin.readObject();
+                return getObject();
             } catch (IOException e) {
                 System.err.println("Problem reading object from object stream.");
             } catch (ClassNotFoundException e) {
@@ -60,6 +60,28 @@ public class ClientConnection {
 
         return response;
 
+    }
+
+    private static Object getObject() throws IOException, ClassNotFoundException {
+        ArrayList al = new ArrayList();
+        Object o;
+
+
+        while ((o = oin.readObject()) != null) {
+            al.add(o);
+//            if (o instanceof Sheep) {
+//                System.out.println(((Sheep) o).getId());
+//            }
+        }
+
+        int size = al.size();
+        if (size == 0) {
+            return null;
+        } else if (size == 1) {
+            return al.get(0);
+        } else {
+            return al;
+        }
     }
 
     //send en melding til server og få respons
@@ -128,7 +150,6 @@ public class ClientConnection {
             }
             out = new PrintWriter(ClientSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(ClientSocket.getInputStream()));
-            oout = new ObjectOutputStream(ObjectSocket.getOutputStream());
             oin = new ObjectInputStream(ObjectSocket.getInputStream());
             ConnectedToServer = true;
         } catch (UnknownHostException e) {
@@ -149,7 +170,6 @@ public class ClientConnection {
         try {
             out.close();
             in.close();
-            oout.close();
             oin.close();
             ClientSocket.close();
             ObjectSocket.close();

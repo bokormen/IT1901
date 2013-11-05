@@ -38,7 +38,7 @@ public class SheepRegistration implements Serializable {
 		int id = 0;
 		// sjekke at melding ble mottatt
 		if(serverRespons instanceof Integer) {
-			id = (int) serverRespons;
+			id = (Integer) serverRespons;
 		} else if(serverRespons instanceof String) {
 			throw new Exception((String) serverRespons);
 		}
