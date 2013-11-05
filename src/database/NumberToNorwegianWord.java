@@ -172,8 +172,8 @@ public class NumberToNorwegianWord {
 	public static void main(String[] args) {
 		
 //		for (long i = 0; i < thousandPowerOf(thousands.length+1); i++) {
-		for (long i = thousandPowerOf(thousands.length-2); i < thousandPowerOf(thousands.length-2)+10; i++) {
-			System.out.println(numberToWord(i));
+		for (long i = thousandPowerOf(thousands.length-3)+10000000; i < thousandPowerOf(thousands.length-3)+10000010; i++) {
+			System.out.println(i + ": " + numberToWord(i));
 		}
 
 	}

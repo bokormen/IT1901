@@ -86,9 +86,9 @@ public class DatabaseConnector {
 //		}
 //		deleteTestUsers();
 //		deleteTestSheeps();
-//		RandomTestData.fillDatabaseWithUsers(3);
-//		RandomTestData.sheepsForTestUsers(10);
-//		RandomTestData.sheepsForTestUser("test2@test.test", 10000-10);
+//		RandomTestData.fillDatabaseWithUsers(200);
+//		RandomTestData.sheepsForTestUsers(10000);
+//		RandomTestData.sheepsForTestUser("test0@test.test", 10);
 //		String sheepBoundariesLongitude = "63.4025,63.4575";
 //		String sheepBoundariesLatitude = "10.3777,10.4023";
 //		for (int i=0;i<10;i++) {

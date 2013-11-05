@@ -25,7 +25,7 @@ public class RandomTestData {
 			String lastName = uppercaseFirstLetters(EnglishNumberToWords.convert(lastname)).replaceAll("\\W", "");
 			String tlf = Integer.toString(generator.nextInt(89999999)+10000000);
 			String password = "passord";
-			String location = Double.toString(90*generator.nextDouble())+","+Double.toString(90*generator.nextDouble());
+			String location = "63.43,10.39";//Double.toString(90*generator.nextDouble())+","+Double.toString(90*generator.nextDouble());
 			DatabaseConnector.newUser(user, firstName, lastName, tlf, password, location);
 		}
 	}
@@ -59,6 +59,7 @@ public class RandomTestData {
 	 */
 	public static void sheepsForTestUsers (int numberOfSheep) {
 		ArrayList<String> testUsers = DatabaseConnector.getAllTestUserEmail();
+		testUsers.remove(0);
 		for (String s : testUsers) {
 			for (int i=0;i<numberOfSheep;i++) {
 				String name = "testSheep";
