@@ -87,13 +87,13 @@ public class DatabaseConnector {
 //		deleteTestUsers();
 //		deleteTestSheeps();
 //		RandomTestData.fillDatabaseWithUsers(200);
-//		RandomTestData.sheepsForTestUsers(10000);
 //		RandomTestData.sheepsForTestUser("test0@test.test", 10);
-//		String sheepBoundariesLongitude = "63.4025,63.4575";
-//		String sheepBoundariesLatitude = "10.3777,10.4023";
-//		for (int i=0;i<10;i++) {
-//			RandomTestData.moveSheeps(sheepBoundariesLongitude, sheepBoundariesLatitude);
-//		}
+//		RandomTestData.sheepsForTestUsers(10000);
+		String sheepBoundariesLongitude = "63.4025,63.4575";
+		String sheepBoundariesLatitude = "10.3777,10.4023";
+		for (int i=0;i<10;i++) {
+			RandomTestData.moveSheeps(sheepBoundariesLongitude, sheepBoundariesLatitude);
+		}
 		close();
 	}
 	

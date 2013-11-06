@@ -22,7 +22,7 @@ public class RandomTestData {
 			int lastname = i+exsistingUsers;
 			String user = "test"+lastname+"@test.test";
 			String firstName = "testuser";
-			String lastName = uppercaseFirstLetters(EnglishNumberToWords.convert(lastname)).replaceAll("\\W", "");
+			String lastName = uppercaseFirstLetters(NumberToNorwegianWord.numberToWord(lastname)).replaceAll("\\W", ""); //uppercaseFirstLetters(EnglishNumberToWords.convert(lastname)).replaceAll("\\W", "");
 			String tlf = Integer.toString(generator.nextInt(89999999)+10000000);
 			String password = "passord";
 			String location = "63.43,10.39";//Double.toString(90*generator.nextDouble())+","+Double.toString(90*generator.nextDouble());
