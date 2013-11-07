@@ -318,10 +318,15 @@ public class ComProtocol {
         } else if (state == ATTACKSHEEP) {
 
             if (theInput != null) {
+
                 String[] temp = theInput.split("\\|\\|"); //splitter input ved ||
-                SheepAttackMail.sendMail(temp[0], Integer.parseInt(temp[1]), temp[2]);
-                log.addEntry(ClientIP + "[" + UserName + "] Sheep: " + temp[1] + " under attack.");
-                theOutput = "attacksheep success";
+                if (temp.length == 3) {
+                    SheepAttackMail.sendMail(temp[0], Integer.parseInt(temp[1]), temp[2]);
+                    log.addEntry(ClientIP + "[" + UserName + "] Sheep: " + temp[1] + " under attack.");
+                    theOutput = "attacksheep success";
+                } else {
+                    theOutput = "attacksheep bad input";
+                }
             } else {
                 theOutput = "attacksheep null input";
             }
