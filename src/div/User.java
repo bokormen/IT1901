@@ -225,5 +225,11 @@ public class User implements Serializable {
 	public ArrayList<Sheep> getSheepList() {
 		return sheepReg.getSheepList();
 	}
+	
+	public void attackSheep(int id) {
+		sheepReg.attackSheep(id);
+	}
+	
+
 
 }

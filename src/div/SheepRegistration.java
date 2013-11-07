@@ -136,5 +136,18 @@ public class SheepRegistration implements Serializable {
 	public ArrayList<Sheep> getSheepList() {
 		return sheepList;
 	}
+	
+	/**
+	 * Sender informasjon om angrep mot en sau til server. 
+	 */
+	public void attackSheep(int id) {
+		String position = sheepSearch(id).getLocation().getPosition();
+		String query = id + "||" + position;
+		 String serverRespons = ClientConnection.sendServerQuery("attacksheep",query);
+		 if(!serverRespons.equals("attacksheep success")) {
+			 System.out.println("Error. Can't add attack information"); 
+		 }
+	}
+
 
 }

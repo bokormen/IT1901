@@ -116,9 +116,6 @@ public class Sheep implements Serializable {
 	 * @param temperature
 	 */
 	public void setTemperature(double temperature) {
-		if (temperature < 35 || temperature > 40) {
-			attackSheep();
-		}
 		this.temperature = temperature;
 	}
 
@@ -136,9 +133,7 @@ public class Sheep implements Serializable {
 		} else {
 			throw new Exception("Heartrate not valid");
 		}
-		if (heartrate < 50 || heartrate > 100) {
-			attackSheep();
-		}
+		
 	}
 	
 	public String getShepherd() {
@@ -215,19 +210,5 @@ public class Sheep implements Serializable {
 	}
 
 
-	/**
-	 * Sender mail til eier og eventuelt shepherd om at en sau blir angrepet. 
-	 */
-	public void attackSheep() {
-		SheepAttackMail.sendMail(owner, id, getLocation().getPosition());
-		if(shepherd != "") {
-			SheepAttackMail.sendMail(shepherd, id, getLocation().getPosition());
-		}
-		attackStatus = true;
-	}
-	
-	public boolean getAttackStatus() {
-		return attackStatus;
-	}
 
 }
