@@ -121,4 +121,14 @@ public class UserRegistration {
             System.out.println(serverRespons);
         }
 	}
+	
+	public static void mailPassword(String user) {
+		String query = user;
+
+        String serverRespons = ClientConnection.sendServerQuery("mailpassword", query);
+
+        if (!serverRespons.equals("mailpassword success")) {
+            System.out.println(serverRespons);
+        }
+	}
 }
