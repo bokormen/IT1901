@@ -89,11 +89,17 @@ public class DatabaseConnector {
 //		RandomTestData.fillDatabaseWithUsers(200);
 //		RandomTestData.sheepsForTestUser("test0@test.test", 10);
 //		RandomTestData.sheepsForTestUsers(10000);
-		String sheepBoundariesLongitude = "63.4025,63.4575";
-		String sheepBoundariesLatitude = "10.3777,10.4023";
-		for (int i=0;i<10;i++) {
-			RandomTestData.moveSheeps(sheepBoundariesLongitude, sheepBoundariesLatitude);
-		}
+//		String sheepBoundariesLongitude = "63.4025,63.4575";
+//		String sheepBoundariesLatitude = "10.3777,10.4023";
+//		for (int i=0;i<10;i++) {
+//			RandomTestData.moveSheeps(sheepBoundariesLongitude, sheepBoundariesLatitude);
+//		}
+//		setSheepAttacked("1020");
+//		setSheepSafe("1020");
+//		ArrayList<String> Sheep = getAttackedSheep("test100@test.test");
+//		for (String s : Sheep) {
+//			System.out.println(s);
+//		}
 		close();
 	}
 	
@@ -151,6 +157,67 @@ public class DatabaseConnector {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Setter sauen i status angrepen
+	 * @param id
+	 */
+	public static void setSheepAttacked(String id) {
+		try {
+			String linje ="UPDATE Sheep SET Sheep.Status = \"attacked\" WHERE ID = \"" + id + "\";";
+
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement(linje);
+			ps.executeUpdate();
+			
+//			Statement st = con.createStatement();
+//			st.executeUpdate(linje);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Setter sauen i status angrepen
+	 * @param id
+	 */
+	public static void setSheepSafe(String id) {
+		try {
+			String linje ="UPDATE Sheep SET Sheep.Status = \"safe\" WHERE ID = \"" + id + "\";";
+
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement(linje);
+			ps.executeUpdate();
+			
+//			Statement st = con.createStatement();
+//			st.executeUpdate(linje);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static ArrayList<String> getAttackedSheep(String owner) {
+		ArrayList<String> Sheep = new ArrayList<String>( );
+
+		try {
+			String query = "SELECT S.ID FROM Sheep AS S WHERE S.Owner=\"" + owner + "\" AND S.Status = \"attacked\";";
+			
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement(query);
+			ResultSet rs;
+			rs = ps.executeQuery();
+			
+//			Statement st = con.createStatement();
+//			ResultSet rs = st.executeQuery(query);
+			while(rs.next()) {
+					Sheep.add(rs.getString(1));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return Sheep;
 	}
 	
 	/**
@@ -324,7 +391,6 @@ public class DatabaseConnector {
 					Sheeps.get(j).newLocation(rs.getString(11), rs.getString(10));
 					j++;
 					
-					System.out.println("hentet ny sau nr:" + j + " fra databasen");
 			}
 			
 		} catch (SQLException e) {

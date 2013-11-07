@@ -91,8 +91,10 @@ public class NumberToNorwegianWord {
 				}
 				if (word.equals("")) {
 					word +=numberBelowThousand(answer, false) + " " + thousands[i];
-				} else {
+				} else if ((!word.equals("")) && (i == 0)) {
 					word +=numberBelowThousand(answer, true) + " " + thousands[i];
+				} else {
+					word +=numberBelowThousand(answer, false) + " " + thousands[i];
 				}
 				
 				if (answer > 1 && i > 1) {
@@ -172,7 +174,7 @@ public class NumberToNorwegianWord {
 	public static void main(String[] args) {
 		
 //		for (long i = 0; i < thousandPowerOf(thousands.length+1); i++) {
-		for (long i = thousandPowerOf(thousands.length-3)+10000000; i < thousandPowerOf(thousands.length-3)+10000010; i++) {
+		for (long i = thousandPowerOf(thousands.length-8)+10000000; i < thousandPowerOf(thousands.length-8)+10000010; i++) {
 			System.out.println(i + ": " + numberToWord(i));
 		}
 
