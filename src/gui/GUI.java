@@ -98,8 +98,8 @@ public class GUI extends JFrame {
 	public GUI() {
 		super("Tittel");
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		width = 1200;
-		height = 600;
+		width = dim.width;
+		height = dim.height;
 		setBounds(0, 0, width, height + 20); // +20 for tittel bar'en
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
