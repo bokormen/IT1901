@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import database.DatabaseConnector;
 import div.Sheep;
+import div.SheepAttackMail;
 
 //handles the input from clients
 public class ComProtocol {
@@ -36,6 +37,7 @@ public class ComProtocol {
     private static final int FINDSHEEP = 3003;
     private static final int GETOWNEDSHEEP = 3004;
     private static final int CHANGESHEEP = 3005;
+    private static final int ATTACKSHEEP = 3006;
 
     private static final int TESTING = 9999;
 
@@ -107,7 +109,10 @@ public class ComProtocol {
             } else if (theInput.equals("changesheep")) { //bruker vil forandre paa en sau
                 state = CHANGESHEEP;
                 theOutput = "done";
-                
+
+            } else if (theInput.equals("attacksheep")) { //bruker vil forandre paa en sau
+                state = ATTACKSHEEP;
+                theOutput = "done";
                 
                 
                 
@@ -303,6 +308,22 @@ public class ComProtocol {
                 }
             } else {
                 theOutput = "changesheep null input";
+            }
+
+            state = WAIT;
+
+        //venter paa input for aa angripe sheep
+        //input: "email||id||position"
+        //exempel: "frodo@hotail.com||1337||63,10"
+        } else if (state == ATTACKSHEEP) {
+
+            if (theInput != null) {
+                String[] temp = theInput.split("\\|\\|"); //splitter input ved ||
+                SheepAttackMail.sendMail(temp[0], Integer.parseInt(temp[1]), temp[2]);
+                log.addEntry(ClientIP + "[" + UserName + "] Sheep: " + temp[1] + " under attack.");
+                theOutput = "attacksheep success";
+            } else {
+                theOutput = "attacksheep null input";
             }
 
             state = WAIT;
