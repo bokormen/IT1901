@@ -4,18 +4,21 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+
 import database.DatabaseConnector;
 
 
 //server applikasjon
 public class ServerMain {
 
-    private static final int USERS = 256;
+    public static final int USERS = 256;
     public static final ServerLog sLog = new ServerLog();
     private static final ServerConsole sConsole = new ServerConsole();
     private static ServerSocket serverSocket = null;
-    private static ServerClientThread[] user = new ServerClientThread[USERS];
-    private static int currentUser = 0;
+    //private static ServerClientThread[] user = new ServerClientThread[USERS];
+    public static ArrayList<ServerClientThread> user = new ArrayList<ServerClientThread>();
+    public static int currentUsers = 0;
     private static boolean listening = true;
 
 
@@ -35,9 +38,9 @@ public class ServerMain {
         }
 
         //start accepting client connections;
-        while (currentUser < USERS) {
+        while (true) {
 
-
+            ServerClientThread sct = null;
             Socket clientSocket = null;
             Socket objectSocket = null;
 
@@ -49,20 +52,28 @@ public class ServerMain {
                 clientSocket.setSendBufferSize(10485760);
                 objectSocket.setSendBufferSize(10485760);
 
+
+
             } catch (IOException e) {
                 System.err.println("Client socket error");
                 e.printStackTrace();
             }
 
+            if (user.size() < USERS) {
+                sct = new ServerClientThread(clientSocket, objectSocket, sLog);
+                user.add(sct);
+            } else {
+                sct = new ServerClientThread(clientSocket, objectSocket, sLog, true);
+            }
 
-            user[currentUser] = new ServerClientThread(clientSocket, objectSocket, sLog);
+            currentUsers += 1;
 
             if (!listening) {   // break out if we executed the quit function
                 break;
-            }
+            } else
 
-            user[currentUser].start();
-            currentUser += 1;
+
+            sct.start();
         }
 
         close();
@@ -72,9 +83,10 @@ public class ServerMain {
     public static void quit() throws IOException {
         listening = false;
         int i = 0;
-        while (i < USERS) {  //disconnect all users
-            if (user[i] != null) {
-                user[i].closeNoLog();
+        int size = user.size();
+        while (i < size) {  //disconnect all users
+            if (user.get(i) != null) {
+                user.get(i).closeNoLog();
             }
             i += 1;
         }

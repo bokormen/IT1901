@@ -136,7 +136,7 @@ public class ClientConnection {
 
 
     //aapner en socket til server med gitt ip adresse
-    public static void open(InetAddress ip) {
+    public static void open(InetAddress ip) throws Exception {
         try {
             if (ip == null) {
                 ClientSocket = new Socket(InetAddress.getLocalHost(), 58339);
@@ -147,10 +147,20 @@ public class ClientConnection {
             } else {
                 ClientSocket = new Socket(ip, 58339);
                 ObjectSocket = new Socket(ip, 58339);
+                ClientSocket.setSendBufferSize(10485760);
+                ObjectSocket.setSendBufferSize(10485760);
             }
+
             out = new PrintWriter(ClientSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(ClientSocket.getInputStream()));
             oin = new DataInputStream(ObjectSocket.getInputStream());
+
+            String handshake = in.readLine();
+            if (handshake.equals("Server Full")) {
+                close();
+                throw new Exception("Server Full Exception");
+            }
+
             ConnectedToServer = true;
         } catch (UnknownHostException e) {
             System.err.println("Could not find host.");

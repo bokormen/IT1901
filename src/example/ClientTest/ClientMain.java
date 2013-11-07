@@ -22,7 +22,11 @@ public class ClientMain {
     public static void main(String args[]) throws IOException {
 
         //create connection to server
-        ClientConnection.open(null);
+        try {
+            ClientConnection.open(null);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
 
         //input from console
         BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));

@@ -1,5 +1,7 @@
 package Server;
 
+import example.ClientTest.ClientMain;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -12,7 +14,9 @@ public class ServerClientThread extends Thread {
     private Socket osocket = null;
     private PrintWriter out = null;
     private BufferedReader in = null;
+    private boolean sendserverfullmessage = false;
     protected ServerLog log = null;
+
 
     //Starter en ny traad
     public void run() {
@@ -23,9 +27,16 @@ public class ServerClientThread extends Thread {
 
             String inputLine, outputLine;
 
+            if (sendserverfullmessage) {
+                out.println("Server Full");
+                close();
+                return;
+            }
+
             String ClientIP = getClientAddress();
             ComProtocol com = new ComProtocol(ClientIP, osocket, false, log); //opretter komunikasjons protokollen, all komunikasjon med klient blir prosessert her
             log.addEntry(ClientIP + " connected."); //loggf0rer
+            out.println("Welcome");
 
             //les input fra klient socket og prosesser input
             while ((inputLine = in.readLine()) != null) {
@@ -58,6 +69,12 @@ public class ServerClientThread extends Thread {
     //lukker socket og inputstreams
     public void close() throws IOException {
         log.addEntry(getClientAddress() + " disconnected.");
+        System.out.println(ServerMain.user.contains(this));
+        System.out.println(ServerMain.user.size());
+        ServerMain.user.remove(this);
+        System.out.println(ServerMain.user.contains(this));
+        System.out.println(ServerMain.user.size());
+        ServerMain.currentUsers -= 1;
         out.close();
         in.close();
         socket.close();
@@ -77,5 +94,13 @@ public class ServerClientThread extends Thread {
         socket = clientSocket;
         osocket = objectSocket;
         this.log = log;
+    }
+
+    public ServerClientThread(Socket clientSocket, Socket objectSocket, ServerLog sLog, boolean b) {
+        super("MultiServerThread"); //invokes the thread constructor
+        socket = clientSocket;
+        osocket = objectSocket;
+        log = sLog;
+        sendserverfullmessage = b;
     }
 }
