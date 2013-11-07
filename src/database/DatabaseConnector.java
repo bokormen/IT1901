@@ -29,10 +29,10 @@ public class DatabaseConnector {
 			try {
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
 			} catch (InstantiationException e) {
-				// TODO Auto-generated catch block
+				System.out.println("Error " + e.getMessage() + "InstantiationException");
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
+				System.out.println("Error " + e.getMessage() + "IllegalAccessException");
 				e.printStackTrace();
 			}
 			
@@ -76,7 +76,7 @@ public class DatabaseConnector {
 //				System.out.println(Sheeps.get(i).getId() + " Lokasjon: " + Sheeps.get(i).getLocationLog().get(0));
 //			}
 //		} catch (Exception e) {
-//			// TODO Auto-generated catch block
+//			System.out.println("Error " + e.getMessage() + "Exception");
 //			e.printStackTrace();
 //		}
 //		System.out.println(new Timestamp(System.currentTimeMillis()) + " Nå har alle sauene til test0@test.test blitt returnert");
@@ -88,12 +88,12 @@ public class DatabaseConnector {
 //		deleteTestSheeps();
 //		RandomTestData.fillDatabaseWithUsers(200);
 //		RandomTestData.sheepsForTestUser("test0@test.test", 10);
-//		RandomTestData.sheepsForTestUsers(10000);
-//		String sheepBoundariesLongitude = "63.4025,63.4575";
-//		String sheepBoundariesLatitude = "10.3777,10.4023";
-//		for (int i=0;i<10;i++) {
-//			RandomTestData.moveSheeps(sheepBoundariesLongitude, sheepBoundariesLatitude);
-//		}
+//		RandomTestData.sheepsForTestUsers(50);
+		String sheepBoundariesLongitude = "63.4025,63.4575";
+		String sheepBoundariesLatitude = "10.3777,10.4023";
+		for (int i=0;i<10;i++) {
+			RandomTestData.moveSheeps(sheepBoundariesLongitude, sheepBoundariesLatitude);
+		}
 //		setSheepAttacked("1020");
 //		setSheepSafe("1020");
 //		ArrayList<String> Sheep = getAttackedSheep("test100@test.test");
@@ -115,7 +115,7 @@ public class DatabaseConnector {
 //			Statement st = con.createStatement();
 //			ResultSet rs= st.executeQuery(query);
 			
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(query);
+			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			
 			int matchingUsers=0;
@@ -126,7 +126,7 @@ public class DatabaseConnector {
 				return true;
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
 		
@@ -148,13 +148,13 @@ public class DatabaseConnector {
 			String linje = "INSERT INTO `User` (`Email`, `FirstName`, `LastName`, `Tlf`, `Password`, `Location`) VALUES "+
 			String.format("(\"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")", email,firstName,lastName,phoneNumber,password,location);
 			
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(linje);
+			PreparedStatement ps = con.prepareStatement(linje);
 			ps.executeUpdate();
 			
 //			Statement st = con.createStatement();
 //			st.executeUpdate(linje);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
 	}
@@ -167,13 +167,13 @@ public class DatabaseConnector {
 		try {
 			String linje ="UPDATE Sheep SET Sheep.Status = \"attacked\" WHERE ID = \"" + id + "\";";
 
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(linje);
+			PreparedStatement ps = con.prepareStatement(linje);
 			ps.executeUpdate();
 			
 //			Statement st = con.createStatement();
 //			st.executeUpdate(linje);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
 	}
@@ -186,13 +186,13 @@ public class DatabaseConnector {
 		try {
 			String linje ="UPDATE Sheep SET Sheep.Status = \"safe\" WHERE ID = \"" + id + "\";";
 
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(linje);
+			PreparedStatement ps = con.prepareStatement(linje);
 			ps.executeUpdate();
 			
 //			Statement st = con.createStatement();
 //			st.executeUpdate(linje);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
 	}
@@ -203,7 +203,7 @@ public class DatabaseConnector {
 		try {
 			String query = "SELECT S.ID FROM Sheep AS S WHERE S.Owner=\"" + owner + "\" AND S.Status = \"attacked\";";
 			
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(query);
+			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet rs;
 			rs = ps.executeQuery();
 			
@@ -213,7 +213,7 @@ public class DatabaseConnector {
 					Sheep.add(rs.getString(1));
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
 		
@@ -239,12 +239,12 @@ public class DatabaseConnector {
 			String linje ="INSERT INTO `Sheep` (`Name`, `Owner`, `Shepherd`, `Gender`, `Weight`,`Heartrate`,`Temperature`,`Age`) VALUES "+
 			String.format("(\"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\");", name,owner,shepherd,gender,weight,heartrate,temperature,birthyear);
 
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(linje);
+			PreparedStatement ps = con.prepareStatement(linje);
 			ps.executeUpdate();
 			
 			String query = "SELECT LAST_INSERT_ID();";
 			
-			PreparedStatement ps2 = (PreparedStatement) con.prepareStatement(query);
+			PreparedStatement ps2 = con.prepareStatement(query);
 			ResultSet rs = ps2.executeQuery();
 			
 			
@@ -256,7 +256,7 @@ public class DatabaseConnector {
 //			Statement st = con.createStatement();
 //			st.executeUpdate(linje);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
 		return i;
@@ -276,7 +276,7 @@ public class DatabaseConnector {
 		try {
 			String query = "Select S.ID, S.Gender, S.Shepherd, S.Weight, S.Heartrate, S.Temperature, S.Age, S.Shepherd, S.Name From Sheep as S WHERE S.Owner=\""+owner+"\";"; //spoer etter all informasjonen om sauen med untak av eier(Owner) og gjeter(Shepherd)
 
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(query);
+			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			
 //			Statement st = con.createStatement();
@@ -289,7 +289,7 @@ public class DatabaseConnector {
 				
 				String query2 = "Select Date, Position FROM Location WHERE SheepID = " + rs.getInt(1) + " ORDER BY Date DESC LIMIT 0,5;";
 
-				PreparedStatement ps2 = (PreparedStatement) con.prepareStatement(query2);
+				PreparedStatement ps2 = con.prepareStatement(query2);
 				ResultSet rs2 = ps2.executeQuery();
 				
 //				Statement st2 = con.createStatement();
@@ -304,7 +304,7 @@ public class DatabaseConnector {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
 		
@@ -325,7 +325,7 @@ public class DatabaseConnector {
 		try {
 			String query = "SELECT S.ID, S.Gender, S.Weight, S.Heartrate, S.Temperature, S.Age, S.Shepherd, L.Date, L.Position, S.Name FROM Sheep AS S JOIN Location AS L ON (S.ID = L.SheepID) WHERE S.Owner = " + owner + " ORDER BY L.Date DESC;";
 			
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(query);
+			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			
 //			Statement st = con.createStatement();
@@ -354,7 +354,7 @@ public class DatabaseConnector {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
 		
@@ -376,7 +376,7 @@ public class DatabaseConnector {
 		try {
 			String query = "SELECT S.ID, S.Name, S.Owner, S.Shepherd, S.Gender, S.Weight, S.Heartrate, S.Temperature, S.Age, L.Date, L.Position FROM Sheep AS S INNER JOIN Location AS L ON S.ID = L.SheepID LEFT JOIN Location L2 ON L.SheepID = L2.SheepID AND L.Date < L2.Date WHERE L2.Date IS NULL AND S.Owner=\"" + owner + "\";";
 			
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(query);
+			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			
 //			Statement st = con.createStatement();
@@ -394,9 +394,10 @@ public class DatabaseConnector {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		} catch (Exception e) {
+			System.out.println("Error " + e.getMessage() + "Exception");
 			e.printStackTrace();
 		}
 		
@@ -417,7 +418,7 @@ public class DatabaseConnector {
 			
 			String query = "SELECT S.ID, S.Gender, S.Weight, S.Heartrate, S.Temperature, S.Age, S.Shepherd, L.Date, L.Position, S.Name, S.Owner FROM Sheep AS S JOIN Location AS L ON (S.ID = L.SheepID) WHERE S.ID = " + id + " ORDER BY L.Date DESC LIMIT 0," + sizeOfHistory + ";";
 			
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(query);
+			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			
 //			Statement st = con.createStatement();
@@ -433,13 +434,13 @@ public class DatabaseConnector {
 					}
 					sheep.newLocation(rs.getString(9), rs.getString(8));
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
+					System.out.println("Error " + e.getMessage() + "Exception");
 					e.printStackTrace();
 				}
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
 		
@@ -460,7 +461,7 @@ public class DatabaseConnector {
 			}
 			String query = "Select U.Email, U.Password From User as U WHERE U.Email=\""+user+"\";";
 
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(query);
+			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			
 //			Statement st = con.createStatement();
@@ -474,7 +475,7 @@ public class DatabaseConnector {
 				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.fillInStackTrace();
 			e.printStackTrace();
 		}
@@ -496,7 +497,7 @@ public class DatabaseConnector {
 			}
 			String query = "Select U.Email, U.Password, U.FirstName, U.LastName, U.TLF, U.Location From User as U WHERE U.Email="+user+";";
 
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(query);
+			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			
 //			Statement st = con.createStatement();
@@ -507,7 +508,7 @@ public class DatabaseConnector {
 					try {
 						farmer=new User(rs.getString(3),rs.getString(4),rs.getString(1),rs.getString(5),rs.getString(6));
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
+						System.out.println("Error " + e.getMessage() + "Exception");
 						e.printStackTrace();
 					}
 				} 
@@ -515,7 +516,7 @@ public class DatabaseConnector {
 			
 			return farmer;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
 		return farmer;
@@ -531,7 +532,7 @@ public class DatabaseConnector {
 		try {
 			String query = "Select U.FirstName, U.LastName, U.Email, U.TLF, U.Location From User as U WHERE U.Email=\""+user+"\";";
 			
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(query);
+			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			
 //			Statement st = con.createStatement();
@@ -542,12 +543,12 @@ public class DatabaseConnector {
 					farmer=new User(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5));
                     return farmer;
                 } catch (Exception e) {
-					// TODO Auto-generated catch block
+                	System.out.println("Error " + e.getMessage() + "Exception");
 					e.printStackTrace();
 				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
 		return farmer;
@@ -563,7 +564,7 @@ public class DatabaseConnector {
 		try {
 			String query = "SELECT ID FROM Sheep WHERE ID = '" + id + "'";
 
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(query);
+			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			
 //			Statement st = con.createStatement();
@@ -576,7 +577,7 @@ public class DatabaseConnector {
 				return true;
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
 		return false;
@@ -596,7 +597,7 @@ public class DatabaseConnector {
 		try {
 			String query = "SELECT S.ID FROM Sheep AS S WHERE S.Owner = '" + user + "' AND S.ID = "+ID;
 
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(query);
+			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			
 //			Statement st = con.createStatement();
@@ -609,7 +610,7 @@ public class DatabaseConnector {
 				return true;
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
 		return false;
@@ -627,7 +628,7 @@ public class DatabaseConnector {
 		try {
 			String query = "SELECT S.ID, S.Name, S.Gender, S.Shepherd, S.Weight, S.Heartrate, S.Temperature, S.Age FROM Sheep AS S WHERE S.Owner = '" + user + "' AND S.ID = "+ID;
 
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(query);
+			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			
 //			Statement st = con.createStatement();
@@ -637,7 +638,7 @@ public class DatabaseConnector {
 					sheep = new Sheep(rs.getInt(1), rs.getString(2), rs.getInt(8),rs.getInt(5),rs.getString(3).charAt(0),user, rs.getString(4));
 					String query2 = "Select Date, Position FROM Location WHERE SheepID = " + rs.getInt(1) + " ORDER BY Date DESC LIMIT 0,5;";
 
-					PreparedStatement ps2 = (PreparedStatement) con.prepareStatement(query2);
+					PreparedStatement ps2 = con.prepareStatement(query2);
 					ResultSet rs2 = ps2.executeQuery();
 					
 //					Statement st2 = con.createStatement();
@@ -649,12 +650,12 @@ public class DatabaseConnector {
 						sheep.newLocation(rs2.getString(0), rs2.getString(1));
 					}
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
+					System.out.println("Error " + e.getMessage() + "Exception");
 					e.printStackTrace();
 				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
 		return sheep;
@@ -676,13 +677,13 @@ public class DatabaseConnector {
 		try {
 			String linje ="UPDATE Sheep SET Sheep.Name = \""+name+"\", Sheep.Owner =\""+owner+"\", Sheep.Shepherd=\""+shepherd+"\", Sheep.Gender=\""+gender+"\", Sheep.Weight="+weight+", Sheep.Heartrate="+heartrate+", Sheep.Temperature="+temperature+", Sheep.Age="+birthyear+" WHERE Sheep.ID = "+id+";";
 
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(linje);
+			PreparedStatement ps = con.prepareStatement(linje);
 			ps.executeUpdate();
 			
 //			Statement st = con.createStatement();
 //			st.executeUpdate(linje);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
 	}
@@ -701,13 +702,13 @@ public class DatabaseConnector {
 		try {
 			String linje ="UPDATE Sheep SET Sheep.Name = \""+name+"\", Sheep.Owner =\""+owner+"\", Sheep.Shepherd=\""+shepherd+"\", Sheep.Gender=\""+gender+"\", Sheep.Weight="+weight+", Sheep.Age="+birthyear+" WHERE Sheep.ID = "+id+";";
 
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(linje);
+			PreparedStatement ps = con.prepareStatement(linje);
 			ps.executeUpdate();
 			
 //			Statement st = con.createStatement();
 //			st.executeUpdate(linje);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
 	}
@@ -726,13 +727,13 @@ public class DatabaseConnector {
 		try {
 			String linje ="UPDATE User SET User.FirstName = \""+firstName+"\", User.LastName = \""+lastName+"\", User.TLF = \""+phoneNumber+"\", User.Location = \""+location+"\" WHERE User.Email = \""+user+"\";";
 
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(linje);
+			PreparedStatement ps = con.prepareStatement(linje);
 			ps.executeUpdate();
 			
 //			Statement st = con.createStatement();
 //			st.executeUpdate(linje);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
 	}
@@ -747,13 +748,13 @@ public class DatabaseConnector {
 		try {
 			String linje ="UPDATE User SET User.Password = \""+password+"\" WHERE User.Email = \""+user+"\";";
 
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(linje);
+			PreparedStatement ps = con.prepareStatement(linje);
 			ps.executeUpdate();
 			
 //			Statement st = con.createStatement();
 //			st.executeUpdate(linje);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
 	}
@@ -769,13 +770,13 @@ public class DatabaseConnector {
 			String linje = "INSERT INTO `Location` (`SheepID`, `Date`, `Position`) VALUES "+
 			String.format("(\"%s\", \"%s\", \"%s\")", id,date,location);
 
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(linje);
+			PreparedStatement ps = con.prepareStatement(linje);
 			ps.executeUpdate();
 			
 //			Statement st = con.createStatement();
 //			st.executeUpdate(linje);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
 	}
@@ -789,13 +790,13 @@ public class DatabaseConnector {
 		try {
 			String linje ="DELETE FROM `oyvilund_sheep`.`User` WHERE `Email`=\""+user+"\";";
 
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(linje);
+			PreparedStatement ps = con.prepareStatement(linje);
 			ps.executeUpdate();
 			
 //			Statement st = con.createStatement();
 //			st.executeUpdate(linje);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
 	}
@@ -809,13 +810,13 @@ public class DatabaseConnector {
 		try {
 			String linje ="DELETE FROM `oyvilund_sheep`.`Sheep` WHERE `ID`="+id+";";
 
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(linje);
+			PreparedStatement ps = con.prepareStatement(linje);
 			ps.executeUpdate();
 			
 //			Statement st = con.createStatement();
 //			st.executeUpdate(linje);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
 	}
@@ -829,13 +830,13 @@ public class DatabaseConnector {
 		try {
 			String linje ="DELETE FROM `oyvilund_sheep`.`Location` WHERE Date < \"" + date + "\";";
 
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(linje);
+			PreparedStatement ps = con.prepareStatement(linje);
 			ps.executeUpdate();
 			
 //			Statement st = con.createStatement();
 //			st.executeUpdate(linje);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
 	}
@@ -850,13 +851,13 @@ public class DatabaseConnector {
 		try {
 			String linje ="DELETE FROM Location WHERE SheepID IN (SELECT S.ID FROM Sheep AS S WHERE S.Owner = \"" +user+"\") AND Date < \"" + date + "\";";
 
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(linje);
+			PreparedStatement ps = con.prepareStatement(linje);
 			ps.executeUpdate();
 			
 //			Statement st = con.createStatement();
 //			st.executeUpdate(linje);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
 	}
@@ -869,13 +870,13 @@ public class DatabaseConnector {
 		try {
 			String linje ="DELETE FROM `oyvilund_sheep`.`Sheep` WHERE `Name`=\"testSheep\";";
 
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(linje);
+			PreparedStatement ps = con.prepareStatement(linje);
 			ps.executeUpdate();
 			
 			Statement st = con.createStatement();
 			st.executeUpdate(linje);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
 	}
@@ -888,13 +889,13 @@ public class DatabaseConnector {
 		try {
 			String linje ="DELETE FROM `oyvilund_sheep`.`User` WHERE `FirstName`=\"testuser\";";
 
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(linje);
+			PreparedStatement ps = con.prepareStatement(linje);
 			ps.executeUpdate();
 			
 //			Statement st = con.createStatement();
 //			st.executeUpdate(linje);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
 	}
@@ -910,7 +911,7 @@ public class DatabaseConnector {
 		try {
 			String query = "Select U.Email From User as U WHERE U.FirstName=\"testuser\";";
 			
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(query);
+			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 
 //			Statement st = con.createStatement();
@@ -922,7 +923,7 @@ public class DatabaseConnector {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
 		
@@ -940,7 +941,7 @@ public class DatabaseConnector {
 		try {
 			String query = "Select S.ID From Sheep as S;";
 
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(query);
+			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			
 //			Statement st = con.createStatement();
@@ -951,7 +952,7 @@ public class DatabaseConnector {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
 		
@@ -968,7 +969,7 @@ public class DatabaseConnector {
 		try {
 			String query = "Select max(Date) From Location;";
 
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(query);
+			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			
 //			Statement st = con.createStatement();
@@ -977,7 +978,7 @@ public class DatabaseConnector {
 				date = rs.getString(1);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
 		if (date==null) {
@@ -996,7 +997,7 @@ public class DatabaseConnector {
 		try {
 			String query = "Select max(Email) From User Where FirstName=\"testuser\";";
 
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement(query);
+			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			
 //			Statement st = con.createStatement();
@@ -1005,7 +1006,7 @@ public class DatabaseConnector {
 				lastname = rs.getString(1);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
 		if (lastname==null) {
