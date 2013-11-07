@@ -167,7 +167,6 @@ public class User implements Serializable {
 
 	private double longlatIsValid(String longlat) {
 		double tall = 0;
-		System.out.println(longlat);
 		try {
 			tall = Double.parseDouble(longlat);
 			return tall;
