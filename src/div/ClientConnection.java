@@ -141,6 +141,8 @@ public class ClientConnection {
             if (ip == null) {
                 ClientSocket = new Socket(InetAddress.getLocalHost(), 58339);
                 ObjectSocket = new Socket(InetAddress.getLocalHost(), 58339);
+                ClientSocket.setSendBufferSize(10485760);
+                ObjectSocket.setSendBufferSize(10485760);
 
             } else {
                 ClientSocket = new Socket(ip, 58339);

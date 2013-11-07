@@ -20,7 +20,7 @@ public class ServerMain {
 
 
     // Start Server
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
         //open a server socket
         try {
@@ -37,8 +37,23 @@ public class ServerMain {
         //start accepting client connections;
         while (currentUser < USERS) {
 
-            Socket clientSocket = serverSocket.accept();
-            Socket objectSocket = serverSocket.accept();
+
+            Socket clientSocket = null;
+            Socket objectSocket = null;
+
+            try {
+
+                clientSocket = serverSocket.accept();
+                objectSocket = serverSocket.accept();
+
+                clientSocket.setSendBufferSize(10485760);
+                objectSocket.setSendBufferSize(10485760);
+
+            } catch (IOException e) {
+                System.err.println("Client socket error");
+                e.printStackTrace();
+            }
+
 
             user[currentUser] = new ServerClientThread(clientSocket, objectSocket, sLog);
 

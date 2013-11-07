@@ -315,7 +315,7 @@ public class ComProtocol {
             if (theInput != null) {
                 theOutput = "object sending";
                 try {
-                    int size = 805;
+                    int size = 10000;
                     ArrayList<Sheep> sl = new ArrayList<Sheep>();
                     //Sheep[] sa = new Sheep[size];
                     for (int i = 0; i < size; i++) {
