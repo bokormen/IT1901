@@ -59,7 +59,11 @@ import div.UserRegistration;
 public class GUI extends JFrame {
 
 	public static void main(String args[]) {
-		ClientConnection.open(null);
+		try {
+			ClientConnection.open(null);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
 		GUI f = new GUI();
 		f.setVisible(true);
 	}
