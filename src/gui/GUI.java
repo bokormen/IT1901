@@ -12,10 +12,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
@@ -44,7 +45,6 @@ import components.MyTextField;
 import div.ClientConnection;
 import div.MyPoint;
 import div.Sheep;
-import div.SheepRegistration;
 import div.User;
 import div.UserRegistration;
 
@@ -159,7 +159,7 @@ public class GUI extends JFrame {
 
 	private BufferedImage getGoogleImage(double latitude, double longitude) {
 		BufferedImage img = (BufferedImage) (GoogleStaticMap.getImage(latitude,
-				longitude, 4, 2 * width / 3, height, 1));
+				longitude, 12, 2 * width / 3, height, 1));
 		return img;
 	}
 
@@ -456,15 +456,15 @@ public class GUI extends JFrame {
 		editButton.setBounds(width / 12, 120 * height / 200, cw, ch);
 		editButton.addActionListener(actionListener);
 
-		// homeButton = new MyButton(new JButton(), "Home", null);
-		// homeButton.setBounds(width / 12, 110 * height / 200, cw, ch);
-		// homeButton.addActionListener(actionListener);
+		homeButton = new MyButton(new JButton(), "Home", null);
+		homeButton.setBounds(width / 12, 110 * height / 200, cw, ch);
+		homeButton.addActionListener(actionListener);
 
 		lp.add(sheepRegButton);
 		lp.add(listButton);
 		lp.add(searchButton);
 		lp.add(editButton);
-		// lp.add(homeButton);
+		lp.add(homeButton);
 	}
 
 	private void createSearchInterfaceComponents() {
@@ -548,6 +548,9 @@ public class GUI extends JFrame {
 		lp.add(regretButton);
 	}
 
+	int lastIndex = -1;
+	int firstIndex = -1;
+
 	private void createListInterfaceComponents() {
 		// TODO
 		int cw = width / 6;
@@ -563,6 +566,29 @@ public class GUI extends JFrame {
 		sheepList
 				.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		sheepList.setCellRenderer(new MyListRenderer());
+
+		sheepList.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent evt) {
+				JList list = (JList) evt.getSource();
+				if (evt.getClickCount() == 2) {
+					int index = list.locationToIndex(evt.getPoint());
+					System.out.println(index);
+					Sheep s = null;
+					String id = ((String) sheepListModel.getElementAt(index))
+							.substring(0, 7);
+					System.out.println(id);
+					for (MySheepButton b : mySheepButtons) {
+						if (b.getSheep().getId() == (Integer.parseInt(id))) {
+							s = b.getSheep();
+						}
+					}
+					setLwEditSheep(s);
+				} else if (evt.getClickCount() == 3) { // Triple-click
+					int index = list.locationToIndex(evt.getPoint());
+
+				}
+			}
+		});
 
 		sheepScrollPane = new JScrollPane(sheepList);
 		sheepScrollPane.setBounds(width / 24, 50 * height / 200, 3 * cw / 2,
@@ -628,8 +654,8 @@ public class GUI extends JFrame {
 		mySheepButtons = new ArrayList<MySheepButton>();
 		ArrayList<Sheep> list = user.getSheepList();
 		int zoom = 15;
-		double numw = 0.0275 / 2;
-		double numh = 0.00577 / 2;
+		double numw = 0.0123 / 2;
+		double numh = 0.0275 / 2;
 
 		double nh = height / 2 / numh;
 		double nw = width / 3 / numw;
@@ -639,7 +665,8 @@ public class GUI extends JFrame {
 				MyPoint p = null;
 				try {
 					p = getLocationPoint(s.getLocation().getPosition());
-					System.out.println(p);
+					System.out
+							.println(p.getLatitude() + " " + p.getLongitude());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -664,16 +691,11 @@ public class GUI extends JFrame {
 
 	public void changeMySheepButtonBounds(double lat, double lon, int zoom,
 			int x, int y) {
-		double numw = 0.0275 / 2;
-		double numh = 0.00577 / 2;
-		if (zoom == 17) {
-			numw = 0.0275 / 8;
-			numh = 0.00577 / 8;
-		}
+		double numw = 0.0275;
+		double numh = 0.0123;
 
-		double nh = height / 2 / numh;
-		double nw = width / 3 / numw;
-
+		double nh = height / numh;
+		double nw = 2 * width / 3 / numw;
 		for (MySheepButton b : mySheepButtons) {
 			MyPoint p = null;
 			try {
@@ -722,8 +744,8 @@ public class GUI extends JFrame {
 			lwEditLabel.setVisible(false);
 
 			lwEditIdField = new MyTextField(new JTextField(), null, "");
-			lwEditIdField.setBounds(21 * width / 60, 9 * height / 10, cw / 2,
-					ch);
+			lwEditIdField.setBounds(41 * width / 120, 9 * height / 10,
+					5 * cw / 8, ch);
 			lwEditIdField.setEditable(false);
 
 			// lwEditAgeField = new MyTextField(new JTextField(), null, "");
@@ -755,8 +777,8 @@ public class GUI extends JFrame {
 					cw, ch);
 
 			lwEditIdLabel = new MyLabel(new JLabel(), "ID:", null);
-			lwEditIdLabel.setBounds(21 * width / 60, 85 * height / 100, cw / 2,
-					ch);
+			lwEditIdLabel.setBounds(41 * width / 120, 85 * height / 100,
+					5 * cw / 8, ch);
 
 			// lwEditAgeLabel = new MyLabel(new JLabel(), "Age:", null);
 			// lwEditAgeLabel.setBounds(24 * width / 60, 85 * height / 100, cw /
@@ -863,7 +885,7 @@ public class GUI extends JFrame {
 		mainComps.add(sheepRegButton);
 		mainComps.add(listButton);
 		mainComps.add(searchButton);
-		// mainComps.add(homeButton);
+		mainComps.add(homeButton);
 		mainComps.add(backButton);
 		mainComps.add(exitButton);
 
@@ -1425,15 +1447,25 @@ public class GUI extends JFrame {
 	 */
 
 	public void setLwEditSheep(Sheep s) {
-		lwEditIdField.setText("" + s.getId());
-		// lwEditAgeField.setText("" + s.getBirthyear());
-		lwEditWeightField.setText("" + s.getWeight());
-		lwEditOwnerField.setText("" + user.getEmail()); // get owner
-		lwEditShepherdField.setText("" + s.getShepherd());
-		lwEditHeartrateField.setText("" + s.getHeartrate());
-		lwEditTemperatureField.setText("" + s.getTemperature());
-		lwEditBirthyearField.setText("" + s.getBirthyear());
-		System.out.println(s.getLocation());
+		if (s == null) {
+
+		} else {
+			lwEditIdField.setText("" + s.getId());
+			// lwEditAgeField.setText("" + s.getBirthyear());
+			lwEditWeightField.setText("" + s.getWeight());
+			lwEditOwnerField.setText("" + user.getEmail()); // get owner
+			lwEditShepherdField.setText("" + s.getShepherd());
+			lwEditHeartrateField.setText("" + s.getHeartrate());
+			lwEditTemperatureField.setText("" + s.getTemperature());
+			lwEditBirthyearField.setText("" + s.getBirthyear());
+			System.out.println(s.getLocation());
+			double lat = Double.parseDouble(s.getLocation().getLatitude());
+			double lon = Double.parseDouble(s.getLocation().getLongitude());
+			System.out.println(lat + "  " + lon);
+			myMap.changeToSheepImages(lat, lon);
+			changeMySheepButtonBounds(lat, lon, 15, 0, 0);
+
+		}
 	}
 
 	private void updateSheepList() {

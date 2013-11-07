@@ -27,6 +27,8 @@ public class MyMap extends JPanel implements MouseListener,
 	private int width;
 	private int height;
 
+	private int sideLength;
+
 	private double latitude;
 	private double longitude;
 
@@ -37,18 +39,6 @@ public class MyMap extends JPanel implements MouseListener,
 	private Image image;
 	private Image scaledImg;
 	private Image savedImg;
-
-	private Image image2;
-	private Image scaledImg2;
-	private Image savedImg2;
-
-	private Image image3;
-	private Image scaledImg3;
-	private Image savedImg3;
-
-	private Image image4;
-	private Image scaledImg4;
-	private Image savedImg4;
 
 	private ArrayList<MyImage> images;
 
@@ -66,6 +56,7 @@ public class MyMap extends JPanel implements MouseListener,
 		images = new ArrayList<MyImage>();
 		this.width = width;
 		this.height = height;
+		this.sideLength = 1280;
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.gui = gui;
@@ -91,6 +82,7 @@ public class MyMap extends JPanel implements MouseListener,
 		} else {
 			this.setVisible(true);
 			images.add(new MyImage(0, 0, latitude, longitude));
+
 		}
 	}
 
@@ -125,13 +117,22 @@ public class MyMap extends JPanel implements MouseListener,
 		return null;
 	}
 
-	private Image scaleImage(Image img, int width, int height) {
-		return img.getScaledInstance(width, height, Image.SCALE_FAST);
+	public void changeToSheepImages(double lat, double lon) {
+		images.clear();
+		images.add(new MyImage(0, 0, lat, lon));
+		this.latitude = lat;
+		this.longitude = lon;
+		repaint();
+	}
+
+	private void updateImageSideLength(int length) {
+		this.sideLength = length;
 	}
 
 	private void zoom(int dnum) {
 		this.zw += dnum;
 		this.zh += dnum;
+
 		this.dx += 7 * dnum / 10;
 		this.dy += 6 * dnum / 10;
 
@@ -139,7 +140,9 @@ public class MyMap extends JPanel implements MouseListener,
 			for (MyImage i : images) {
 				i.scaleImage(zw, zh);
 			}
+			updateImageSideLength(images.get(0).getImage().getHeight(this));
 		}
+		updateMap();
 		repaint();
 	}
 
@@ -167,47 +170,90 @@ public class MyMap extends JPanel implements MouseListener,
 	int ni = 0;
 	int nj = 0;
 
+	int wc = 0;
+	int sc = 0;
+	int ec = 0;
+	int nc = 0;
+
+	private boolean isImageInList(int x, int y) {
+		for (MyImage img : images) {
+			if (img.getX() == x && img.getY() == y) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	boolean update = false;
+
 	private void updateMap() {
-		if (dx < wi * -1280) {
+		double percent = 1280 / -sideLength;
+		if (dx < wi * -sideLength) {
 			if (wi > wj) {
 				wj++;
 			}
 			if (wi == wj) {
-				images.add(new MyImage(-wi - 1, 0, latitude, longitude));
 				wi++;
+				images.add(new MyImage(-wi, 0, latitude, longitude));
+				for (int i = -ni; i <= si; i++) {
+					if (isImageInList(-wi, i)) {
+						// System.out.println(i + " " + -wi);
+						images.add(new MyImage(-wi, i, latitude, longitude));
+					}
+				}
 			}
 		}
 
-		if (dy > 750 + si * 1280) {
+		if (dy > (int) (750 * percent) + si * sideLength) {
 			if (si > sj) {
 				sj++;
 			}
 			if (si == sj) {
-				images.add(new MyImage(0, si + 1, latitude, longitude));
 				si++;
+				images.add(new MyImage(0, si, latitude, longitude));
+				for (int i = -wi; i <= ei; i++) {
+					if (isImageInList(i, si)) {
+						// System.out.println(i + " " + si);
+						images.add(new MyImage(i, si, latitude, longitude));
+					}
+				}
 			}
 		}
 
-		if (dx > 470 + ei * 1280) {
+		if (dx > (int) (470 * percent) + ei * sideLength) {
 			if (ei > ej) {
 				ej++;
 			}
 			if (ei == ej) {
-				images.add(new MyImage(ei + 1, 0, latitude, longitude));
 				ei++;
+				images.add(new MyImage(ei, 0, latitude, longitude));
+				for (int i = -ni; i <= si; i++) {
+					if (isImageInList(ei, i)) {
+						// System.out.println(i + " " + ei);
+						images.add(new MyImage(ei, i, latitude, longitude));
+					}
+				}
 			}
 		}
 
-		if (dy < ni * -1280) {
+		if (dy < ni * -sideLength) {
 			if (ni > nj) {
 				nj++;
 			}
 			if (ni == nj) {
-				images.add(new MyImage(0, -ni - 1, latitude, longitude));
 				ni++;
+				images.add(new MyImage(0, -ni, latitude, longitude));
+
+				for (int i = -wi; i <= ei; i++) {
+					System.out.println("asdasd" + i + "  " + ei);
+					if (isImageInList(i, -ni)) {
+						// System.out.println(i + " " + -ni);
+						images.add(new MyImage(i, -ni, latitude, longitude));
+					}
+				}
 			}
 		}
-		System.out.println(ni + " " + si + " " + wi + " " + ei);
+		// System.out.println(ni + " " + si + " " + wi + " " + ei);
 	}
 
 	@Override
@@ -243,7 +289,7 @@ public class MyMap extends JPanel implements MouseListener,
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		System.out.println(dx + "  " + dy);
+		// System.out.println(dx + "  " + dy);
 		if (skip == 1) {
 			this.dx += (int) (old.getX() - e.getX());
 			this.dy += (int) (old.getY() - e.getY());
@@ -269,7 +315,7 @@ public class MyMap extends JPanel implements MouseListener,
 
 	@Override
 	public void keyPressed(KeyEvent arg) {
-		System.out.println(arg.getKeyChar());
+		System.out.println(arg.getKeyChar() * 4);
 	}
 
 	@Override

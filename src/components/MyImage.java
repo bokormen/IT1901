@@ -18,6 +18,7 @@ public class MyImage {
 		// 63.43,10.39 0.0123, 0.0275
 		// 58.43,15.39 0.0143, 0.0275
 		// 53.43,15.39 0.0163
+		System.out.println(x + "  " + y);
 		this.image = getGoogleImage(lat - (0.0123) * y, lon + (0.0275) * x);
 		this.savedImage = image;
 		this.x = x;
@@ -25,7 +26,7 @@ public class MyImage {
 	}
 
 	private BufferedImage getGoogleImage(double latitude, double longitude) {
-
+		// System.out.println(latitude+" " + longitude);
 		BufferedImage img = (BufferedImage) (GoogleStaticMap.getImage(latitude,
 				longitude, 15, 640, 640, 2));
 		return img;
