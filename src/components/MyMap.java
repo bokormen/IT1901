@@ -27,7 +27,7 @@ public class MyMap extends JPanel implements MouseListener,
 	private int width;
 	private int height;
 
-	private int sideLength;
+	private int imageLength;
 
 	private double latitude;
 	private double longitude;
@@ -52,18 +52,18 @@ public class MyMap extends JPanel implements MouseListener,
 
 	public MyMap(int width, int height, double latitude, double longitude,
 			GUI gui) {
-		System.out.println(width + " " + height);
+		// System.out.println(width + " " + height);
 		images = new ArrayList<MyImage>();
 		this.width = width;
 		this.height = height;
-		this.sideLength = 1280;
+		this.imageLength = 1280;
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.gui = gui;
 		this.setVisible(false);
 
-		this.dx = width / 2;
-		this.dy = height / 2;
+		this.dx = 0;
+		this.dy = 0;
 
 		this.zw = 1280;
 		this.zh = 1280;
@@ -82,14 +82,31 @@ public class MyMap extends JPanel implements MouseListener,
 		} else {
 			this.setVisible(true);
 			images.add(new MyImage(0, 0, latitude, longitude));
+			images.add(new MyImage(-1, 0, latitude, longitude));
+			images.add(new MyImage(0, 1, latitude, longitude));
+			images.add(new MyImage(1, 0, latitude, longitude));
+			images.add(new MyImage(0, -1, latitude, longitude));
+			gui.changeMySheepButtonBounds(latitude, longitude, 15, 0, 0,
+					imageLength);
 
 		}
 	}
 
 	public void zoomInOnSheep(double latitude, double longitude) {
-		this.image = getGoogleImage(latitude, longitude, 17);
-		this.savedImg = image;
+		// -209 -> 40 (-249), -169->220 (-389)
+		// 68 -> 319 (-251), -78->313 (-391)
+		double numw = 0.0275;
+		double numh = 0.0123;
+
+		int x = (int) (-(this.longitude - longitude) * imageLength / numw);
+		int y = (int) ((this.latitude - latitude) * imageLength / numh);
+		this.dx = x + 250;
+		this.dy = y + 390;
+		System.out.println(dx + "  " + dy);
+		updateMap();
 		repaint();
+		gui.changeMySheepButtonBounds(latitude, longitude, 15, x, y,
+				imageLength);
 	}
 
 	public void bigMap() {
@@ -106,44 +123,34 @@ public class MyMap extends JPanel implements MouseListener,
 		return img;
 	}
 
-	private MyPoint getLocationPoint(String arg) throws Exception {
-		String[] list = arg.split(",");
-		try {
-			return new MyPoint(Double.parseDouble(list[0]),
-					Double.parseDouble(list[1]));
-		} catch (Exception e) {
-			System.err.println("Fikk ikke gjort om string til Point location.");
-		}
-		return null;
-	}
-
 	public void changeToSheepImages(double lat, double lon) {
-		images.clear();
-		images.add(new MyImage(0, 0, lat, lon));
-		this.latitude = lat;
-		this.longitude = lon;
+		this.dx = 0;
+		this.dy = 0;
+		gui.changeMySheepButtonBounds(lat, lon, 15, dx, dy, imageLength);
 		repaint();
 	}
 
-	private void updateImageSideLength(int length) {
-		this.sideLength = length;
+	private void updateImageLength(int length) {
+		this.imageLength = length;
 	}
 
 	private void zoom(int dnum) {
 		this.zw += dnum;
 		this.zh += dnum;
 
-		this.dx += 7 * dnum / 10;
-		this.dy += 6 * dnum / 10;
+		// this.dx += 7 * dnum / 10;
+		// this.dy += 6 * dnum / 10;
 
 		if (!images.isEmpty()) {
 			for (MyImage i : images) {
 				i.scaleImage(zw, zh);
 			}
-			updateImageSideLength(images.get(0).getImage().getHeight(this));
+			updateImageLength(images.get(0).getImage().getHeight(this));
 		}
 		updateMap();
 		repaint();
+		gui.changeMySheepButtonBounds(latitude, longitude, 15, dx, dy,
+				imageLength);
 	}
 
 	protected void paintComponent(Graphics g) {
@@ -184,76 +191,64 @@ public class MyMap extends JPanel implements MouseListener,
 		return true;
 	}
 
-	boolean update = false;
-
 	private void updateMap() {
-		double percent = 1280 / -sideLength;
-		if (dx < wi * -sideLength) {
+		double percent = 1280 / -imageLength;
+		if (dx < wi * -imageLength) {
 			if (wi > wj) {
 				wj++;
 			}
 			if (wi == wj) {
 				wi++;
-				images.add(new MyImage(-wi, 0, latitude, longitude));
 				for (int i = -ni; i <= si; i++) {
 					if (isImageInList(-wi, i)) {
-						// System.out.println(i + " " + -wi);
 						images.add(new MyImage(-wi, i, latitude, longitude));
 					}
 				}
 			}
 		}
 
-		if (dy > (int) (750 * percent) + si * sideLength) {
+		if (dy > (int) (750 * percent) + si * imageLength) {
 			if (si > sj) {
 				sj++;
 			}
 			if (si == sj) {
 				si++;
-				images.add(new MyImage(0, si, latitude, longitude));
 				for (int i = -wi; i <= ei; i++) {
 					if (isImageInList(i, si)) {
-						// System.out.println(i + " " + si);
 						images.add(new MyImage(i, si, latitude, longitude));
 					}
 				}
 			}
 		}
 
-		if (dx > (int) (470 * percent) + ei * sideLength) {
+		if (dx > (int) (470 * percent) + ei * imageLength) {
 			if (ei > ej) {
 				ej++;
 			}
 			if (ei == ej) {
 				ei++;
-				images.add(new MyImage(ei, 0, latitude, longitude));
 				for (int i = -ni; i <= si; i++) {
 					if (isImageInList(ei, i)) {
-						// System.out.println(i + " " + ei);
 						images.add(new MyImage(ei, i, latitude, longitude));
 					}
 				}
 			}
 		}
 
-		if (dy < ni * -sideLength) {
+		if (dy < ni * -imageLength) {
 			if (ni > nj) {
 				nj++;
 			}
 			if (ni == nj) {
 				ni++;
-				images.add(new MyImage(0, -ni, latitude, longitude));
-
 				for (int i = -wi; i <= ei; i++) {
-					System.out.println("asdasd" + i + "  " + ei);
 					if (isImageInList(i, -ni)) {
-						// System.out.println(i + " " + -ni);
 						images.add(new MyImage(i, -ni, latitude, longitude));
 					}
 				}
 			}
 		}
-		// System.out.println(ni + " " + si + " " + wi + " " + ei);
+		repaint();
 	}
 
 	@Override
@@ -293,11 +288,10 @@ public class MyMap extends JPanel implements MouseListener,
 		if (skip == 1) {
 			this.dx += (int) (old.getX() - e.getX());
 			this.dy += (int) (old.getY() - e.getY());
-			repaint();
 			updateMap();
 		}
-		gui.changeMySheepButtonBounds(user.getLatitudeDouble(),
-				user.getLongitudeDouble(), 15, -dx, dy);
+		gui.changeMySheepButtonBounds(latitude, longitude, 15, dx, dy,
+				imageLength);
 		old = e.getPoint();
 		skip = 1;
 	}

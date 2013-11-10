@@ -100,7 +100,7 @@ public class GUI extends JFrame {
 	private KartverketStaticMap kartverketStaticMap;
 
 	public GUI() {
-		super("Tittel");
+		super("Sheepy");
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		width = 1200;
 		height = 600;
@@ -142,6 +142,11 @@ public class GUI extends JFrame {
 		repaintPanel();
 	}
 
+	/**
+	 * 
+	 * @param arg
+	 * @return liste med componenter gitt argument
+	 */
 	public ArrayList<JComponent> getComponentList(int arg) {
 		if (arg == LOGIN) {
 			return loginComps;
@@ -156,6 +161,9 @@ public class GUI extends JFrame {
 		}
 	}
 
+	/**
+	 * Tegner om alle komponenter
+	 */
 	public void repaintPanel() {
 		repaint();
 		validate();
@@ -168,7 +176,7 @@ public class GUI extends JFrame {
 	}
 
 	private void updateRightPanelMap(double latitude, double longitude) {
-		rightPanel.changeImage(getGoogleImage(latitude, longitude), 0);
+		rightPanel.changeImage(getGoogleImage(latitude, longitude), 15);
 		rightPanel.repaint();
 	}
 
@@ -187,8 +195,8 @@ public class GUI extends JFrame {
 			try {
 				img2 = ImageIO.read(this.getClass().getClassLoader()
 						.getResource("images/sheepbackground.jpeg"));
-				scaledImage = img2
-						.getScaledInstance(300, 300, Image.SCALE_FAST);
+				scaledImage = img2.getScaledInstance(2 * width / 3, height,
+						Image.SCALE_SMOOTH);
 			} catch (IOException e) {
 				System.err.println(e.getLocalizedMessage());
 			}
@@ -199,69 +207,18 @@ public class GUI extends JFrame {
 			rightPanel = new MyImagePanel(imgs2, xs2, ys2);
 			rightPanel.repaint();
 			rightPanel.setBounds(width / 3, 0, 2 * width / 3, height);
-		} else {
-			int test = 1;
-			if (test == 0) {
-				double lat = 63.43;
-				double lon = 10.39;
-
-				double w = 0.0172;
-				double h = 0.00577;
-
-				int zoom = 15;
-				BufferedImage img1 = (BufferedImage) GoogleStaticMap.getImage(
-						lat, lon, zoom, 400, 300, 1);
-				BufferedImage img2 = (BufferedImage) GoogleStaticMap.getImage(
-						lat, lon + w, zoom, 400, 300, 1);
-				BufferedImage img3 = (BufferedImage) GoogleStaticMap.getImage(
-						lat - h, lon, zoom, 400, 300, 1);
-				BufferedImage img4 = (BufferedImage) GoogleStaticMap.getImage(
-						lat - h, lon + w, zoom, 400, 300, 1);
-				BufferedImage[] imgs2 = { img1, img2, img3, img4 };
-				int[] xs2 = { 0, 400, 0, 400 };
-				int[] ys2 = { 0, 0, 300, 300 };
-
-				rightPanel = new MyImagePanel(imgs2, xs2, ys2);
-				rightPanel.repaint();
-				rightPanel.setBounds(width / 3, 0, 2 * width / 3, height);
-			} else if (test == 1) {
-				double lat = 63.43;
-				double lon = 10.39;
-				int zoom = 15;
-
-				double w = 0.02745;
-				double h = 0.01231;
-
-				Image img1 = GoogleStaticMap.getImage(lat, lon, zoom, 640, 640,
-						1);
-				Image img2 = GoogleStaticMap.getImage(lat, lon + w, zoom, 640,
-						640, 1);
-				Image img3 = GoogleStaticMap.getImage(lat - h, lon, zoom, 640,
-						640, 1);
-				Image img4 = GoogleStaticMap.getImage(lat - h, lon + w, zoom,
-						640, 640, 1);
-				img1.getScaledInstance(320, 320, Image.SCALE_DEFAULT);
-				img2.getScaledInstance(320, 320, Image.SCALE_DEFAULT);
-				img3.getScaledInstance(320, 320, Image.SCALE_DEFAULT);
-				img4.getScaledInstance(320, 320, Image.SCALE_DEFAULT);
-
-				Image[] imgs2 = { img1, img2, img3, img4 };
-				int[] xs2 = { 0, 320, 0, 320 };
-				int[] ys2 = { 0, 0, 320, 320 };
-
-				rightPanel = new MyImagePanel(imgs2, xs2, ys2);
-				rightPanel.repaint();
-				rightPanel.setBounds(width / 3, 0, 2 * width / 3, height);
-			}
 		}
-		BufferedImage img1 = null;
+		Image img1 = null;
+		Image scaledImg1 = null;
 		try {
 			img1 = ImageIO.read(this.getClass().getClassLoader()
 					.getResource("images/blackcarbon.jpg"));
+			scaledImg1 = img1.getScaledInstance(width / 3, height,
+					Image.SCALE_SMOOTH);
 		} catch (IOException e) {
 			System.err.println(e.getLocalizedMessage());
 		}
-		BufferedImage[] imgs = { img1 };
+		Image[] imgs = { img1 };
 		int[] xs = { 0 };
 		int[] ys = { 0 };
 
@@ -274,10 +231,7 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Lager alle knappene og plasserer dem i start posisjonene.
-	 * 
-	 * @param lp
-	 *            LayeredPane
+	 * Lager start knappene og plasserer dem i riktige posisjonenr.
 	 */
 	private void createButtons() {
 		int bw = width / 6;
@@ -316,10 +270,7 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Creates all the components to the login interface
-	 * 
-	 * @param lp
-	 *            LayeredPane
+	 * Lager alle komponeneter til login interfacet
 	 */
 
 	private void createLoginInterfaceComponents() {
@@ -343,10 +294,7 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Creates all the components to the register interface
-	 * 
-	 * @param lp
-	 *            LayeredPane
+	 * Lager alle komponeneter til registrering interfacet
 	 */
 
 	private void createRegisterInterfaceComponents() {
@@ -420,10 +368,7 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Creates all the components to the forgot interface
-	 * 
-	 * @param lp
-	 *            LayeredPane
+	 * Lager alle komponeneter til glemt passord interfacet
 	 */
 
 	private void createForgotInterfaceComponents() {
@@ -438,6 +383,10 @@ public class GUI extends JFrame {
 		// lp.add(emailLabel);
 		lp.add(emailField);
 	}
+
+	/**
+	 * Lager alle komponeneter til hovedmeny interfacet
+	 */
 
 	private void createMainInterfaceComponents() {
 		// TODO
@@ -471,6 +420,10 @@ public class GUI extends JFrame {
 		lp.add(homeButton);
 	}
 
+	/**
+	 * Lager alle komponeneter til s¿k etter sau interfacet
+	 */
+
 	private void createSearchInterfaceComponents() {
 		// TODO
 		int cw = width / 6;
@@ -494,6 +447,10 @@ public class GUI extends JFrame {
 		lp.add(searchField);
 		// lp.add(searchButton);
 	}
+
+	/**
+	 * Lager alle komponeneter til forandre saue informasjon interfacet
+	 */
 
 	private void createEditInterfaceComponents() {
 		// TODO
@@ -552,17 +509,25 @@ public class GUI extends JFrame {
 		lp.add(regretButton);
 	}
 
+	/**
+	 * Lager alle komponeneter til forandre saue informasjon interfacet
+	 */
+
 	int lastIndex = -1;
 	int firstIndex = -1;
 
 	private void createListInterfaceComponents() {
-		// TODO
 		int cw = width / 6;
 		int ch = 3 * height / 40;
 
-		sheepy = new MyButton(new JButton(), "DONT CLICK", "bluesheepicon");
-		sheepy.setBounds(width / 12, 20 * height / 200, cw, ch);
+		sheepy = new MyButton(new JButton(), "Sort by color", null);
+		sheepy.setBounds(width / 12, 20 * height / 200, cw / 2, ch);
 		sheepy.addActionListener(actionListener);
+
+		sheepyAttack = new MyButton(new JButton(), "Attack sheep", null);
+		sheepyAttack.setBounds(width / 12 + cw / 2, 20 * height / 200, cw / 2,
+				ch);
+		sheepyAttack.addActionListener(actionListener);
 
 		sheepListModel = new DefaultListModel();
 
@@ -576,17 +541,22 @@ public class GUI extends JFrame {
 				JList list = (JList) evt.getSource();
 				if (evt.getClickCount() == 2) {
 					int index = list.locationToIndex(evt.getPoint());
-					System.out.println(index);
 					Sheep s = null;
 					String id = ((String) sheepListModel.getElementAt(index))
-							.substring(0, 7);
-					System.out.println(id);
+							.split(" ")[0];
 					for (MySheepButton b : mySheepButtons) {
 						if (b.getSheep().getId() == (Integer.parseInt(id))) {
 							s = b.getSheep();
 						}
 					}
 					setLwEditSheep(s);
+					MyPoint p = null;
+					try {
+						p = getLocationPoint(s.getLocation().getPosition());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					myMap.zoomInOnSheep(p.getLatitude(), p.getLongitude());
 				} else if (evt.getClickCount() == 3) { // Triple-click
 					int index = list.locationToIndex(evt.getPoint());
 
@@ -601,7 +571,12 @@ public class GUI extends JFrame {
 
 		lp.add(sheepScrollPane);
 		lp.add(sheepy);
+		lp.add(sheepyAttack);
 	}
+
+	/**
+	 * Lager alle komponeneter til registrere sau interfacet
+	 */
 
 	private void createRegSheepInterfaceComponents() {
 		// TODO
@@ -642,7 +617,16 @@ public class GUI extends JFrame {
 		lp.add(regShepherdField);
 	}
 
-	// metode for ï¿½ fï¿½ ut et punkt fra en streng
+	/**
+	 * Prover Œ gjore om en gitt string til et objekt MyPoint
+	 * 
+	 * @param arg
+	 *            String
+	 * @return myPoint
+	 * @throws Exception
+	 *             mislykket omgjoring fra String til double
+	 */
+
 	private MyPoint getLocationPoint(String arg) throws Exception {
 		String[] list = arg.split(",");
 		try {
@@ -654,31 +638,17 @@ public class GUI extends JFrame {
 		return null;
 	}
 
+	/**
+	 * Legger til alle knappene over kartet, utifra brukerens liste over sauer.
+	 */
+
 	private void addMySheepButtons() {
 		mySheepButtons = new ArrayList<MySheepButton>();
 		ArrayList<Sheep> list = user.getSheepList();
-		int zoom = 15;
-		double numw = 0.0123 / 2;
-		double numh = 0.0275 / 2;
-
-		double nh = height / 2 / numh;
-		double nw = width / 3 / numw;
-		System.out.println("lengden pŒ sauelisten: " + list.size());
 		if (!list.isEmpty()) {
 			for (Sheep s : list) {
-				MyPoint p = null;
-				try {
-					p = getLocationPoint(s.getLocation().getPosition());
-					System.out
-							.println(p.getLatitude() + " " + p.getLongitude());
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				int x = (int) ((user.getLongitudeDouble() - p.getLongitude()) * nw);
-				int y = (int) ((user.getLatitudeDouble() - p.getLatitude()) * nh);
-
-				mySheepButtons.add(new MySheepButton(new JButton(), s, 2
-						* width / 3 - x, height / 2 + y, 10, this));
+				mySheepButtons.add(new MySheepButton(new JButton(), s, 0, 0,
+						10, this));
 			}
 			for (MySheepButton b : mySheepButtons) {
 				lp.add(b);
@@ -686,20 +656,24 @@ public class GUI extends JFrame {
 		}
 	}
 
-	public void updateSheepButtonPosition(int x, int y) {
-		for (MySheepButton b : mySheepButtons) {
-			Point p = b.getLocation();
-			b.setLocation(p.x - x, p.y - y);
-		}
-	}
-
+	/**
+	 * Endrer posisjonen til saueknappene pŒ kartet
+	 * 
+	 * @param lat
+	 *            hoydegraden til senter av kartet
+	 * @param lon
+	 *            breddegraden til senter av kartet
+	 * @param zoom
+	 *            verdien av zoom
+	 * @param x
+	 *            antall pixler alt skal flyttes i x retning
+	 * @param y
+	 *            antall pixler alt skal flyttes i y retning
+	 */
 	public void changeMySheepButtonBounds(double lat, double lon, int zoom,
-			int x, int y) {
+			int x, int y, int imageLength) {
 		double numw = 0.0275;
 		double numh = 0.0123;
-
-		double nh = height / numh;
-		double nw = 2 * width / 3 / numw;
 		for (MySheepButton b : mySheepButtons) {
 			MyPoint p = null;
 			try {
@@ -707,19 +681,25 @@ public class GUI extends JFrame {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			int dx = (int) ((lon - p.getLongitude()) * nw) - x - 400;
-			int dy = (int) ((lat - p.getLatitude()) * nh) - y + 250;
-
-			b.setLocation(2 * width / 3 - dx, height / 2 + dy);
-			if (zoom == 17) {
-				b.changeSize(20);
-			} else {
-				b.changeSize(10);
+			int dx = (int) (-(lon - p.getLongitude()) * imageLength / numw) - x;
+			int dy = (int) ((lat - p.getLatitude()) * imageLength / numh) - y;
+			if (b.getSheep().getId() == 495844
+					|| b.getSheep().getId() == 495850) {
+				System.out.println(x + "  " + y);
+				System.out
+						.println((-(lon - p.getLongitude()) * imageLength / numw)
+								+ "  "
+								+ ((lat - p.getLatitude()) * imageLength / numh));
 			}
+			b.setLocation(width / 3 + dx + imageLength / 2, dy + imageLength
+					/ 2);
 			b.repaint();
 		}
 	}
 
+	/**
+	 * Lager et objekt av kartet
+	 */
 	private void createMap() {
 		myMap = new MyMap(2 * width / 3, 85 * height / 100,
 				user.getLatitudeDouble(), user.getLongitudeDouble(), this);
@@ -727,6 +707,9 @@ public class GUI extends JFrame {
 		lp.add(myMap);
 	}
 
+	/**
+	 * Lager en nedre meny som brukes til Œ vise informasjonen til sauene
+	 */
 	private void createLowerPanel() {
 		try {
 			lwEditLabel = new JLabel() {
@@ -849,7 +832,8 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Sets together the different lists of components that are showing in the
+	 * Setter sammen de ulike listene av komponeneter for Œ enklere sette de
+	 * synlige og motsatt
 	 */
 	private void createComponentArrays() {
 
@@ -960,8 +944,8 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Metode for aa plassere de ulike komponentene bedre, for ï¿½ slippe mye av
-	 * den samme koden.
+	 * UFERDIG Metode for aa plassere de ulike komponentene bedre, for aa slippe
+	 * mye av den samme koden.
 	 * 
 	 * @param list
 	 */
@@ -993,13 +977,14 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Metode for ï¿½ bytte til start interface
+	 * Metode for aa bytte til start interface
 	 * 
 	 * @param bool
 	 *            true for synlig
 	 */
 	private void changeToStartInterface(Boolean bool) {
 		if (bool) {
+			// endrer posisjon til gitte knapper
 			loginButton.setBounds(width / 12, 6 * height / 20, width / 6,
 					height / 10);
 			registerButton.setBounds(width / 12, 9 * height / 20, width / 6,
@@ -1013,7 +998,7 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Metode for ï¿½ bytte til login interface
+	 * Metode for aa bytte til login interface
 	 * 
 	 * @param bool
 	 *            true for synlig
@@ -1023,6 +1008,7 @@ public class GUI extends JFrame {
 			c.setVisible(bool);
 		}
 		if (bool) {
+			// endrer posisjon til gitte knapper
 			loginButton.setBounds(width / 12, 85 * height / 200, width / 6,
 					3 * height / 40);
 			forgotButton.setBounds(width / 12, 105 * height / 200, width / 6,
@@ -1036,7 +1022,7 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Metode for ï¿½ bytte til register interface
+	 * Metode for aa bytte til register interface
 	 * 
 	 * @param bool
 	 *            true for synlig
@@ -1055,7 +1041,7 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Metode for ï¿½ bytte til forgot interface
+	 * Metode for aa bytte til forgot interface
 	 * 
 	 * @param bool
 	 *            true for synlig
@@ -1074,7 +1060,7 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Metode for ï¿½ bytte til main interface
+	 * Metode for aa bytte til main interface
 	 * 
 	 * @param bool
 	 *            true for synlig
@@ -1099,7 +1085,7 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Metode for ï¿½ bytte til search interface
+	 * Metode for aa bytte til search interface
 	 * 
 	 * @param bool
 	 *            true for synlig
@@ -1118,7 +1104,7 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Metode for ï¿½ bytte til edit interface
+	 * Metode for aa bytte til edit interface
 	 * 
 	 * @param bool
 	 *            true for synlig
@@ -1134,7 +1120,7 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Metode for ï¿½ bytte til list interface
+	 * Metode for aa bytte til list interface
 	 * 
 	 * @param bool
 	 *            true for synlig
@@ -1150,7 +1136,7 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Metode for ï¿½ bytte til register sheep interface
+	 * Metode for aa bytte til register sheep interface
 	 * 
 	 * @param bool
 	 *            true for synlig
@@ -1168,9 +1154,8 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Metode som prï¿½ver ï¿½ registrere bruker naar brukeren ber om det
+	 * Metode som prover aa registrere bruker naar brukeren ber om det
 	 */
-	// Henter informasjon fra tekst boksene og skriver dem ut.
 	private boolean registerUser() {
 		String firstName = regNameField.getText();
 		String lastName = regLNameField.getText();
@@ -1189,7 +1174,7 @@ public class GUI extends JFrame {
 		for (int i = 0; i < pw2.length; i++) {
 			password2 += pw2[i];
 		}
-		// Sjekker om passordene stemmer oversend
+		// Sjekker om passordene stemmer oversens
 		if (password.equals(password2)) {
 			try {
 				// Registrer bruker
@@ -1280,7 +1265,6 @@ public class GUI extends JFrame {
 		boolean sendmail = true;
 		if (sendmail) { // you know
 			if (emailField.getText() != null) {
-				// TODO finnes email, og sende og bytte passord.
 			}
 		}
 		return false;
@@ -1290,11 +1274,8 @@ public class GUI extends JFrame {
 	 * Metode der en kan endre paa saue informasjonen
 	 */
 	private Sheep editSheep() {
-		// editIdField.setText("" + editSheep.getId());
-		// editAgeField.setText("" + editSheep.getBirthyear());
-		// editWeightField.setText("" + editSheep.getWeight());
-		// editSexField.setText("" + editSheep.getGender());
-		// editShepherdField.setText("" + editSheep.getShepherd());
+		// TODO
+		// M FIKSE P EDIT SHEEP YE!
 		String id = lwEditIdField.getText();
 		String age = lwEditAgeField.getText();
 		String weight = lwEditWeightField.getText();
@@ -1305,7 +1286,8 @@ public class GUI extends JFrame {
 		String birthyear = lwEditBirthyearField.getText();
 
 		try {
-			// user.editSheep(owner, shepherd, weight);
+			user.editSheep(1337, "bernt", owner, shepherd, 'm',
+					Integer.parseInt(weight), Integer.parseInt(birthyear));
 		} catch (Exception e) {
 			System.out.println("something wrong!");
 			e.printStackTrace();
@@ -1386,7 +1368,7 @@ public class GUI extends JFrame {
 							.getLatitude());
 					double lon = Double.parseDouble(editSheep.getLocation()
 							.getLongitude());
-					changeMySheepButtonBounds(lat, lon, 15, 0, 0);
+					changeMySheepButtonBounds(lat, lon, 15, 0, 0, 1280);
 				} catch (Exception e) {
 					System.out.println("no internet");
 				}
@@ -1447,7 +1429,7 @@ public class GUI extends JFrame {
 	 * Setter inn informasjon fra en sau inn i lwEdit feltene.
 	 * 
 	 * @param s
-	 *            Gitt Sheep
+	 *            Sheep
 	 */
 
 	public void setLwEditSheep(Sheep s) {
@@ -1465,10 +1447,8 @@ public class GUI extends JFrame {
 			System.out.println(s.getLocation());
 			double lat = Double.parseDouble(s.getLocation().getLatitude());
 			double lon = Double.parseDouble(s.getLocation().getLongitude());
-			System.out.println(lat + "  " + lon);
-			myMap.changeToSheepImages(lat, lon);
-			changeMySheepButtonBounds(lat, lon, 15, 0, 0);
-
+			// System.out.println(lat + "  " + lon);
+			// myMap.changeToSheepImages(lat, lon);
 		}
 	}
 
@@ -1480,7 +1460,7 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Lager en FocusListener som lytter til naar en bruker trykker pï¿½
+	 * Lager en FocusListener som lytter til naar en bruker trykker aa
 	 * tekstbokser og forlater dem
 	 */
 
@@ -1499,7 +1479,7 @@ public class GUI extends JFrame {
 			@Override
 			public void focusLost(FocusEvent e) {
 				Component component = e.getComponent();
-
+				// sjekker om input i feltene stemmer og setter farge deretter
 				if (component instanceof JTextField) {
 					JTextField fc = (JTextField) component;
 					String name = fc.getName();
@@ -1629,6 +1609,7 @@ public class GUI extends JFrame {
 							} else {
 								// LEGGE TIL EN PASSORD MATCHER IKKE LABEL
 								// ELLERNO
+								// TODO
 								((MyBorder) regPwField2.getBorder())
 										.changeColor(invalid);
 								System.out.println("Password does not match!");
@@ -1642,7 +1623,7 @@ public class GUI extends JFrame {
 						}
 					} else if (name.equals("regIDField")) {
 						try {
-							// TODO metode for ï¿½ sjekke om ID field finnes.
+							// TODO metode for aa sjekke om ID field finnes.
 							input = "1337";// regIDField.getID();
 							if (Integer.parseInt(input) >= 0) {
 								((MyBorder) regIDField.getBorder())
@@ -1702,6 +1683,7 @@ public class GUI extends JFrame {
 						}
 					} else if (name.equals("searchField")) {
 						// mmmh
+						// TODO
 					}
 				}
 			}
@@ -1710,14 +1692,12 @@ public class GUI extends JFrame {
 
 	/**
 	 * Egen version av ActionListener klasse som haandterer knappetrykking og
-	 * naar "enter" blir trykket pï¿½ mens i en tekst boks
+	 * naar "enter" blir trykket paa mens en tekst boks er aktivert.
 	 * 
 	 * @author andreas
 	 * 
 	 */
 	private class MyListener implements ActionListener {
-		// bruke setActionCommand pï¿½ alt som skal lyttes pï¿½ og bruke det
-		// istedenfor navn?
 		private int delete = 0;
 
 		@Override
@@ -1771,9 +1751,7 @@ public class GUI extends JFrame {
 						changeToSearchInterface(false);
 						changeToMainInterface(true);
 						regretButton.setVisible(false);
-						changeMySheepButtonBounds(user.getLatitudeDouble(),
-								user.getLongitudeDouble(), 15, 0, 0);
-						myMap.bigMap();
+						// TODO Tilbake
 					} else if (state == EDIT) {
 						changeToEditInterface(false);
 						changeToMainInterface(true);
@@ -1932,8 +1910,6 @@ public class GUI extends JFrame {
 
 	}
 
-	// Lytter for ï¿½ hï¿½ndtere tid. Til komponenter som skal flyttes over tid.
-	// Animasjoner!
 	/**
 	 * A class that handles time. Can be used for animations.
 	 * 
@@ -1999,6 +1975,7 @@ public class GUI extends JFrame {
 
 	// list components
 	private JButton sheepy;
+	private JButton sheepyAttack;
 	private DefaultListModel sheepListModel;
 	private JList sheepList;
 	private JScrollPane sheepScrollPane;
@@ -2027,7 +2004,6 @@ public class GUI extends JFrame {
 	private JTextField lwEditBirthyearField;
 
 	private JLabel lwEditIdLabel;
-	private JLabel lwEditAgeLabel;
 	private JLabel lwEditWeightLabel;
 	private JLabel lwEditOwnerLabel;
 	private JLabel lwEditShepherdLabel;

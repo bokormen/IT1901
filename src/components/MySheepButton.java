@@ -24,7 +24,7 @@ public class MySheepButton extends JButton implements MouseListener {
 	private MyBorder border;
 	private int diameter;
 	private Sheep sheep;
-	private Color color = Color.red;
+	private Color color = Color.WHITE;
 	private GUI gui;
 
 	private int buttonCount = 0;
@@ -34,7 +34,8 @@ public class MySheepButton extends JButton implements MouseListener {
 
 	private Timer timer = new Timer(1000, new TimerListener());
 
-	public MySheepButton(JButton jb, Sheep sheep, int x, int y, int diameter, GUI gui) {
+	public MySheepButton(JButton jb, Sheep sheep, int x, int y, int diameter,
+			GUI gui) {
 		this.jb = jb;
 		this.setVisible(true);
 		this.diameter = diameter;
@@ -46,7 +47,7 @@ public class MySheepButton extends JButton implements MouseListener {
 		this.setContentAreaFilled(false);
 
 		this.border = new MyBorder(80);
-		border.setColor(Color.RED);
+		border.setColor(Color.BLACK);
 
 		this.setBorder(border);
 		this.dummyInsets = border.getBorderInsets(jb);
@@ -66,7 +67,7 @@ public class MySheepButton extends JButton implements MouseListener {
 
 	public void setColor(Color color) {
 		this.color = color;
-		this.border.setColor(color);
+		// this.border.setColor(color);
 		repaint();
 	}
 
@@ -75,20 +76,23 @@ public class MySheepButton extends JButton implements MouseListener {
 		Graphics2D g2d = (Graphics2D) g;
 		Ellipse2D.Double circle = new Ellipse2D.Double(0, 0, diameter, diameter);
 		g2d.setColor(color);
-		// g2d.translate(-diameter / 2, -diameter / 2);
 		g2d.fill(circle);
-		// g2d.translate(diameter / 2, diameter / 2);
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-		this.color = Color.yellow;
 		gui.setLwEditSheep(this.sheep);
-		repaint();
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
+		this.color = Color.YELLOW;
+		repaint();
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
 		if (!color.equals(Color.yellow)) {
 			this.color = Color.BLACK;
 			border.changeColor(Color.BLACK);
@@ -97,17 +101,8 @@ public class MySheepButton extends JButton implements MouseListener {
 	}
 
 	@Override
-	public void mouseExited(MouseEvent arg0) {
-		if (!color.equals(Color.yellow)) {
-			this.color = Color.RED;
-			border.changeColor(Color.RED);
-			repaint();
-		}
-	}
-
-	@Override
 	public void mousePressed(MouseEvent arg0) {
-		System.out.println(this.sheep.getId());
+		// System.out.println(this.sheep.getId());
 		// System.out.println(this.sheep.getLocation());
 		timer.start();
 		if (buttonCount == 1) {
@@ -140,8 +135,10 @@ public class MySheepButton extends JButton implements MouseListener {
 	public String toString() {
 		int id = sheep.getId();
 
-		String lat = String.format("%.4g%n", Double.parseDouble(sheep.getLocation().getLatitude()));
-		String lon = String.format("%.4g%n", Double.parseDouble(sheep.getLocation().getLongitude()));
+		String lat = String.format("%.4g%n",
+				Double.parseDouble(sheep.getLocation().getLatitude()));
+		String lon = String.format("%.4g%n",
+				Double.parseDouble(sheep.getLocation().getLongitude()));
 
 		return id + " - " + lat + "," + lon;
 	}
