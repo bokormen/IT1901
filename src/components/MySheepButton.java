@@ -130,9 +130,10 @@ public class MySheepButton extends JButton implements MouseListener {
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
-		this.color = Color.BLUE;
-		repaint();
-
+		if (!color.equals(Color.RED)) {
+			this.color = Color.BLUE;
+			repaint();
+		}
 	}
 
 	@Override
