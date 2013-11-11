@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -49,7 +48,7 @@ import div.User;
 import div.UserRegistration;
 
 /**
- * Klasse som lager GUI
+ * Klasse som setter sammen GUI
  * 
  * @author andreas
  * 
@@ -77,6 +76,8 @@ public class GUI extends JFrame {
 	private User tUser = new User(); // test bruker
 	private Sheep tSheep = new Sheep();
 	private Sheep editSheep;
+	private MySheepButton listSelected;
+
 	private MySheepButton editSheepButton;
 
 	public static int START = 0, LOGIN = 1, REG = 2, FORGOT = 3, MAIN = 4,
@@ -539,26 +540,26 @@ public class GUI extends JFrame {
 		sheepList.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent evt) {
 				JList list = (JList) evt.getSource();
-				if (evt.getClickCount() == 2) {
-					int index = list.locationToIndex(evt.getPoint());
-					Sheep s = null;
-					String id = ((String) sheepListModel.getElementAt(index))
-							.split(" ")[0];
-					for (MySheepButton b : mySheepButtons) {
-						if (b.getSheep().getId() == (Integer.parseInt(id))) {
-							s = b.getSheep();
-						}
+				int index = list.locationToIndex(evt.getPoint());
+				Sheep s = null;
+				String id = ((String) sheepListModel.getElementAt(index))
+						.split(" ")[0];
+				for (MySheepButton b : mySheepButtons) {
+					if (b.getSheep().getId() == (Integer.parseInt(id))) {
+						s = b.getSheep();
+						listSelected = b;
 					}
-					setLwEditSheep(s);
+				}
+				if (evt.getClickCount() == 2) {
 					MyPoint p = null;
 					try {
 						p = getLocationPoint(s.getLocation().getPosition());
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					myMap.zoomInOnSheep(p.getLatitude(), p.getLongitude());
+					myMap.centerInOnSheep(p.getLatitude(), p.getLongitude());
 				} else if (evt.getClickCount() == 3) { // Triple-click
-					int index = list.locationToIndex(evt.getPoint());
+					index = list.locationToIndex(evt.getPoint());
 
 				}
 			}
@@ -569,9 +570,13 @@ public class GUI extends JFrame {
 				ch * 6);
 		sheepScrollPane.setVisible(false);
 
+		listInfo = new MyLabel(new JLabel(), "", null);
+		listInfo.setBounds(width / 24, 40 * height / 200, cw, ch);
+
 		lp.add(sheepScrollPane);
 		lp.add(sheepy);
 		lp.add(sheepyAttack);
+		lp.add(listInfo);
 	}
 
 	/**
@@ -683,14 +688,7 @@ public class GUI extends JFrame {
 			}
 			int dx = (int) (-(lon - p.getLongitude()) * imageLength / numw) - x;
 			int dy = (int) ((lat - p.getLatitude()) * imageLength / numh) - y;
-			if (b.getSheep().getId() == 495844
-					|| b.getSheep().getId() == 495850) {
-				System.out.println(x + "  " + y);
-				System.out
-						.println((-(lon - p.getLongitude()) * imageLength / numw)
-								+ "  "
-								+ ((lat - p.getLatitude()) * imageLength / numh));
-			}
+
 			b.setLocation(width / 3 + dx + imageLength / 2, dy + imageLength
 					/ 2);
 			b.repaint();
@@ -735,10 +733,6 @@ public class GUI extends JFrame {
 					5 * cw / 8, ch);
 			lwEditIdField.setEditable(false);
 
-			// lwEditAgeField = new MyTextField(new JTextField(), null, "");
-			// lwEditAgeField.setBounds(24 * width / 60, 9 * height / 10, cw /
-			// 2, ch);
-
 			lwEditWeightField = new MyTextField(new JTextField(), null, "");
 			lwEditWeightField.setBounds(24 * width / 60, 9 * height / 10,
 					cw / 2, ch);
@@ -766,10 +760,6 @@ public class GUI extends JFrame {
 			lwEditIdLabel = new MyLabel(new JLabel(), "ID:", null);
 			lwEditIdLabel.setBounds(41 * width / 120, 85 * height / 100,
 					5 * cw / 8, ch);
-
-			// lwEditAgeLabel = new MyLabel(new JLabel(), "Age:", null);
-			// lwEditAgeLabel.setBounds(24 * width / 60, 85 * height / 100, cw /
-			// 2, ch);
 
 			lwEditWeightLabel = new MyLabel(new JLabel(), "Weight:", null);
 			lwEditWeightLabel.setBounds(24 * width / 60, 85 * height / 100,
@@ -808,7 +798,6 @@ public class GUI extends JFrame {
 
 			lp.add(lwEditButton);
 			lp.add(lwEditIdField);
-			// lp.add(lwEditAgeField);
 			lp.add(lwEditWeightField);
 			lp.add(lwEditOwnerField);
 			lp.add(lwEditShepherdField);
@@ -817,7 +806,6 @@ public class GUI extends JFrame {
 			lp.add(lwEditBirthyearField);
 
 			lp.add(lwEditIdLabel);
-			// lp.add(lwEditAgeLabel);
 			lp.add(lwEditWeightLabel);
 			lp.add(lwEditOwnerLabel);
 			lp.add(lwEditShepherdLabel);
@@ -897,7 +885,9 @@ public class GUI extends JFrame {
 
 		listComps = new ArrayList<JComponent>();
 		listComps.add(sheepy);
+		listComps.add(sheepyAttack);
 		listComps.add(sheepScrollPane);
+		listComps.add(listInfo);
 		listComps.add(backButton);
 		listComps.add(exitButton);
 
@@ -1363,7 +1353,7 @@ public class GUI extends JFrame {
 				try {
 					myMap = new MyMap(2 * width / 3, 85 * height / 100,
 							latitude, longitude, this);
-					myMap.zoomInOnSheep(latitude, longitude);
+					myMap.centerInOnSheep(latitude, longitude);
 					double lat = Double.parseDouble(editSheep.getLocation()
 							.getLatitude());
 					double lon = Double.parseDouble(editSheep.getLocation()
@@ -1447,8 +1437,7 @@ public class GUI extends JFrame {
 			System.out.println(s.getLocation());
 			double lat = Double.parseDouble(s.getLocation().getLatitude());
 			double lon = Double.parseDouble(s.getLocation().getLongitude());
-			// System.out.println(lat + "  " + lon);
-			// myMap.changeToSheepImages(lat, lon);
+			myMap.centerInOnSheep(lat, lon);
 		}
 	}
 
@@ -1854,9 +1843,19 @@ public class GUI extends JFrame {
 					} else {
 						changeMySheepButtonColors(5);
 					}
+				} else if (text.equals("Attack sheep")) {
+					if (listSelected != null) {
+						System.out.println(listSelected.getSheep().getId());
+						for (MySheepButton b : mySheepButtons) {
+							if (b.equals(listSelected)) {
+								b.attackSheep(true);
+							}
+						}
+					} else {
+						listInfo.setText("Select a sheep.");
+					}
 				}
 			} else if (arg.getSource() instanceof JTextField) {
-				// System.out.println(((JTextField) arg.getSource()).getName());
 				JTextField pressed = (JTextField) arg.getSource();
 				String text = pressed.getName();
 				// Register user
@@ -1979,6 +1978,7 @@ public class GUI extends JFrame {
 	private DefaultListModel sheepListModel;
 	private JList sheepList;
 	private JScrollPane sheepScrollPane;
+	private JLabel listInfo;
 
 	// register sheep components
 	private JTextField regIDField;

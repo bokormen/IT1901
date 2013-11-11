@@ -22,6 +22,9 @@ public class MyBorder extends AbstractBorder {
 		g2.drawRoundRect(x, y, width - 1, height - 1, arc, arc);
 	}
 
+	/**
+	 * Endrer farge fra hvit til blaa, og fra blaa til hvit
+	 */
 	public void changeTargetColor() {
 		if (color.equals(Color.WHITE)) {
 			color = Color.BLUE;
@@ -30,12 +33,20 @@ public class MyBorder extends AbstractBorder {
 		}
 	}
 
+	/**
+	 * 
+	 * @param color
+	 */
 	public void changeColor(Color color) {
 		if (!this.color.equals(Color.GREEN) || !this.color.equals(Color.RED)) {
 			this.color = color;
 		}
 	}
 
+	/**
+	 * 
+	 * @param color
+	 */
 	public void setColor(Color color) {
 		this.color = color;
 	}
