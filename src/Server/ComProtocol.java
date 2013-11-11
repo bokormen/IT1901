@@ -318,16 +318,16 @@ public class ComProtocol {
             state = WAIT;
 
         //venter paa input for aa angripe sheep
-        //input: "email||id||position"
-        //exempel: "frodo@hotail.com||1337||63,10"
+        //input: "id||position"
+        //exempel: "1337||63,10"
         } else if (state == ATTACKSHEEP) {
 
             if (theInput != null) {
 
-                String[] temp = theInput.split("\\|\\|"); //splitter input ved ||
-                if (temp.length == 3) {
-                    SheepAttackMail.sendMail(temp[0], Integer.parseInt(temp[1]), temp[2]);
-                    log.addEntry(ClientIP + "[" + UserName + "] Sheep: " + temp[1] + " under attack.");
+                if (theInput != null) {
+                    Sheep s = DatabaseConnector.findSheep(theInput, "1");
+                    SheepAttackMail.sendMail(s.getOwner(), s.getId(), s.getLocation().getPosition());
+                    log.addEntry(ClientIP + "[" + UserName + "] Sheep: " + theInput + " under attack.");
                     theOutput = "attacksheep success";
                 } else {
                     theOutput = "attacksheep bad input";
