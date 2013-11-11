@@ -1,7 +1,9 @@
 package div;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import database.DatabaseConnector;
 
@@ -23,7 +25,7 @@ public class SheepRegistration implements Serializable {
 	 * Registrerer en sau i databasen med navn, fodselsar, vekt, kjonn, eier og gjeter. 
 	 */
 	public int registerSheep(String name, int birthyear, int weight, char gender,
-			String owner, String shepherd) throws Exception {
+			String owner, String shepherd, String latitude, String longitude) throws Exception {
 
 		// Lager en foresp0rsel til server.
 		// retiningslinjer for kommunikasjon med server vil til en hver tid
@@ -43,7 +45,11 @@ public class SheepRegistration implements Serializable {
 			throw new Exception((String) serverRespons);
 		}
 		
-		sheepList.add(new Sheep(id, name, birthyear, weight, gender, owner, shepherd));
+		String timeStamp = new SimpleDateFormat("yyyy/MM/dd/HH-mm-ss").format(Calendar.getInstance().getTime());
+		
+		Sheep tempSheep = new Sheep(id, name, birthyear, weight, gender, owner, shepherd);
+		tempSheep.newLocation(latitude + "," + longitude, timeStamp );
+		sheepList.add(tempSheep);
 		
 		return id;
 		

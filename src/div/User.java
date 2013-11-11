@@ -206,7 +206,7 @@ public class User implements Serializable {
 			String gender, String owner, String shepherd)
 			throws NumberFormatException, Exception {
 		sheepReg.registerSheep(name, Integer.parseInt(age),
-				Integer.parseInt(weight), gender.charAt(0), owner, shepherd);
+				Integer.parseInt(weight), gender.charAt(0), owner, shepherd, latitude, longitude);
 	}
 	
 	public void editSheep(int id, String name, String owner, String shepherd, char gender, int weight, int birthyear) throws Exception {
