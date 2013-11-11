@@ -144,9 +144,9 @@ public class MyMap extends JPanel implements MouseListener,
 	private void resetZoom() {
 		this.dx = 0;
 		this.dy = 0;
-		if(!images.isEmpty()) {
-			for(MyImage i : images) {
-				
+		if (!images.isEmpty()) {
+			for (MyImage i : images) {
+
 			}
 		}
 	}
@@ -268,7 +268,6 @@ public class MyMap extends JPanel implements MouseListener,
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-
 	}
 
 	@Override

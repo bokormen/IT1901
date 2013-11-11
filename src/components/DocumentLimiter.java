@@ -12,7 +12,11 @@ public class DocumentLimiter extends PlainDocument {
 		this.limit = limit;
 	}
 
-	public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
+	/**
+	 * Metode som ordner opp i strengen hvis den er for lang
+	 */
+	public void insertString(int offset, String str, AttributeSet attr)
+			throws BadLocationException {
 		if (str == null)
 			return;
 

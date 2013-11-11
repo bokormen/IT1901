@@ -124,7 +124,8 @@ public class MySheepButton extends JButton implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-
+		this.gui.setLwEditSheep(this.sheep);
+		this.gui.setListSelection(this.sheep);
 	}
 
 	@Override
@@ -144,8 +145,6 @@ public class MySheepButton extends JButton implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		// System.out.println(this.sheep.getId());
-		// System.out.println(this.sheep.getLocation());
 		timer.start();
 		if (buttonCount == 1) {
 			gui.setLwEditSheep(this.sheep);
