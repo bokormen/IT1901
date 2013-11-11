@@ -318,19 +318,19 @@ public class ComProtocol {
             state = WAIT;
 
         //venter paa input for aa angripe sheep
-        //input: "id||position"
-        //exempel: "1337||63,10"
+        //input: "id"
+        //exempel: "1337"
         } else if (state == ATTACKSHEEP) {
 
             if (theInput != null) {
 
-                if (theInput != null) {
-                    Sheep s = DatabaseConnector.findSheep(theInput, "1");
+                if (isLoggedIn) {
+                    Sheep s = DatabaseConnector.findSheep(UserName, theInput);
                     SheepAttackMail.sendMail(s.getOwner(), s.getId(), s.getLocation().getPosition());
                     log.addEntry(ClientIP + "[" + UserName + "] Sheep: " + theInput + " under attack.");
                     theOutput = "attacksheep success";
                 } else {
-                    theOutput = "attacksheep bad input";
+                    theOutput = "attacksheep no login";
                 }
             } else {
                 theOutput = "attacksheep null input";
