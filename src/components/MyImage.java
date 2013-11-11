@@ -11,7 +11,7 @@ public class MyImage {
 	protected int x;
 	protected int y;
 
-	public MyImage(int x, int y, double lat, double lon) {
+	public MyImage(int x, int y, double lat, double lon) throws Exception {
 		// 63.43,10.39 0.0123, 0.0275
 		// 58.43,15.39 0.0143, 0.0275
 		// 53.43,15.39 0.0163
@@ -31,9 +31,11 @@ public class MyImage {
 	 * @param longitude
 	 *            lengdegraden til senterpunktet
 	 * @return img BufferedImage
+	 * @throws Exception
 	 */
 
-	private BufferedImage getGoogleImage(double latitude, double longitude) {
+	private BufferedImage getGoogleImage(double latitude, double longitude)
+			throws Exception {
 		// System.out.println(latitude+" " + longitude);
 		BufferedImage img = (BufferedImage) (GoogleStaticMap.getImage(latitude,
 				longitude, 15, 640, 640, 2));

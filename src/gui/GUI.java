@@ -172,8 +172,13 @@ public class GUI extends JFrame {
 	}
 
 	private BufferedImage getGoogleImage(double latitude, double longitude) {
-		BufferedImage img = (BufferedImage) (GoogleStaticMap.getImage(latitude,
-				longitude, 12, 2 * width / 3, height, 1));
+		BufferedImage img = null;
+		try {
+			img = (BufferedImage) (GoogleStaticMap.getImage(latitude,
+					longitude, 12, 2 * width / 3, height, 1));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return img;
 	}
 
@@ -419,12 +424,16 @@ public class GUI extends JFrame {
 		homeButton.setBounds(width / 12, 110 * height / 200, cw, ch);
 		homeButton.addActionListener(actionListener);
 
+		mainInfoLabel = new MyLabel(new JLabel(), "", null);
+		mainInfoLabel.setBounds(width / 12, 15 * height / 200, cw, ch);
+
 		lp.add(sheepRegButton);
 		lp.add(listButton);
 		lp.add(searchButton);
 		lp.add(logButton);
 		lp.add(editButton);
 		lp.add(homeButton);
+		lp.add(mainInfoLabel);
 	}
 
 	/**
@@ -594,10 +603,11 @@ public class GUI extends JFrame {
 		// TODO
 		int cw = width / 6;
 		int ch = 3 * height / 40;
-		regIDField = new MyTextField(new JTextField(), "bluesheepicon", "ID");
-		regIDField.setBounds(width / 12, 25 * height / 200, cw, ch);
-		regIDField.addFocusListener(focusListener);
-		regIDField.setName("regIDField");
+		regSheepNameField = new MyTextField(new JTextField(), "bluesheepicon",
+				"Name");
+		regSheepNameField.setBounds(width / 12, 25 * height / 200, cw, ch);
+		regSheepNameField.addFocusListener(focusListener);
+		regSheepNameField.setName("regSheepNameField");
 
 		regAgeField = new MyTextField(new JTextField(), "bluesheepicon",
 				"Birthyear");
@@ -622,7 +632,7 @@ public class GUI extends JFrame {
 		regShepherdField.addFocusListener(focusListener);
 		regShepherdField.setName("regShepherdField");
 
-		lp.add(regIDField);
+		lp.add(regSheepNameField);
 		lp.add(regAgeField);
 		lp.add(regWeightField);
 		lp.add(regSexField);
@@ -933,6 +943,7 @@ public class GUI extends JFrame {
 		mainComps.add(searchButton);
 		mainComps.add(logButton);
 		mainComps.add(homeButton);
+		mainComps.add(mainInfoLabel);
 		mainComps.add(backButton);
 		mainComps.add(exitButton);
 
@@ -963,7 +974,7 @@ public class GUI extends JFrame {
 		listComps.add(exitButton);
 
 		regSheepComps = new ArrayList<JComponent>();
-		regSheepComps.add(regIDField);
+		regSheepComps.add(regSheepNameField);
 		regSheepComps.add(regAgeField);
 		regSheepComps.add(regWeightField);
 		regSheepComps.add(regSexField);
@@ -1179,6 +1190,7 @@ public class GUI extends JFrame {
 	 */
 	private void changeToLogInterface(boolean bool) {
 		if (bool) {
+			backButton.setText("Back");
 			state = LOG;
 		}
 		for (Component c : logComps) {
@@ -1355,7 +1367,7 @@ public class GUI extends JFrame {
 	 * @return true Hvis sau er blitt registrert
 	 */
 	private boolean registerSheep() {
-		String id = regIDField.getText();
+		String id = regNameField.getText();
 		String age = regAgeField.getText();
 		String weight = regWeightField.getText();
 		String gender = regSexField.getText();
@@ -1364,10 +1376,24 @@ public class GUI extends JFrame {
 		try {
 			user.registerSheep(id, age, weight, gender, user.getEmail(),
 					shepherd);
+
 			mySheepButtons.clear();
 			addMySheepButtons();
 			sheepListModel.clear();
 			updateSheepList();
+			myMap.repaint();
+
+			regSheepNameField.setText("");
+			regAgeField.setText("");
+			regWeightField.setText("");
+			regSexField.setText("");
+			regShepherdField.setText("");
+
+			mainInfoLabel.setText("Sheep registred with ID: "
+					+ user.getSheepList().get(user.getSheepList().size() - 1)
+							.getId());
+			changeToRegSheepInterface(false);
+			changeToMainInterface(true);
 			return true;
 		} catch (NumberFormatException e) {
 			System.out.println("hey wrong");
@@ -1418,11 +1444,12 @@ public class GUI extends JFrame {
 				double longitude = Double.parseDouble(sheep.getLocation()
 						.getLongitude());
 				editSheep = sheep;
+				setLwEditSheep(sheep);
 				myMap.centerInOnSheep(latitude, longitude);
 
 				editButton.setVisible(true);
 			} else {
-				// kan ikke finne sheep, vise fram p� en m�te
+				// kan ikke finne sheep, vise fram paa en maate
 				searchButton.setBounds(width / 12, 95 * height / 200,
 						width / 6, 3 * height / 40);
 				searchLabel.setText("No sheep by that ID, (" + input + ").");
@@ -1456,19 +1483,7 @@ public class GUI extends JFrame {
 			}
 		} else if (num == 2) {
 			for (MySheepButton b : mySheepButtons) {
-				b.setColor(Color.RED);
-			}
-		} else if (num == 3) {
-			for (MySheepButton b : mySheepButtons) {
-				b.setColor(Color.GREEN);
-			}
-		} else if (num == 4) {
-			for (MySheepButton b : mySheepButtons) {
-				b.setColor(Color.CYAN);
-			}
-		} else if (num == 5) {
-			for (MySheepButton b : mySheepButtons) {
-				b.setColor(Color.PINK);
+				b.setColor(Color.WHITE);
 			}
 		}
 	}
@@ -1518,7 +1533,7 @@ public class GUI extends JFrame {
 	}
 
 	private void updateLogList() {
-		
+
 	}
 
 	/**
@@ -1603,7 +1618,6 @@ public class GUI extends JFrame {
 								tUser.setLatitude(input);
 								((MyBorder) regLatitudeField.getBorder())
 										.changeColor(valid);
-								System.out.println("hore");
 								if (((MyBorder) regLongitudeField.getBorder())
 										.getColor().equals(valid)) {
 									updateRightPanelMap(
@@ -1683,19 +1697,19 @@ public class GUI extends JFrame {
 							((MyBorder) regPwField2.getBorder())
 									.changeColor(invalid);
 						}
-					} else if (name.equals("regIDField")) {
+					} else if (name.equals("regSheepNameField")) {
 						try {
 							// TODO metode for aa sjekke om ID field finnes.
-							input = "1337";// regIDField.getID();
+							input = "1337";// regSheepNameField.getID();
 							if (Integer.parseInt(input) >= 0) {
-								((MyBorder) regIDField.getBorder())
+								((MyBorder) regSheepNameField.getBorder())
 										.changeColor(valid);
 							} else {
-								((MyBorder) regIDField.getBorder())
+								((MyBorder) regSheepNameField.getBorder())
 										.changeColor(invalid);
 							}
 						} catch (Exception exc) {
-							((MyBorder) regIDField.getBorder())
+							((MyBorder) regSheepNameField.getBorder())
 									.changeColor(invalid);
 						}
 					} else if (name.equals("regAgeField")) {
@@ -1909,18 +1923,12 @@ public class GUI extends JFrame {
 					clearAllButton.setBounds(width / 12, 110 * height / 200,
 							width / 6, 3 * height / 40);
 					regretButton.setVisible(false);
-				} else if (text.equals("DONT CLICK")) {
+				} else if (text.equals("Sort by color")) {
 					delete++;
-					if (delete % 4 == 1) {
+					if (delete % 2 == 0) {
 						changeMySheepButtonColors(1);
-					} else if (delete % 4 == 2) {
+					} else if (delete % 2 == 1) {
 						changeMySheepButtonColors(2);
-					} else if (delete % 4 == 2) {
-						changeMySheepButtonColors(3);
-					} else if (delete % 4 == 3) {
-						changeMySheepButtonColors(4);
-					} else {
-						changeMySheepButtonColors(5);
 					}
 				} else if (text.equals("Attack sheep")) {
 					if (listSelected != null) {
@@ -2029,6 +2037,7 @@ public class GUI extends JFrame {
 	private JButton editButton;
 	private JButton logButton;
 	private JButton homeButton;
+	private JLabel mainInfoLabel;
 	private MyMap myMap;
 
 	// search components
@@ -2054,7 +2063,7 @@ public class GUI extends JFrame {
 	private JLabel listInfo;
 
 	// register sheep components
-	private JTextField regIDField;
+	private JTextField regSheepNameField;
 	private JTextField regAgeField;
 	private JTextField regWeightField;
 	private JTextField regSexField;

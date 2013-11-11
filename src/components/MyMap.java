@@ -74,11 +74,16 @@ public class MyMap extends JPanel implements MouseListener,
 			this.setVisible(false);
 		} else {
 			this.setVisible(true);
-			images.add(new MyImage(0, 0, latitude, longitude));
-			images.add(new MyImage(-1, 0, latitude, longitude));
-			images.add(new MyImage(0, 1, latitude, longitude));
-			images.add(new MyImage(1, 0, latitude, longitude));
-			images.add(new MyImage(0, -1, latitude, longitude));
+			try {
+				images.add(new MyImage(0, 0, latitude, longitude));
+				images.add(new MyImage(-1, 0, latitude, longitude));
+				images.add(new MyImage(0, 1, latitude, longitude));
+				images.add(new MyImage(1, 0, latitude, longitude));
+				images.add(new MyImage(0, -1, latitude, longitude));
+			} catch (Exception e) {
+				System.err.println("Kunne ikke laste inn google bilder");
+				this.setVisible(false);
+			}
 			changesMade = true;
 			repaint();
 		}
@@ -94,12 +99,20 @@ public class MyMap extends JPanel implements MouseListener,
 		for (int i = 0; i < Math.sqrt(Math.pow(
 				((dx - (x + 250)) % imageLength / 2), 2)); i += imageLength / 2) {
 			dx += imageLength / 2;
-			updateMap();
+			try {
+				updateMap();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		for (int i = 0; i < Math.sqrt(Math.pow(
 				((dy - (y + 390)) % imageLength / 2), 2)); i += imageLength / 2) {
 			dy += imageLength / 2;
-			updateMap();
+			try {
+				updateMap();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		this.dx = x + 250 * imageLength / 1280;
@@ -110,7 +123,11 @@ public class MyMap extends JPanel implements MouseListener,
 	public void bigMap() {
 		this.dx = 0;
 		this.dy = 0;
-		updateMap();
+		try {
+			updateMap();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		repaint();
 	}
 
@@ -136,7 +153,11 @@ public class MyMap extends JPanel implements MouseListener,
 				}
 				updateImageLength(images.get(0).getImage().getHeight(this));
 			}
-			updateMap();
+			try {
+				updateMap();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			repaint();
 		}
 	}
@@ -194,7 +215,7 @@ public class MyMap extends JPanel implements MouseListener,
 		return true;
 	}
 
-	private void updateMap() {
+	private void updateMap() throws Exception {
 		double percent = 1280 / -imageLength;
 		if (dx < wi * -imageLength) {
 			if (wi > wj) {
@@ -285,7 +306,11 @@ public class MyMap extends JPanel implements MouseListener,
 			changesMade = true;
 			this.dx += (int) (old.getX() - e.getX());
 			this.dy += (int) (old.getY() - e.getY());
-			updateMap();
+			try {
+				updateMap();
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
 			repaint();
 		}
 		old = e.getPoint();

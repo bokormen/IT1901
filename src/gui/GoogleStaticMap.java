@@ -19,20 +19,14 @@ public class GoogleStaticMap {
 	 * @return img BufferedImage
 	 */
 
-	private static BufferedImage readURL(String url) {
+	private static BufferedImage readURL(String url) throws Exception {
 		BufferedImage img = null;
-		try {
-			img = ImageIO.read(new URL(url));
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.out.println(img.getType());
+		img = ImageIO.read(new URL(url));
 		return img;
 	}
 
-	private static String createURL(double latitude, double longitude, int zoom, int width, int height, int scale) {
+	private static String createURL(double latitude, double longitude,
+			int zoom, int width, int height, int scale) {
 		String url = "http://maps.googleapis.com/maps/api/staticmap?";
 		url += "center=" + latitude + "," + longitude;
 		url += "&zoom=" + zoom;
@@ -40,7 +34,7 @@ public class GoogleStaticMap {
 		url += "&scale=" + scale;
 		url += "&sensor=false";
 		url += "&style=feature:all|element:labels|visibility:off";
-		System.out.println(url);
+		// System.out.println(url);
 		return url;
 	}
 
@@ -63,8 +57,10 @@ public class GoogleStaticMap {
 	 * @see createUrl
 	 */
 
-	public static Image getImage(double latitude, double longitude, int zoom, int width, int height, int scale) {
-		Image img = readURL(createURL(latitude, longitude, zoom, width, height, scale));
+	public static Image getImage(double latitude, double longitude, int zoom,
+			int width, int height, int scale) throws Exception {
+		Image img = readURL(createURL(latitude, longitude, zoom, width, height,
+				scale));
 		return img;
 	}
 }
