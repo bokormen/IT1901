@@ -38,6 +38,7 @@ public class ComProtocol {
     private static final int GETOWNEDSHEEP = 3004;
     private static final int CHANGESHEEP = 3005;
     private static final int ATTACKSHEEP = 3006;
+    private static final int GETSHEEPLOG = 3007;
 
     private static final int TESTING = 9999;
 
@@ -112,6 +113,10 @@ public class ComProtocol {
 
             } else if (theInput.equals("attacksheep")) { //bruker vil forandre paa en sau
                 state = ATTACKSHEEP;
+                theOutput = "done";
+
+            } else if (theInput.equals("getsheeplog")) { //bruker vil ha log over posisjonene til en sau
+                state = GETSHEEPLOG;
                 theOutput = "done";
                 
                 
@@ -334,6 +339,32 @@ public class ComProtocol {
             state = WAIT;
 
 
+        //venter paa input for aa faa hente saue log
+        //input: "id||mengde"
+        //eksempel: "12345||200"
+        } else if (state == GETSHEEPLOG) {
+
+            if (theInput != null) {
+                if (isLoggedIn) {
+                    String[] temp = theInput.split("\\|\\|"); //splitter input ved ||
+                    if (temp.length == 2) {
+                        sendObject(DatabaseConnector.addNumberOfHistoricalLocationsToSheep(temp[0], temp[1]));
+                        log.addEntry(ClientIP + "[" + UserName + "] Requested log of sheep: " + temp[0] + ".");
+                        theOutput = "object sending";
+
+                    } else {
+                        theOutput = "getsheeplog bad input";
+                    }
+                } else {
+                    theOutput = "getsheeplog no login";
+                }
+            } else {
+                theOutput = "getsheeplog null input";
+            }
+
+            state = WAIT;
+
+
         //venter paa input for aa faa liste av sauer
         //input: "email"
         } else if (state == TESTING) {
@@ -365,6 +396,7 @@ public class ComProtocol {
 
         } else {
             theOutput = "err";
+            state = WAIT;
         }
 
 
