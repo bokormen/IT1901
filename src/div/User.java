@@ -229,6 +229,10 @@ public class User implements Serializable {
 		sheepReg.attackSheep(id);
 	}
 	
+	public ArrayList<SheepLocation> getLastLocations(int id) throws Exception {
+		return sheepReg.getLastLocations(id);
+	}
+	
 
 
 }

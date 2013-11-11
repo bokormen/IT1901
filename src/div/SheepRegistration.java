@@ -57,6 +57,7 @@ public class SheepRegistration implements Serializable {
 		Sheep s = sheepSearch(id);
 		s.setName(name);
 		s.setShepherd(shepherd);
+		s.setGender(gender);
 		s.setWeight(weight);
 		s.setBirthyear(birthyear);
 		 String query = id + "||" + name + "||" + owner + "||" + shepherd + "||" + gender + "||" + weight + "||" + birthyear;
@@ -148,6 +149,19 @@ public class SheepRegistration implements Serializable {
 			 System.out.println("Error. Can't add attack information"); 
 		 }
 	}
+
+	public ArrayList<SheepLocation> getLastLocations(int id) throws Exception {
+		String query = "" + id;
+		//Får tilbake et Sheep-objekt
+		 Object serverRespons = ClientConnection.sendObjectQuery("getsheeplog",query);
+		 if(serverRespons instanceof Sheep) {
+			 return ((Sheep) serverRespons).getLastLocations();
+		 }
+		 throw new Exception("Error. Can't get last locations"); 
+		 
+		 
+	}
+	
 
 
 }

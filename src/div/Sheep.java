@@ -33,11 +33,7 @@ public class Sheep implements Serializable {
 		setOwner(owner);
 		setShepherd(shepherd);
 		locations = new ArrayList<SheepLocation>();
-		if (gender == 'f' || gender == 'm') {
-			this.gender = gender;
-		} else {
-			throw new Exception("Gender not valid");
-		}
+		setGender(gender);
 		attackStatus = false;
 	}
 	public Sheep(int id, String name, int birthyear, int weight, char gender, String owner,
@@ -49,11 +45,8 @@ public class Sheep implements Serializable {
 		setOwner(owner);
 		setShepherd(shepherd);
 		locations = new ArrayList<SheepLocation>();
-		if (gender == 'f' || gender == 'm') {
-			this.gender = gender;
-		} else {
-			throw new Exception("Gender not valid");
-		}
+		setGender(gender);
+		attackStatus = false;
 	}
 	
 
@@ -176,12 +169,14 @@ public class Sheep implements Serializable {
     }
 
 	/**
-	 * Returnerer de siste posisjonene til sauen. Antall er avhengig av
-	 * parameteren num.
+	 * Returnerer de 5 siste posisjonene til sauen, eller så mange den har.
 	 */
-	public ArrayList<SheepLocation> getLastLocations(int num) {
-		return (ArrayList<SheepLocation>) locations.subList(locations.size()
-				- num, locations.size());
+	public ArrayList<SheepLocation> getLastLocations() {
+		int num = 5;
+		if (locations.size() < 5) {
+			num = locations.size()-1;
+		}
+		return (ArrayList<SheepLocation>) locations.subList(locations.size() - num, locations.size());
 	}
 
 	/**
@@ -207,6 +202,14 @@ public class Sheep implements Serializable {
 			return true;
 		}
 		return false;
+	}
+	public void setGender(char gender) throws Exception {
+		if (gender == 'f' || gender == 'm') {
+			this.gender = gender;
+		} else {
+			throw new Exception("Gender not valid");
+		}
+		
 	}
 
 
