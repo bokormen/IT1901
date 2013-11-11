@@ -46,7 +46,6 @@ public class SheepRegistration implements Serializable {
 		}
 		
 		String timeStamp = new SimpleDateFormat("yyyy/MM/dd/HH-mm-ss").format(Calendar.getInstance().getTime());
-		
 		Sheep tempSheep = new Sheep(id, name, birthyear, weight, gender, owner, shepherd);
 		tempSheep.newLocation(latitude + "," + longitude, timeStamp );
 		sheepList.add(tempSheep);
@@ -148,8 +147,7 @@ public class SheepRegistration implements Serializable {
 	 * Sender informasjon om angrep mot en sau til server. 
 	 */
 	public void attackSheep(int id) {
-		String position = sheepSearch(id).getLocation().getPosition();
-		String query = id + "||" + position;
+		String query = "" + id;
 		 String serverRespons = ClientConnection.sendServerQuery("attacksheep",query);
 		 if(!serverRespons.equals("attacksheep success")) {
 			 System.out.println("Error. Can't add attack information"); 
