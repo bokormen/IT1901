@@ -87,10 +87,10 @@ public class DatabaseConnector {
 //		deleteTestUsers();
 //		deleteTestSheeps();
 //		RandomTestData.fillDatabaseWithUsers(200);
-//		RandomTestData.sheepsForTestUser("test0@test.test", 10);
-		RandomTestData.maxSheepsForTestUsers(50);
-		String sheepBoundariesLongitude = "63.4025,63.4575";
-		String sheepBoundariesLatitude = "10.3777,10.4023";
+//		RandomTestData.sheepsForTestUser("bokormen-05@hotmail.com", 1);
+		RandomTestData.maxSheepsForTestUser("bokormen-05@hotmail.com",7);
+		String sheepBoundariesLongitude = "63.4259,63.4341";
+		String sheepBoundariesLatitude = "10.3808,10.3992";
 		for (int i=0;i<10;i++) {
 			RandomTestData.moveSheeps(sheepBoundariesLongitude, sheepBoundariesLatitude);
 		}
@@ -102,12 +102,12 @@ public class DatabaseConnector {
 //		}
 //		System.out.println(getLatestTestUser());
 		
-		ArrayList<Integer> test = getNumberOfSheepForTestusers();
-		ArrayList<String> testEmails = getAllTestUserEmail();
-		
-		for (int i = 0; i < test.size(); i++) {
-			System.out.println(testEmails.get(i) + " har " + test.get(i) + " sauer");
-		}
+//		ArrayList<Integer> test = getNumberOfSheepForTestusers();
+//		ArrayList<String> testEmails = getAllTestUserEmail();
+//		
+//		for (int i = 0; i < test.size(); i++) {
+//			System.out.println(testEmails.get(i) + " har " + test.get(i) + " sauer");
+//		}
 		
 		close();
 	}
@@ -954,6 +954,35 @@ public class DatabaseConnector {
 		
 		try {
 			String query = "Select S.ID From Sheep as S;";
+
+			PreparedStatement ps = con.prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
+			
+//			Statement st = con.createStatement();
+//			ResultSet rs = st.executeQuery(query);
+			while(rs.next()) {
+				
+				IDs.add(rs.getString(1));
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("Error " + e.getMessage() + "SQLException");
+			e.printStackTrace();
+		}
+		
+		return IDs;
+	}
+	
+	/**
+	 * Denne funkjsonen returnerer en liste med id'en til alle eksisterende sauer, avhegig av eier
+	 * @return
+	 * @author Oeyvind
+	 */
+	public static ArrayList<String> getAllSheepIDs(String owner) {
+		ArrayList<String> IDs = new ArrayList<String>( );
+		
+		try {
+			String query = "Select S.ID From Sheep as S WHERE S.Owner = \"" + owner + "\";";
 
 			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();

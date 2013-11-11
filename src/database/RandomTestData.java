@@ -2,8 +2,11 @@ package database;
 
 import java.util.*;
 
+import javax.xml.crypto.Data;
+
 //import div.Sheep;
 
+@SuppressWarnings("unused")
 public class RandomTestData {
 	
 	/**
@@ -48,6 +51,35 @@ public class RandomTestData {
 				int birthyear = generator.nextInt(12)+2001;
 				int temperature = generator.nextInt(2)+38;
 				DatabaseConnector.newSheep(name, owner, "", gender, Integer.toString(weight), Integer.toString(heartrate), Integer.toString(temperature), Integer.toString(birthyear));
+			}
+		}
+	}
+	
+	/**
+	 * sletter eller oppretter sauer for en bruker slik at brukeren har oppgitt antall sauer, funker bare for testbrukere
+	 * @param user
+	 * @param numberOfSheep
+	 */
+	public static void maxSheepsForTestUser(String user, int numberOfSheep) {
+		ArrayList<String> testUsers = DatabaseConnector.getAllTestUserEmail();
+		int j = testUsers.indexOf(user);
+		ArrayList<Integer> numberOfTestSheep = DatabaseConnector.getNumberOfSheepForTestusers();
+		int numberOfSheeps = numberOfTestSheep.get(j);
+		ArrayList<String> Sheep = DatabaseConnector.getAllSheepIDs(user);
+		if (numberOfSheeps > numberOfSheep) {
+				for (int i = 0; i < numberOfSheeps-numberOfSheep; i++) {
+					DatabaseConnector.deleteSheep(Sheep.get(i));
+			}
+		} else if (numberOfSheeps < numberOfSheep){
+				for (int i = numberOfSheeps; i < numberOfSheep; i++) {
+					String name = "testSheep";
+					String owner = user;
+					String gender = Gender.getRandomGender();
+					int weight = generator.nextInt(10)+20;
+					int heartrate = generator.nextInt(30)+60;
+					int birthyear = generator.nextInt(12)+2001;
+					int temperature = generator.nextInt(2)+38;
+					DatabaseConnector.newSheep(name, owner, "", gender, Integer.toString(weight), Integer.toString(heartrate), Integer.toString(temperature), Integer.toString(birthyear));
 			}
 		}
 	}

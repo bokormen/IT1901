@@ -47,7 +47,7 @@ public class NumberToNorwegianWord {
 	
 	/**
 	 * Inneholder listen over navn for hver tredje null
-	 * Kilde: http://no.wikipedia.org/wiki/number#Store_number
+	 * Kilde: http://no.wikipedia.org/wiki/tall#Store_tall
 	 */
 	private static final String[] thousands = {
 	    "",
@@ -83,19 +83,32 @@ public class NumberToNorwegianWord {
 		
 		String word = "";
 		
-		if (number < 2000 && number > 999) {
-			word += checkSpecialCases(number);
-			number -= 1000;
-			if (number > 0) {
-				if (!word.equals("")) {
-					word += " ";
-				}
-				word +=numberBelowThousand((int) number, true);
-			}
+		word += remainingNumberLessThanTwoThousand(number);
+		if (!word.equals("")) {
 			return word;
 		}
 		
+//		if (number < 2000 && number > 999) {
+//			word += checkSpecialCases(number);
+//			number -= 1000;
+//			if (number > 0) {
+//				if (!word.equals("")) {
+//					word += " ";
+//				}
+//				word +=numberBelowThousand((int) number, true);
+//			}
+//			return word;
+//		}
+		
 		for (int i = thousands.length-1; i > -1; i--) {
+			
+			if (number < 2000) {
+				if (!word.equals("")) {
+					word += " ";
+				}
+				word += remainingNumberLessThanTwoThousand(number);
+				return word;
+			}
 			
 			int answer = (int) (number/thousandPowerOf(i));
 			
@@ -115,7 +128,6 @@ public class NumberToNorwegianWord {
 					word += "er";
 				}
 			}
-			
 			number -= answer * thousandPowerOf(i);
 		}
 		
@@ -170,6 +182,32 @@ public class NumberToNorwegianWord {
 	}
 	
 	/**
+	 * brukes for tall mindre enn 2000
+	 * @param number
+	 * @return
+	 */
+	private static String remainingNumberLessThanTwoThousand(long number) {
+		String word = "";
+		if (number < 2000 && number > 999) {
+			word += checkSpecialCases(number);
+			number -= 1000;
+			if (number > 0) {
+				if (!word.equals("")) {
+					word += " ";
+				}
+				word +=numberBelowThousand((int) number, true);
+			} 
+			return word;
+		}else if (number < 1000){
+			if (!word.equals("")) {
+				word += " ";
+			}
+			word +=numberBelowThousand((int) number, true);
+		}
+		return word;
+	}
+	
+	/**
 	 * returner verdien av 1000 opphoeyd i det tilsendte tallet
 	 * @param power
 	 * @return
@@ -208,7 +246,7 @@ public class NumberToNorwegianWord {
 	public static void main(String[] args) {
 		
 //		for (long i = 0; i < thousandPowerOf(thousands.length+1); i++) {
-		for (long i = thousandPowerOf(thousands.length-8)+10000000; i < thousandPowerOf(thousands.length-8)+10000010; i++) {
+		for (long i = thousandPowerOf(6)+3000; i < thousandPowerOf(6)+3198; i++) {
 			System.out.println(i + ": " + numberToWord(i));
 		}
 
