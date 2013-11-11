@@ -52,7 +52,41 @@ public class RandomTestData {
 		}
 	}
 	
-	
+	public static void maxSheepsForTestUsers (int numberOfSheep) {
+		ArrayList<String> testUsers = DatabaseConnector.getAllTestUserEmail();
+		testUsers.remove(0);
+		ArrayList<Integer> numberOfTestSheep = DatabaseConnector.getNumberOfSheepForTestusers();
+		numberOfTestSheep.remove(0);
+		if (numberOfTestSheep.size() == 0) {
+			for (String s : testUsers) {
+				for (int i = 0; i < numberOfSheep; i++) {
+					String name = "testSheep";
+					String owner = s;
+					String gender = Gender.getRandomGender();
+					int weight = generator.nextInt(10)+20;
+					int heartrate = generator.nextInt(30)+60;
+					int birthyear = generator.nextInt(12)+2001;
+					int temperature = generator.nextInt(2)+38;
+					DatabaseConnector.newSheep(name, owner, "", gender, Integer.toString(weight), Integer.toString(heartrate), Integer.toString(temperature), Integer.toString(birthyear));
+				}
+			}
+		} else {
+			int j=0;
+			for (String s : testUsers) {
+				for (int i = numberOfTestSheep.get(j); i < numberOfSheep; i++) {
+					String name = "testSheep";
+					String owner = s;
+					String gender = Gender.getRandomGender();
+					int weight = generator.nextInt(10)+20;
+					int heartrate = generator.nextInt(30)+60;
+					int birthyear = generator.nextInt(12)+2001;
+					int temperature = generator.nextInt(2)+38;
+					DatabaseConnector.newSheep(name, owner, "", gender, Integer.toString(weight), Integer.toString(heartrate), Integer.toString(temperature), Integer.toString(birthyear));
+				}
+				j++;
+			}
+		}
+	}
 	
 	/**
 	 * Fyller databsesn med antall sauer

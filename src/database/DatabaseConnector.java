@@ -88,7 +88,7 @@ public class DatabaseConnector {
 //		deleteTestSheeps();
 //		RandomTestData.fillDatabaseWithUsers(200);
 //		RandomTestData.sheepsForTestUser("test0@test.test", 10);
-//		RandomTestData.sheepsForTestUsers(50);
+		RandomTestData.maxSheepsForTestUsers(50);
 		String sheepBoundariesLongitude = "63.4025,63.4575";
 		String sheepBoundariesLatitude = "10.3777,10.4023";
 		for (int i=0;i<10;i++) {
@@ -100,6 +100,14 @@ public class DatabaseConnector {
 //		for (String s : Sheep) {
 //			System.out.println(s);
 //		}
+//		System.out.println(getLatestTestUser());
+		
+		ArrayList<Integer> test = getNumberOfSheepForTestusers();
+		
+		for (int i = 0; i < test.size(); i++) {
+			System.out.println(test.get(i));
+		}
+		
 		close();
 	}
 	
@@ -197,6 +205,11 @@ public class DatabaseConnector {
 		}
 	}
 	
+	/**
+	 * tar inn en eier, og returnerer en liste med id'er til alle sauene som er under angrep
+	 * @param owner
+	 * @return
+	 */
 	public static ArrayList<String> getAttackedSheep(String owner) {
 		ArrayList<String> Sheep = new ArrayList<String>( );
 
@@ -909,7 +922,7 @@ public class DatabaseConnector {
 		ArrayList<String> testUsers = new ArrayList<String>( );
 		
 		try {
-			String query = "Select U.Email From User as U WHERE U.FirstName=\"testuser\";";
+			String query = "Select U.Email From User as U WHERE U.FirstName=\"testuser\" GROUP BY Email ASC;";
 			
 			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
@@ -993,26 +1006,79 @@ public class DatabaseConnector {
 	 * @author Oeyvind
 	 */
 	public static int getLatestTestUser() {
-		String lastname = null;
+		
+		ArrayList<String> emails = getAllTestUserEmail();
+		
+		List<Integer> list = new ArrayList<Integer>();
+		
+		for (String s : emails) {
+			list.add(getTestUserNumberFromEmail(s));
+		}
+		
+		Collections.sort( list );
+		
+		if (list.size()==0) {
+			return -1;
+		}
+		return list.get(list.size()-1);
+	}
+	
+	/**
+	 * returnerer en arraylist med int verdier som angir hvor mange sauer testbrukerne har, verdien paa posisjon i tilhoerer testbruker i-1
+	 * @return
+	 */
+	public static ArrayList<Integer> getNumberOfSheepForTestusers() {
+		
+		ArrayList<Integer> numberOfSheeps = new ArrayList<Integer>();
+		
 		try {
-			String query = "Select max(Email) From User Where FirstName=\"testuser\";";
+			String query = "SELECT Owner, COUNT(*) AS counted FROM ( Select S.*, U.* From Sheep AS S Join User AS U ON (U.Email=S.Owner)) AS Info WHERE Info.FirstName = \"testuser\" GROUP BY Owner ASC;";
 
 			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
-			
+//			
+//			int count = 0;
+//			while (rs.next()) {
+//				count++;
+//			}
+//			
+//			rs.beforeFirst();
+//
+//			numberOfSheeps = new ArrayList<Integer>(Collections.nCopies(count, 0));
+//			
 //			Statement st = con.createStatement();
-//			ResultSet rs= st.executeQuery(query);
+//			ResultSet rs = st.executeQuery(query);
 			while(rs.next()) {
-				lastname = rs.getString(1);
+				numberOfSheeps.add(rs.getInt(2));
+//				numberOfSheeps.set(getTestUserNumberFromEmail(rs.getString(1)),rs.getInt(2));
 			}
+			
 		} catch (SQLException e) {
 			System.out.println("Error " + e.getMessage() + "SQLException");
 			e.printStackTrace();
 		}
-		if (lastname==null) {
-			return -1;
+		
+		return numberOfSheeps;
+	}
+	
+	/**
+	 * Finner tallet i testuser mailen og returnerer det som en int
+	 * @param email
+	 * @return
+	 */
+	public static int getTestUserNumberFromEmail(String email) {
+		int number;
+		String temp = "";
+		int i = 4;
+		
+		while (email.charAt(i) != '@') {
+			temp+=Character.toString(email.charAt(i));
+			i++;
 		}
-		return Integer.parseInt(Character.toString(lastname.charAt(4)));
+		
+		number = Integer.parseInt(temp);
+		
+		return number;
 	}
 	
 }

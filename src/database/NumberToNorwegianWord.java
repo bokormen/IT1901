@@ -2,6 +2,9 @@ package database;
 
 public class NumberToNorwegianWord {
 	
+	/**
+	 * Inneholder en liste med navn paa hvert tiende tall fra ti til hundre
+	 */
 	private static final String[] tens = {
 	    "",
 	    "ti",
@@ -16,6 +19,9 @@ public class NumberToNorwegianWord {
 	    "hundre"
 	  };
 	
+	/**
+	 * Inneholder navnet paa tallene fra en til tjue
+	 */
 	private static final String[] oneToTwenty = {
 	    "",
 	    "en",
@@ -40,7 +46,7 @@ public class NumberToNorwegianWord {
 	  };
 	
 	/**
-	 * 
+	 * Inneholder listen over navn for hver tredje null
 	 * Kilde: http://no.wikipedia.org/wiki/number#Store_number
 	 */
 	private static final String[] thousands = {
@@ -55,12 +61,20 @@ public class NumberToNorwegianWord {
 	    "kvadrillion"
 	  };
 	
+	/**
+	 * Inneholder navnet paa et tusen og et hundre, siden de bruker et og ikke en
+	 */
 	private static final String[] specialCases = {
 	    "null",
 	    "et hundre",
 	    "et tusen"
 	  };
 	
+	/**
+	 * tar inne nummeret og gir det tilbake som en string med det norske navnet for tallet
+	 * @param number
+	 * @return
+	 */
 	public static String numberToWord(long number) {
 		
 		if (number >= thousandPowerOf(thousands.length+1)){
@@ -112,6 +126,12 @@ public class NumberToNorwegianWord {
 		return word;
 	}
 	
+	/**
+	 * tar inn et tall mindr enn tusen og returnerer det norske navnet for tallet, hvis tallet er en del av et stoerre tall, vil det under visse forhold sette et og foran det returnerte tallet
+	 * @param number
+	 * @param partOfBiggerNumber
+	 * @return
+	 */
 	private static String numberBelowThousand(int number, boolean partOfBiggerNumber) {
 		String word = "";
 		
@@ -149,6 +169,11 @@ public class NumberToNorwegianWord {
 		return word;
 	}
 	
+	/**
+	 * returner verdien av 1000 opphoeyd i det tilsendte tallet
+	 * @param power
+	 * @return
+	 */
 	private static long thousandPowerOf(long power) {
 		long returnValue = 1;
 		
@@ -159,6 +184,11 @@ public class NumberToNorwegianWord {
 		return returnValue;
 	}
 	
+	/**
+	 * sjekker om tallet som skal brukes er et hundre eller et tusen
+	 * @param number
+	 * @return
+	 */
 	private static String checkSpecialCases(long number){
 		String word = "";
 		
@@ -170,7 +200,11 @@ public class NumberToNorwegianWord {
 		
 		return word;
 	}
-
+	
+	/**
+	 * brukt for aa teste koden
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		
 //		for (long i = 0; i < thousandPowerOf(thousands.length+1); i++) {
