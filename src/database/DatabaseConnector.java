@@ -103,9 +103,10 @@ public class DatabaseConnector {
 //		System.out.println(getLatestTestUser());
 		
 		ArrayList<Integer> test = getNumberOfSheepForTestusers();
+		ArrayList<String> testEmails = getAllTestUserEmail();
 		
 		for (int i = 0; i < test.size(); i++) {
-			System.out.println(test.get(i));
+			System.out.println(testEmails.get(i) + " har " + test.get(i) + " sauer");
 		}
 		
 		close();
@@ -424,7 +425,7 @@ public class DatabaseConnector {
 	 * @return
 	 * @author Oeyvind
 	 */
-	public static Sheep addNumberOfHistoricalLocationsToSheep(int id, int sizeOfHistory) {
+	public static Sheep addNumberOfHistoricalLocationsToSheep(String id, String sizeOfHistory) {
 		Sheep sheep = null;
 		try {
 //			String query = "Select L.Date, L.Position From Location AS L WHERE L.SheepID = " + id + " ORDER BY L.Date DESC LIMIT 0," + sizeOfHistory + ";";
@@ -914,7 +915,7 @@ public class DatabaseConnector {
 	}
 	
 	/**
-	 * Returnerer en liste med e-postadressen til alle brukerene med navnet "testuser"
+	 * Returnerer en liste med e-postadressen til alle brukerene med navnet "testuser", sorteres paa samme maate som i funksjonen getNumberOfSheepForTestusers
 	 * @return
 	 * @author Oeyvind
 	 */
@@ -1024,7 +1025,7 @@ public class DatabaseConnector {
 	}
 	
 	/**
-	 * returnerer en arraylist med int verdier som angir hvor mange sauer testbrukerne har, verdien paa posisjon i tilhoerer testbruker i-1
+	 * returnerer en arraylist med int verdier som angir hvor mange sauer testbrukerne har, verdien paa posisjon i tilhoerer testbruker i-1, listen sorteres paa samme maate som getAllTestUserEmail
 	 * @return
 	 */
 	public static ArrayList<Integer> getNumberOfSheepForTestusers() {
