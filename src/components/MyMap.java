@@ -1,28 +1,31 @@
 package components;
 
 import gui.GUI;
-import gui.GoogleStaticMap;
 
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
+import javax.swing.Timer;
 
-import div.MyPoint;
 import div.User;
 
 public class MyMap extends JPanel implements MouseListener,
-		MouseMotionListener, KeyListener, MouseWheelListener {
+		MouseMotionListener, MouseWheelListener {
 
 	private int width;
 	private int height;
@@ -43,6 +46,9 @@ public class MyMap extends JPanel implements MouseListener,
 	private int dx;
 	private int dy;
 
+	private TimerListener tl;
+	private Timer timer;
+
 	private boolean changesMade = false;
 
 	public MyMap(int width, int height, double latitude, double longitude,
@@ -61,10 +67,13 @@ public class MyMap extends JPanel implements MouseListener,
 
 		this.z = 1280;
 
+		this.tl = new TimerListener();
+		this.timer = new Timer(1, tl);
+
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
-		this.addKeyListener(this);
 		this.addMouseWheelListener(this);
+		this.setFocusable(true);
 		// this.setOpaque(true);
 	}
 
@@ -117,6 +126,7 @@ public class MyMap extends JPanel implements MouseListener,
 
 		this.dx = x + 250 * imageLength / 1280;
 		this.dy = y + 390 * imageLength / 1280;
+
 		repaint();
 	}
 
@@ -174,12 +184,14 @@ public class MyMap extends JPanel implements MouseListener,
 
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
+
 		if (!images.isEmpty()) {
 			for (MyImage i : images) {
 				int width = i.getImage().getWidth(this);
 				int height = i.getImage().getHeight(this);
 				g.drawImage(i.getImage(), i.getX() * width - dx, i.getY()
 						* height - dy, this);
+				gui.repaintMySheepButtons();
 			}
 		}
 		if (changesMade) {
@@ -187,6 +199,7 @@ public class MyMap extends JPanel implements MouseListener,
 					imageLength);
 			changesMade = false;
 		}
+
 	}
 
 	int wi = 0;
@@ -326,20 +339,17 @@ public class MyMap extends JPanel implements MouseListener,
 		zoom(e.getWheelRotation());
 	}
 
-	@Override
-	public void keyPressed(KeyEvent arg) {
-		System.out.println(arg.getKeyChar());
-	}
+	/**
+	 * A class that handles time. Can be used for animations.
+	 * 
+	 * @author andreas
+	 * 
+	 */
 
-	@Override
-	public void keyReleased(KeyEvent arg0) {
-		System.out.println("asd");
+	private class TimerListener implements ActionListener {
 
-	}
-
-	@Override
-	public void keyTyped(KeyEvent arg0) {
-		System.out.println("asd");
-
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+		}
 	}
 }

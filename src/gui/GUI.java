@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
+import javax.swing.AbstractAction;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -29,6 +30,7 @@ import javax.swing.JList;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.Timer;
 
@@ -45,6 +47,7 @@ import components.MyTextField;
 import div.ClientConnection;
 import div.MyPoint;
 import div.Sheep;
+import div.SheepLocation;
 import div.User;
 import div.UserRegistration;
 
@@ -112,7 +115,7 @@ public class GUI extends JFrame {
 		actionListener = new MyListener();
 		createFocusListener();
 		tListener = new TimerListener();
-		timer = new Timer(100, tListener);
+		timer = new Timer(1000, tListener);
 		// timer.start();
 
 		kartverketStaticMap = new KartverketStaticMap();
@@ -182,9 +185,26 @@ public class GUI extends JFrame {
 		return img;
 	}
 
+	/**
+	 * Oppdaterer startbildet til kart for aa se om kordinater stemmer
+	 * 
+	 * @param latitude
+	 * @param longitude
+	 */
+
 	private void updateRightPanelMap(double latitude, double longitude) {
 		rightPanel.changeImage(getGoogleImage(latitude, longitude), 15);
 		rightPanel.repaint();
+	}
+
+	/**
+	 * Tegner alle knapper paa nytt
+	 */
+
+	public void repaintMySheepButtons() {
+		for (MySheepButton b : mySheepButtons) {
+			b.repaint();
+		}
 	}
 
 	/**
@@ -396,7 +416,6 @@ public class GUI extends JFrame {
 	 */
 
 	private void createMainInterfaceComponents() {
-		// TODO
 		int cw = width / 6;
 		int ch = 3 * height / 40;
 
@@ -441,7 +460,6 @@ public class GUI extends JFrame {
 	 */
 
 	private void createSearchInterfaceComponents() {
-		// TODO
 		int cw = width / 6;
 		int ch = 3 * height / 40;
 
@@ -469,7 +487,6 @@ public class GUI extends JFrame {
 	 */
 
 	private void createEditInterfaceComponents() {
-		// TODO
 		int cw = width / 6;
 		int ch = 3 * height / 40;
 
@@ -537,13 +554,17 @@ public class GUI extends JFrame {
 		int ch = 3 * height / 40;
 
 		sheepy = new MyButton(new JButton(), "Sort by color", null);
-		sheepy.setBounds(width / 12, 20 * height / 200, cw / 2, ch);
+		sheepy.setBounds(width / 24, 20 * height / 200, cw / 2, ch);
 		sheepy.addActionListener(actionListener);
 
 		sheepyAttack = new MyButton(new JButton(), "Attack sheep", null);
-		sheepyAttack.setBounds(width / 12 + cw / 2, 20 * height / 200, cw / 2,
+		sheepyAttack.setBounds(width / 24 + cw / 2, 20 * height / 200, cw / 2,
 				ch);
 		sheepyAttack.addActionListener(actionListener);
+
+		sheepyLog = new MyButton(new JButton(), "History", null);
+		sheepyLog.setBounds(width / 24 + cw, 20 * height / 200, cw / 2, ch);
+		sheepyLog.addActionListener(actionListener);
 
 		sheepListModel = new DefaultListModel();
 
@@ -592,6 +613,7 @@ public class GUI extends JFrame {
 		lp.add(sheepScrollPane);
 		lp.add(sheepy);
 		lp.add(sheepyAttack);
+		lp.add(sheepyLog);
 		lp.add(listInfo);
 	}
 
@@ -639,6 +661,10 @@ public class GUI extends JFrame {
 		lp.add(regShepherdField);
 	}
 
+	/**
+	 * Lager alle komponeneter til log interfacet
+	 */
+
 	private void createLogInterfaceComponents() {
 		int cw = width / 6;
 		int ch = 3 * height / 40;
@@ -646,7 +672,7 @@ public class GUI extends JFrame {
 
 		logList = new JList(logListModel);
 		logList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-		logList.setCellRenderer(new MyListRenderer());
+		// logList.setCellRenderer(new MyListRenderer());
 
 		logList.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent evt) {
@@ -675,7 +701,7 @@ public class GUI extends JFrame {
 		logComboBox.setBounds(width / 12, 20 * height / 200, cw, ch);
 		logComboBox.setVisible(false);
 
-		lp.add(logComboBox);
+		// lp.add(logComboBox);
 		lp.add(logScrollPane);
 	}
 
@@ -941,7 +967,7 @@ public class GUI extends JFrame {
 		mainComps.add(sheepRegButton);
 		mainComps.add(listButton);
 		mainComps.add(searchButton);
-		mainComps.add(logButton);
+		// mainComps.add(logButton);
 		mainComps.add(homeButton);
 		mainComps.add(mainInfoLabel);
 		mainComps.add(backButton);
@@ -968,6 +994,7 @@ public class GUI extends JFrame {
 		listComps = new ArrayList<JComponent>();
 		listComps.add(sheepy);
 		listComps.add(sheepyAttack);
+		listComps.add(sheepyLog);
 		listComps.add(sheepScrollPane);
 		listComps.add(listInfo);
 		listComps.add(backButton);
@@ -1435,7 +1462,8 @@ public class GUI extends JFrame {
 				if (id == b.getSheep().getId()) {
 					sheep = b.getSheep();
 					editSheepButton = b;
-					((MyBorder) b.getBorder()).setColor(Color.BLUE);
+					b.setColor(Color.BLUE);
+					// ((MyBorder) b.getBorder()).setColor(Color.BLUE);
 				}
 			}
 			if (sheep != null) {
@@ -1447,9 +1475,9 @@ public class GUI extends JFrame {
 				setLwEditSheep(sheep);
 				myMap.centerInOnSheep(latitude, longitude);
 
-				editButton.setVisible(true);
+				sheepyLog.setVisible(true);
+				// editButton.setVisible(true);
 			} else {
-				// kan ikke finne sheep, vise fram paa en maate
 				searchButton.setBounds(width / 12, 95 * height / 200,
 						width / 6, 3 * height / 40);
 				searchLabel.setText("No sheep by that ID, (" + input + ").");
@@ -1464,14 +1492,12 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Endre fargen p� saue knappene
+	 * Endre fargen paa saue knappene
 	 * 
 	 * @param num
 	 *            Tall for forskjellige farger
 	 */
 	private void changeMySheepButtonColors(int num) {
-		// 1 = m/f, 2
-		// System.out.println(num);
 		if (num == 1) {
 			for (MySheepButton b : mySheepButtons) {
 				Sheep s = b.getSheep();
@@ -1511,7 +1537,7 @@ public class GUI extends JFrame {
 
 			double lat = Double.parseDouble(s.getLocation().getLatitude());
 			double lon = Double.parseDouble(s.getLocation().getLongitude());
-			myMap.centerInOnSheep(lat, lon);
+			// myMap.centerInOnSheep(lat, lon);
 		}
 	}
 
@@ -1532,8 +1558,17 @@ public class GUI extends JFrame {
 		}
 	}
 
-	private void updateLogList() {
-
+	private void updateLogList(Sheep sheep) {
+		for (SheepLocation s : sheep.getLastLocations()) {
+			logListModel.clear();
+			int id = sheep.getId();
+			String lat = String.format("%.6g%n",
+					Double.parseDouble(s.getLatitude()));
+			String lon = String.format("%.6g%n",
+					Double.parseDouble(s.getLongitude()));
+			String date = s.getDate();
+			logListModel.addElement(id + "-" + lat + "," + lon + "-" + date);
+		}
 	}
 
 	/**
@@ -1839,7 +1874,7 @@ public class GUI extends JFrame {
 						changeToMainInterface(true);
 					} else if (state == LOG) {
 						changeToLogInterface(false);
-						changeToMainInterface(true);
+						changeToListInterface(true);
 					}
 				} else if (text.equals("Forgot")) {
 					changeToLoginInterface(false);
@@ -1942,6 +1977,24 @@ public class GUI extends JFrame {
 					} else {
 						listInfo.setText("Select a sheep.");
 					}
+				} else if (text.equals("History")) {
+					if (state == LOG) {
+						if (listSelected != null) {
+							for (MySheepButton b : mySheepButtons) {
+								if (b.equals(listSelected)) {
+									updateLogList(b.getSheep());
+									changeToListInterface(false);
+									changeToLogInterface(true);
+								}
+							}
+						} else {
+							listInfo.setText("Select a sheep.");
+						}
+					} else if (state == SEARCH) {
+						updateLogList(editSheep);
+						changeToSearchInterface(false);
+						changeToLogInterface(true);
+					}
 				}
 			} else if (arg.getSource() instanceof JTextField) {
 				JTextField pressed = (JTextField) arg.getSource();
@@ -1999,6 +2052,13 @@ public class GUI extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			System.out.println("yaywe");
+		}
+	}
+
+	static class EnterAction extends AbstractAction {
+		public void actionPerformed(ActionEvent tf) {
+			System.out.println("The Enter key has been pressed.");
 		}
 	}
 
@@ -2057,6 +2117,7 @@ public class GUI extends JFrame {
 	// list components
 	private JButton sheepy;
 	private JButton sheepyAttack;
+	private JButton sheepyLog;
 	private JList sheepList;
 	private JScrollPane sheepScrollPane;
 	private DefaultListModel sheepListModel;

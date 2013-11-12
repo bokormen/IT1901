@@ -4,6 +4,10 @@ import gui.GoogleStaticMap;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 public class MyImage {
 	protected Image image;
@@ -16,15 +20,20 @@ public class MyImage {
 		// 58.43,15.39 0.0143, 0.0275
 		// 53.43,15.39 0.0163
 		// System.out.println(x + "  " + y);
-		this.image = getGoogleImage(lat - (0.0123) * y, lon + (0.0275) * x);
+		double numh = 0.0123;
+		double numw = 0.0275;
+		this.image = getStartImage(lat - (numh) * y, lon + (numw) * x);
 		this.savedImage = image;
 		this.x = x;
 		this.y = y;
 	}
 
 	/**
-	 * Tar inn bredde og hoydegrad for aa hente ut og lagre et kart fra
-	 * maps.google
+	 * Metode for aa hente ut bildet til rett sted. Prover forst aa finne riktig
+	 * bildet hvis det er lagret i src/resources. Hvis ikke saa laster den ned
+	 * et statisk png bilde fra maps.google. Hvis en ikke faar bildet fra google
+	 * grunnet for mange foresporsler, eller paa grunn av ingen internett
+	 * forbindelse.
 	 * 
 	 * @param latitude
 	 *            hoydegraden til senterpunktet
@@ -34,11 +43,28 @@ public class MyImage {
 	 * @throws Exception
 	 */
 
-	private BufferedImage getGoogleImage(double latitude, double longitude)
+	private BufferedImage getStartImage(double latitude, double longitude)
 			throws Exception {
-		// System.out.println(latitude+" " + longitude);
-		BufferedImage img = (BufferedImage) (GoogleStaticMap.getImage(latitude,
-				longitude, 15, 640, 640, 2));
+		String file = "googlestaticmap_" + latitude + "_" + longitude + "_"
+				+ 15 + ".png";
+
+		BufferedImage img = null;
+		try {
+			img = ImageIO.read(new File("src/resources/" + file));
+		} catch (IOException e) {
+			// System.out.println("Kunne ikke finne lagret bildet");
+		}
+
+		if (img == null) {
+			img = (BufferedImage) (GoogleStaticMap.getImage(latitude,
+					longitude, 15, 640, 640, 2));
+			try {
+				File outputfile = new File("src/resources/" + file);
+				ImageIO.write(img, "png", outputfile);
+			} catch (IOException e) {
+				// System.out.println("kunne ikke lagre bildet");
+			}
+		}
 		return img;
 	}
 

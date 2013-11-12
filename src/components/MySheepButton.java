@@ -149,6 +149,7 @@ public class MySheepButton extends JButton implements MouseListener {
 		timer.start();
 		if (buttonCount == 1) {
 			gui.setLwEditSheep(this.sheep);
+
 			buttonCount = 0;
 		}
 		buttonCount++;
