@@ -526,13 +526,9 @@ public class ComProtocol {
 
         String[] temp = theInput.split("\\|\\|"); //splitter input ved ||
         if (temp.length == 7) {
-            if (temp[0].equals(UserName)) {
-                DatabaseConnector.changeBasicSheep(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5], temp[6]);
-                log.addEntry(ClientIP + "[" + UserName + "] Changed sheep info for sheep: " + temp[0] + ".");
-                return "changesheep success";
-            } else {
-                return "changesheep different username";
-            }
+        	DatabaseConnector.changeBasicSheep(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5], temp[6]);
+            log.addEntry(ClientIP + "[" + UserName + "] Changed sheep info for sheep: " + temp[0] + ".");
+            return "changesheep success";
         } else {
             return "changesheep bad input";
         }
@@ -627,4 +623,9 @@ public class ComProtocol {
             System.err.println("Error closing object streams.");
         }
     }
+
+
+
+
+
 }
