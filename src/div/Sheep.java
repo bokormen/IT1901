@@ -34,7 +34,7 @@ public class Sheep implements Serializable {
 		setShepherd(shepherd);
 		locations = new ArrayList<SheepLocation>();
 		setGender(gender);
-		attackStatus = false;
+		setAttackStatus(false);
 	}
 	public Sheep(int id, String name, int birthyear, int weight, char gender, String owner,
 			String shepherd) throws Exception {
@@ -46,7 +46,7 @@ public class Sheep implements Serializable {
 		setShepherd(shepherd);
 		locations = new ArrayList<SheepLocation>();
 		setGender(gender);
-		attackStatus = false;
+		setAttackStatus(false);
 	}
 	
 
@@ -78,7 +78,7 @@ public class Sheep implements Serializable {
 	 * @throws Exception
 	 */
 	public void setBirthyear(int birthyear) throws Exception {
-		if (birthyear >= 1900) {
+		if (birthyear >= 1980) {
 			this.birthyear = birthyear;
 		} else {
 			throw new Exception("Age is not valid");
@@ -176,7 +176,7 @@ public class Sheep implements Serializable {
 		if (locations.size() < 5) {
 			num = locations.size()-1;
 		}
-		return (ArrayList<SheepLocation>) locations.subList(locations.size() - num, locations.size());
+		return  (ArrayList<SheepLocation>) locations.subList(locations.size() - num, locations.size());
 	}
 
 	/**
@@ -210,6 +210,12 @@ public class Sheep implements Serializable {
 			throw new Exception("Gender not valid");
 		}
 		
+	}
+	public boolean getAttackStatus() {
+		return attackStatus;
+	}
+	public void setAttackStatus(boolean attackStatus) {
+		this.attackStatus = attackStatus;
 	}
 
 

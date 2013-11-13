@@ -143,6 +143,18 @@ public class SheepRegistration implements Serializable {
 		return sheepList;
 	}
 	
+	public ArrayList<Sheep> getAttackedSheepList(String user) {
+		String query = user;
+		Object serverRespons = ClientConnection.sendObjectQuery("getattackedsheeplist", query);
+		if(serverRespons instanceof ArrayList) {
+			return (ArrayList<Sheep>) serverRespons;
+		} else if(serverRespons instanceof String) {
+			System.out.println("Error. Can't get list of attacked sheep. ");
+		}
+		return null;
+		
+	}
+	
 	/**
 	 * Sender informasjon om angrep mot en sau til server. 
 	 */
