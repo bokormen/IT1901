@@ -627,9 +627,4 @@ public class ComProtocol {
             System.err.println("Error closing object streams.");
         }
     }
-
-
-
-
-
 }

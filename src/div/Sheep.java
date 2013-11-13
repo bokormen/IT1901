@@ -26,8 +26,8 @@ public class Sheep implements Serializable {
 	private ArrayList<SheepLocation> locations;
 	private boolean attackStatus;
 
-	public Sheep(String name, int birthyear, int weight, char gender, String owner,
-			String shepherd) throws Exception {
+	public Sheep(String name, int birthyear, int weight, char gender,
+			String owner, String shepherd) throws Exception {
 		this.name = name;
 		setBirthyear(birthyear);
 		setWeight(weight);
@@ -37,8 +37,9 @@ public class Sheep implements Serializable {
 		setGender(gender);
 		setAttackStatus(false);
 	}
-	public Sheep(int id, String name, int birthyear, int weight, char gender, String owner,
-			String shepherd) throws Exception {
+
+	public Sheep(int id, String name, int birthyear, int weight, char gender,
+			String owner, String shepherd) throws Exception {
 		this.id = id;
 		this.name = name;
 		setBirthyear(birthyear);
@@ -49,12 +50,11 @@ public class Sheep implements Serializable {
 		setGender(gender);
 		setAttackStatus(false);
 	}
-	
 
 	public Sheep() {
 
 	}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -66,6 +66,7 @@ public class Sheep implements Serializable {
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -75,10 +76,12 @@ public class Sheep implements Serializable {
 	}
 
 	/**
-	 * Setter fodselsaret til en sau. Må være over 1900. 
+	 * Setter fodselsaret til en sau. Må være over 1900.
+	 * 
 	 * @throws Exception
 	 */
 	public void setBirthyear(int birthyear) throws Exception {
+		System.out.println(birthyear);
 		if (birthyear >= 1980) {
 			this.birthyear = birthyear;
 		} else {
@@ -97,28 +100,33 @@ public class Sheep implements Serializable {
 			throw new Exception("Weight is not valid");
 		}
 	}
-	
+
 	public char getGender() {
 		return gender;
 	}
-	
+
 	public double getTemperature() {
 		return temperature;
 	}
+
 	/**
-	 * Setter temperaturen. Dersom temperaturen ikke er mellom 35 og 40, så blir melding om angrep sendt. 
+	 * Setter temperaturen. Dersom temperaturen ikke er mellom 35 og 40, så blir
+	 * melding om angrep sendt.
+	 * 
 	 * @param temperature
 	 */
 	public void setTemperature(double temperature) {
 		this.temperature = temperature;
 	}
 
-
 	public int getHeartrate() {
 		return heartrate;
 	}
+
 	/**
-	 * Setter pulsen til en sau. Dersom den er ikke er mellom 50 og 100, så blir melding om angrep sendt. 
+	 * Setter pulsen til en sau. Dersom den er ikke er mellom 50 og 100, så blir
+	 * melding om angrep sendt.
+	 * 
 	 * @throws Exception
 	 */
 	public void setHeartrate(int heartrate) throws Exception {
@@ -127,9 +135,9 @@ public class Sheep implements Serializable {
 		} else {
 			throw new Exception("Heartrate not valid");
 		}
-		
+
 	}
-	
+
 	public String getShepherd() {
 		return shepherd;
 	}
@@ -155,19 +163,19 @@ public class Sheep implements Serializable {
 			throw new Exception("Owner not valid");
 		}
 	}
-	
+
 	/**
-	 * Returnerer den siste posisjonen til sauen. 
+	 * Returnerer den siste posisjonen til sauen.
 	 */
 	public SheepLocation getLocation() {
-        try {
-		    return locations.get(locations.size() - 1);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            //throw new Exception("No location");
-            System.err.println("No location available on sheep");
-            return new SheepLocation("0,0", "00/00/0000");
-        }
-    }
+		try {
+			return locations.get(locations.size() - 1);
+		} catch (ArrayIndexOutOfBoundsException e) {
+			// throw new Exception("No location");
+			System.err.println("No location available on sheep");
+			return new SheepLocation("0,0", "00/00/0000");
+		}
+	}
 
 	/**
 	 * Returnerer de 5 siste posisjonene til sauen, eller så mange den har.
@@ -175,7 +183,7 @@ public class Sheep implements Serializable {
 	public List<SheepLocation> getLastLocations() {
 		int num = 5;
 		if (locations.size() < 5) {
-			num = locations.size()-1;
+			num = locations.size() - 1;
 		}
 		return locations.subList(locations.size() - num, locations.size());
 	}
@@ -184,17 +192,16 @@ public class Sheep implements Serializable {
 	 * Legger til ny posisjon til sau.
 	 */
 	public void newLocation(String position, String date) throws Exception {
-        SheepLocation sl = new SheepLocation(position, date);
-        locations.add(sl);
-    }
+		SheepLocation sl = new SheepLocation(position, date);
+		locations.add(sl);
+	}
 
 	public ArrayList<SheepLocation> getLocationLog() {
 		return locations;
 	}
 
-	
 	/**
-	 * Sjekker om parameteren email er en valid email. 
+	 * Sjekker om parameteren email er en valid email.
 	 */
 	public boolean emailIsValid(String email) {
 		String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
@@ -204,21 +211,22 @@ public class Sheep implements Serializable {
 		}
 		return false;
 	}
+
 	public void setGender(char gender) throws Exception {
 		if (gender == 'f' || gender == 'm') {
 			this.gender = gender;
 		} else {
 			throw new Exception("Gender not valid");
 		}
-		
+
 	}
+
 	public boolean getAttackStatus() {
 		return attackStatus;
 	}
+
 	public void setAttackStatus(boolean attackStatus) {
 		this.attackStatus = attackStatus;
 	}
-
-
 
 }

@@ -630,7 +630,6 @@ public class GUI extends JFrame {
 	 */
 
 	private void createRegSheepInterfaceComponents() {
-		// TODO
 		int cw = width / 6;
 		int ch = 3 * height / 40;
 		regSheepNameField = new MyTextField(new JTextField(), "bluesheepicon",
@@ -1380,8 +1379,6 @@ public class GUI extends JFrame {
 	 * Metode der en kan endre paa saue informasjonen
 	 */
 	private Sheep editSheep() {
-		// TODO
-		// MÅ FIKSE PÅ EDIT SHEEP YE!
 		try {
 			String id = lwEditIdField.getText();
 			String name = lwEditNameField.getText();
@@ -1549,10 +1546,6 @@ public class GUI extends JFrame {
 			lwEditHeartrateField.setText("" + s.getHeartrate());
 			lwEditTemperatureField.setText("" + s.getTemperature());
 			lwEditBirthyearField.setText("" + s.getBirthyear());
-
-			double lat = Double.parseDouble(s.getLocation().getLatitude());
-			double lon = Double.parseDouble(s.getLocation().getLongitude());
-			// myMap.centerInOnSheep(lat, lon);
 		}
 	}
 
@@ -1574,15 +1567,22 @@ public class GUI extends JFrame {
 	}
 
 	private void updateLogList(Sheep sheep) {
-		for (SheepLocation s : sheep.getLastLocations()) {
+		try {
 			logListModel.clear();
-			int id = sheep.getId();
-			String lat = String.format("%.6g%n",
-					Double.parseDouble(s.getLatitude()));
-			String lon = String.format("%.6g%n",
-					Double.parseDouble(s.getLongitude()));
-			String date = s.getDate();
-			logListModel.addElement(id + "-" + lat + "," + lon + "-" + date);
+			for (SheepLocation s : user.getLastLocations(sheep.getId())) {
+				int id = sheep.getId();
+				String lat = String.format("%.6g%n",
+						Double.parseDouble(s.getLatitude()));
+				String lon = String.format("%.6g%n",
+						Double.parseDouble(s.getLongitude()));
+				String date = s.getDate();
+				logListModel.addElement(id + "-" + lat.substring(0, 6) + ","
+						+ lon + "-" + date);
+			}
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -1937,7 +1937,6 @@ public class GUI extends JFrame {
 					changeToMainInterface(false);
 					changeToLogInterface(true);
 				} else if (text.equals("Home")) {
-					// TODO
 
 				} else if (text.equals("Log out")) {
 					changeToMainInterface(false);
@@ -1975,18 +1974,28 @@ public class GUI extends JFrame {
 					regretButton.setVisible(false);
 				} else if (text.equals("Sort by color")) {
 					delete++;
-					if (delete % 2 == 0) {
+					if (delete % 2 == 1) {
 						changeMySheepButtonColors(1);
-					} else if (delete % 2 == 1) {
+					} else if (delete % 2 == 0) {
 						changeMySheepButtonColors(2);
 					}
 				} else if (text.equals("Attack sheep")) {
 					if (listSelected != null) {
+						listInfo.setText("");
 						for (MySheepButton b : mySheepButtons) {
 							if (b.equals(listSelected)) {
 								b.attackSheep(true);
 								user.attackSheep(listSelected.getSheep()
 										.getId(), user.getEmail());
+								try {
+									MyPoint p = getLocationPoint(listSelected
+											.getSheep().getLocation()
+											.getPosition());
+									myMap.centerInOnSheep(p.getLatitude(),
+											p.getLongitude());
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
 							}
 						}
 					} else {

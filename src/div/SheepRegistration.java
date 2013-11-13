@@ -4,8 +4,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-
-import database.DatabaseConnector;
+import java.util.List;
 
 /**
  * Klassen handterer registrering, sletting og sok av sauer.
@@ -33,7 +32,7 @@ public class SheepRegistration implements Serializable {
 		// retiningslinjer for kommunikasjon med server vil til en hver tid
 		// ligge i server.ComProtocol klassen
 		String query = name + "||" + owner + "||" + shepherd + "||" + gender
-				+ "||" + weight + "||" + 75 + "||" + 39 + "||" + birthyear + "||" + latitude + "," + longitude;
+				+ "||" + weight + "||" + 75 + "||" + 39 + "||" + birthyear;
 
 		// sender foresp0rselen til serveren og faar tilbake respons
 		Object serverRespons = ClientConnection.sendObjectQuery(
@@ -154,18 +153,20 @@ public class SheepRegistration implements Serializable {
 	public ArrayList<Sheep> getSheepList() {
 		return sheepList;
 	}
-	
+
 	public ArrayList<Sheep> getAttackedSheepList(String user) {
 		String query = user;
-		Object serverRespons = ClientConnection.sendObjectQuery("getattackedsheeplist", query);
-		if(serverRespons instanceof ArrayList) {
+		Object serverRespons = ClientConnection.sendObjectQuery(
+				"getattackedsheeplist", query);
+		if (serverRespons instanceof ArrayList) {
 			return (ArrayList<Sheep>) serverRespons;
-		} else if(serverRespons instanceof String) {
+		} else if (serverRespons instanceof String) {
 			System.out.println("Error. Can't get list of attacked sheep. ");
 		}
 		return null;
-		
+
 	}
+
 	/**
 	 * Sender informasjon om angrep mot en sau til server.
 	 */
@@ -179,13 +180,20 @@ public class SheepRegistration implements Serializable {
 	}
 
 	public ArrayList<SheepLocation> getLastLocations(int id) throws Exception {
-		String query = "" + id;
+		String query = "" + id + "||" + 5;
 		// Får tilbake et Sheep-objekt
 		Object serverRespons = ClientConnection.sendObjectQuery("getsheeplog",
 				query);
 		if (serverRespons instanceof Sheep) {
-			return (ArrayList<SheepLocation>) ((Sheep) serverRespons).getLastLocations();
+			// ((Sheep) serverRespons).getLocationLog();
+			ArrayList<SheepLocation> ret = new ArrayList<SheepLocation>();
+			for (SheepLocation s : ((Sheep) serverRespons).getLastLocations()) {
+				System.out.println(s);
+				ret.add(s);
+			}
+			return ret;
 		}
+		System.out.println(serverRespons);
 		throw new Exception("Error. Can't get last locations");
 
 	}
