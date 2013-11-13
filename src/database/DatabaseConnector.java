@@ -108,7 +108,7 @@ public class DatabaseConnector {
 //		for (int i = 0; i < test.size(); i++) {
 //			System.out.println(testEmails.get(i) + " har " + test.get(i) + " sauer");
 //		}
-		Sheep sau = findSheep("test0@test.test", "495844");
+//		Sheep sau = findSheep("test0@test.test", "495844");
 		
 		
 		close();
@@ -645,8 +645,6 @@ public class DatabaseConnector {
 		Sheep sheep = null;
 		try {
 			String query = "SELECT S.ID, S.Name, S.Gender, S.Shepherd, S.Weight, S.Heartrate, S.Temperature, S.Age FROM Sheep AS S WHERE S.Owner = '" + user + "' AND S.ID = "+ID;
-			
-			System.out.println(query);
 			
 			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
