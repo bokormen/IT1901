@@ -6,7 +6,6 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -15,9 +14,6 @@ import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.Timer;
@@ -70,11 +66,30 @@ public class MyMap extends JPanel implements MouseListener,
 		this.tl = new TimerListener();
 		this.timer = new Timer(1, tl);
 
+		setFocusable(true);
+		getInputMap().put(KeyStroke.getKeyStroke('+'), "zoomin");
+		getActionMap().put("zoomin", new ZoomInAction());
+
+		getInputMap().put(KeyStroke.getKeyStroke('-'), "zoomout");
+		getActionMap().put("zoomout", new ZoomOutAction());
+
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 		this.addMouseWheelListener(this);
 		this.setFocusable(true);
 		// this.setOpaque(true);
+	}
+
+	private class ZoomInAction extends AbstractAction {
+		public void actionPerformed(ActionEvent tf) {
+			zoom(30);
+		}
+	}
+
+	private class ZoomOutAction extends AbstractAction {
+		public void actionPerformed(ActionEvent tf) {
+			zoom(-30);
+		}
 	}
 
 	public void setUser(User u) {
@@ -102,6 +117,7 @@ public class MyMap extends JPanel implements MouseListener,
 		double numw = 0.0275;
 		double numh = 0.0123;
 		changesMade = true;
+		zoom(1280 - z);
 		int x = (int) (-(this.longitude - longitude) * imageLength / numw);
 		int y = (int) ((this.latitude - latitude) * imageLength / numh);
 
@@ -293,6 +309,7 @@ public class MyMap extends JPanel implements MouseListener,
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
+		this.requestFocus();
 	}
 
 	@Override
