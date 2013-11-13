@@ -33,7 +33,7 @@ public class SheepRegistration implements Serializable {
 		// retiningslinjer for kommunikasjon med server vil til en hver tid
 		// ligge i server.ComProtocol klassen
 		String query = name + "||" + owner + "||" + shepherd + "||" + gender
-				+ "||" + weight + "||" + 75 + "||" + 39 + "||" + birthyear;
+				+ "||" + weight + "||" + 75 + "||" + 39 + "||" + birthyear + "||" + latitude + "," + longitude;
 
 		// sender foresp0rselen til serveren og faar tilbake respons
 		Object serverRespons = ClientConnection.sendObjectQuery(

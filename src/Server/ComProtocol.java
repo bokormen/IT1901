@@ -489,7 +489,7 @@ public class ComProtocol {
         if (temp.length == 8) {
             if (!DatabaseConnector.doesSheepExsist(temp[0])) {
                 try {
-                    sendObject(DatabaseConnector.newSheep(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5], temp[6], temp[7]));
+                    sendObject(DatabaseConnector.newSheep(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5], temp[6], temp[7], temp[8]));
                 } catch (IOException e) {
                     return "regsheep database error";
                 }
