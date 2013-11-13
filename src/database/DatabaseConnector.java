@@ -644,7 +644,18 @@ public class DatabaseConnector {
 	public static Sheep findSheep(String user,String ID) {
 		Sheep sheep = null;
 		try {
+			//TODO fikse dette saa jeg kan fjerne denne koden som retter feilen i serveren
+			
+			System.out.println(ID);
+			
+			int index = ID.indexOf("|");
+			ID = ID.substring(0, index);
+			
+			System.out.println(ID);
+			
 			String query = "SELECT S.ID, S.Name, S.Gender, S.Shepherd, S.Weight, S.Heartrate, S.Temperature, S.Age FROM Sheep AS S WHERE S.Owner = '" + user + "' AND S.ID = "+ID;
+			
+			System.out.println(query);
 			
 			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
