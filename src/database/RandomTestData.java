@@ -50,7 +50,7 @@ public class RandomTestData {
 				int heartrate = generator.nextInt(30)+60;
 				int birthyear = generator.nextInt(12)+2001;
 				int temperature = generator.nextInt(2)+38;
-				DatabaseConnector.newSheep(name, owner, "", gender, Integer.toString(weight), Integer.toString(heartrate), Integer.toString(temperature), Integer.toString(birthyear));
+				DatabaseConnector.newSheep(name, owner, "", gender, Integer.toString(weight), Integer.toString(heartrate), Integer.toString(temperature), Integer.toString(birthyear), "63.23,10.36");
 			}
 		}
 	}
