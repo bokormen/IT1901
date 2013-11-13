@@ -20,12 +20,14 @@ public class SheepRegistration implements Serializable {
 	public SheepRegistration() {
 
 	}
-	
+
 	/**
-	 * Registrerer en sau i databasen med navn, fodselsar, vekt, kjonn, eier og gjeter. 
+	 * Registrerer en sau i databasen med navn, fodselsar, vekt, kjonn, eier og
+	 * gjeter.
 	 */
-	public int registerSheep(String name, int birthyear, int weight, char gender,
-			String owner, String shepherd, String latitude, String longitude) throws Exception {
+	public int registerSheep(String name, int birthyear, int weight,
+			char gender, String owner, String shepherd, String latitude,
+			String longitude) throws Exception {
 
 		// Lager en foresp0rsel til server.
 		// retiningslinjer for kommunikasjon med server vil til en hver tid
@@ -39,41 +41,48 @@ public class SheepRegistration implements Serializable {
 
 		int id = 0;
 		// sjekke at melding ble mottatt
-		if(serverRespons instanceof Integer) {
+		if (serverRespons instanceof Integer) {
 			id = (Integer) serverRespons;
-		} else if(serverRespons instanceof String) {
+		} else if (serverRespons instanceof String) {
 			throw new Exception((String) serverRespons);
 		}
-		
-		String timeStamp = new SimpleDateFormat("yyyy/MM/dd/HH-mm-ss").format(Calendar.getInstance().getTime());
-		Sheep tempSheep = new Sheep(id, name, birthyear, weight, gender, owner, shepherd);
-		tempSheep.newLocation(latitude + "," + longitude, timeStamp );
+
+		String timeStamp = new SimpleDateFormat("yyyy/MM/dd/HH-mm-ss")
+				.format(Calendar.getInstance().getTime());
+		Sheep tempSheep = new Sheep(id, name, birthyear, weight, gender, owner,
+				shepherd);
+		tempSheep.newLocation(latitude + "," + longitude, timeStamp);
 		sheepList.add(tempSheep);
-		
+
 		return id;
-		
 
 	}
+
 	/**
-	 * Endrer en sau sine data. Kan endre navn, gjeter, kjønn og fødselsår. 
+	 * Endrer en sau sine data. Kan endre navn, gjeter, kjønn og fødselsår.
 	 */
-	public void editSheep(int id, String name, String owner, String shepherd, char gender, int weight, int birthyear)
-			throws Exception {
+	public void editSheep(int id, String name, String owner, String shepherd,
+			char gender, int weight, int birthyear) throws Exception {
 		Sheep s = sheepSearch(id);
 		s.setName(name);
 		s.setShepherd(shepherd);
 		s.setGender(gender);
 		s.setWeight(weight);
 		s.setBirthyear(birthyear);
-		 String query = id + "||" + name + "||" + owner + "||" + shepherd + "||" + gender + "||" + weight + "||" + birthyear;
-		 String serverRespons = ClientConnection.sendServerQuery("changesheep",query);
-		 if(!serverRespons.equals("changesheep success")) {
-			 System.out.println("Error. Can't change sheep information"); 
-		 }
-		 
+		String query = id + "||" + name + "||" + owner + "||" + shepherd + "||"
+				+ gender + "||" + weight + "||" + birthyear;
+		String serverRespons = ClientConnection.sendServerQuery("changesheep",
+				query);
+		if (!serverRespons.equals("changesheep success")) {
+			System.out.println(serverRespons);
+			System.out.println("Error. Can't change sheep information");
+		}
+
 	}
+
 	/**
-	 * Seltter en sau fra databasen. Returnerer true dersom alt gikk bra, false ellers. 
+	 * Seltter en sau fra databasen. Returnerer true dersom alt gikk bra, false
+	 * ellers.
 	 */
 	public boolean deleteSheep(Sheep s) {
 		String query = "" + s.getId();
@@ -88,8 +97,9 @@ public class SheepRegistration implements Serializable {
 
 		return sheepList.remove(s);
 	}
+
 	/**
-	 * Soker og returnerer sauen med en viss id. 
+	 * Soker og returnerer sauen med en viss id.
 	 */
 	public Sheep sheepSearch(int id) {
 		for (Sheep s : sheepList) {
@@ -99,8 +109,9 @@ public class SheepRegistration implements Serializable {
 		}
 		return null;
 	}
+
 	/**
-	 * Finner en sau i databasen med en gitt eier og id på sau. 
+	 * Finner en sau i databasen med en gitt eier og id på sau.
 	 */
 	public Sheep findSheep(String user, String id) throws Exception {
 		String query = user + "||" + id;
@@ -119,8 +130,9 @@ public class SheepRegistration implements Serializable {
 		}
 		return null;
 	}
+
 	/**
-	 * Fyller opp sheepList med sauer fra databasen. 
+	 * Fyller opp sheepList med sauer fra databasen.
 	 */
 	public void updateSheepList(String user) throws Exception {
 		String query = user;
@@ -142,30 +154,29 @@ public class SheepRegistration implements Serializable {
 	public ArrayList<Sheep> getSheepList() {
 		return sheepList;
 	}
-	
+
 	/**
-	 * Sender informasjon om angrep mot en sau til server. 
+	 * Sender informasjon om angrep mot en sau til server.
 	 */
-	public void attackSheep(int id) {
-		String query = "" + id;
-		 String serverRespons = ClientConnection.sendServerQuery("attacksheep",query);
-		 if(!serverRespons.equals("attacksheep success")) {
-			 System.out.println("Error. Can't add attack information"); 
-		 }
+	public void attackSheep(int id, String user) {
+		String query = "" + id + "||" + user;
+		String serverRespons = ClientConnection.sendServerQuery("attacksheep",
+				query);
+		if (!serverRespons.equals("attacksheep success")) {
+			System.out.println("Error. Can't add attack information");
+		}
 	}
 
 	public ArrayList<SheepLocation> getLastLocations(int id) throws Exception {
 		String query = "" + id;
-		//Får tilbake et Sheep-objekt
-		 Object serverRespons = ClientConnection.sendObjectQuery("getsheeplog",query);
-		 if(serverRespons instanceof Sheep) {
-			 return ((Sheep) serverRespons).getLastLocations();
-		 }
-		 throw new Exception("Error. Can't get last locations"); 
-		 
-		 
-	}
-	
+		// Får tilbake et Sheep-objekt
+		Object serverRespons = ClientConnection.sendObjectQuery("getsheeplog",
+				query);
+		if (serverRespons instanceof Sheep) {
+			return ((Sheep) serverRespons).getLastLocations();
+		}
+		throw new Exception("Error. Can't get last locations");
 
+	}
 
 }
