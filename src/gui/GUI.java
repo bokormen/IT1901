@@ -106,6 +106,9 @@ public class GUI extends JFrame {
 	public GUI() {
 		super("Sheepy");
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		System.out.println(System.getProperty("os.name"));
+		System.out.println(System.getProperty("os.version"));
+		System.out.println(System.getProperty("os.arch"));
 		width = 1200;
 		height = 600;
 		setBounds(0, 0, width, height + 20); // +20 for tittel bar'en
@@ -121,6 +124,9 @@ public class GUI extends JFrame {
 		kartverketStaticMap = new KartverketStaticMap();
 
 		this.lp = getLayeredPane();
+		// lp.setFocusable(true);
+		// lp.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "a");
+		// lp.getActionMap().put("a", new EnterAction());
 
 		createLowerPanel();
 
@@ -595,6 +601,8 @@ public class GUI extends JFrame {
 						e.printStackTrace();
 					}
 					myMap.centerInOnSheep(p.getLatitude(), p.getLongitude());
+					changeMySheepButtonColor(Color.WHITE);
+					listSelected.setColor(Color.BLUE);
 				} else if (evt.getClickCount() == 3) { // Triple-click
 					index = list.locationToIndex(evt.getPoint());
 
@@ -775,6 +783,12 @@ public class GUI extends JFrame {
 			b.setLocation(width / 3 + dx + imageLength / 2, dy + imageLength
 					/ 2);
 			b.repaint();
+		}
+	}
+
+	public void changeMySheepButtonColor(Color color) {
+		for (MySheepButton b : mySheepButtons) {
+			b.setColor(color);
 		}
 	}
 
@@ -1971,7 +1985,7 @@ public class GUI extends JFrame {
 							if (b.equals(listSelected)) {
 								b.attackSheep(true);
 								user.attackSheep(listSelected.getSheep()
-										.getId());
+										.getId(), user.getEmail());
 							}
 						}
 					} else {
@@ -2053,12 +2067,6 @@ public class GUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			System.out.println("yaywe");
-		}
-	}
-
-	static class EnterAction extends AbstractAction {
-		public void actionPerformed(ActionEvent tf) {
-			System.out.println("The Enter key has been pressed.");
 		}
 	}
 

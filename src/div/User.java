@@ -10,8 +10,7 @@ import javax.mail.internet.MimeMessage;
 
 /**
  * User-klassen representerer en brukers profil. Lagrer og validerer generell
- * info om brukeren, inkludert email og passord som er nodvendig for
- * innlogging.
+ * info om brukeren, inkludert email og passord som er nodvendig for innlogging.
  * 
  * @author Ragnhild
  * 
@@ -107,7 +106,7 @@ public class User implements Serializable {
 	}
 
 	/**
-	 * Validerer navn. True dersom det bare inneholder bokstaver og mellomrom. 
+	 * Validerer navn. True dersom det bare inneholder bokstaver og mellomrom.
 	 */
 	private boolean nameIsValid(String name) {
 		if (name.matches("^[a-zA-Z ]+$")) {
@@ -117,7 +116,7 @@ public class User implements Serializable {
 	}
 
 	/**
-	 * Validerer telefonnummer. Må minst være 8 tall. 
+	 * Validerer telefonnummer. Må minst være 8 tall.
 	 */
 	private boolean phoneNumberIsValid(String phoneNr) {
 		if (phoneNr.length() < 8) {
@@ -131,9 +130,9 @@ public class User implements Serializable {
 		}
 		return true;
 	}
-	
+
 	/**
-	 * Validerer emailadresse. 
+	 * Validerer emailadresse.
 	 */
 	public boolean emailAddressIsValid(String email) {
 		String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
@@ -143,7 +142,8 @@ public class User implements Serializable {
 	}
 
 	/**
-	 * Validerer passord. Returnerer true dersom det bare inneholder bokstaver, tall og mellomrom. 
+	 * Validerer passord. Returnerer true dersom det bare inneholder bokstaver,
+	 * tall og mellomrom.
 	 */
 	private boolean passwordIsValid(String pass) {
 		if (pass.matches("^[a-zA-Z0-9 ]+$")) {
@@ -200,16 +200,18 @@ public class User implements Serializable {
 	}
 
 	/**
-	 * Registrer en sau på denne brukeren. 
+	 * Registrer en sau på denne brukeren.
 	 */
 	public void registerSheep(String name, String age, String weight,
 			String gender, String owner, String shepherd)
 			throws NumberFormatException, Exception {
 		sheepReg.registerSheep(name, Integer.parseInt(age),
-				Integer.parseInt(weight), gender.charAt(0), owner, shepherd, latitude, longitude);
+				Integer.parseInt(weight), gender.charAt(0), owner, shepherd,
+				latitude, longitude);
 	}
-	
-	public void editSheep(int id, String name, String owner, String shepherd, char gender, int weight, int birthyear) throws Exception {
+
+	public void editSheep(int id, String name, String owner, String shepherd,
+			char gender, int weight, int birthyear) throws Exception {
 		sheepReg.editSheep(id, name, owner, shepherd, gender, weight, birthyear);
 	}
 
@@ -224,15 +226,13 @@ public class User implements Serializable {
 	public ArrayList<Sheep> getSheepList() {
 		return sheepReg.getSheepList();
 	}
-	
-	public void attackSheep(int id) {
-		sheepReg.attackSheep(id);
+
+	public void attackSheep(int id, String user) {
+		sheepReg.attackSheep(id, user);
 	}
-	
+
 	public ArrayList<SheepLocation> getLastLocations(int id) throws Exception {
 		return sheepReg.getLastLocations(id);
 	}
-	
-
 
 }
