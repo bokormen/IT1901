@@ -108,7 +108,7 @@ public class DatabaseConnector {
 //		for (int i = 0; i < test.size(); i++) {
 //			System.out.println(testEmails.get(i) + " har " + test.get(i) + " sauer");
 //		}
-		findSheep("test0@test.test", "495844");
+		Sheep sau = findSheep("test0@test.test", "495844");
 		
 		
 		close();
@@ -667,7 +667,7 @@ public class DatabaseConnector {
 					sheep.setHeartrate(rs.getInt(6));
 					sheep.setTemperature(rs.getInt(7));
 					while(rs2.next()) {
-						sheep.newLocation(rs2.getString(0), rs2.getString(1));
+						sheep.newLocation(rs2.getString(1), rs2.getString(2));
 					}
 				} catch (Exception e) {
 					System.out.println("Error " + e.getMessage() + "Exception");
