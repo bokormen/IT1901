@@ -184,7 +184,7 @@ public class SheepRegistration implements Serializable {
 		Object serverRespons = ClientConnection.sendObjectQuery("getsheeplog",
 				query);
 		if (serverRespons instanceof Sheep) {
-			return ((Sheep) serverRespons).getLastLocations();
+			return (ArrayList<SheepLocation>) ((Sheep) serverRespons).getLastLocations();
 		}
 		throw new Exception("Error. Can't get last locations");
 

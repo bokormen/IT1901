@@ -3,6 +3,7 @@ package div;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Sheep-klassen representerer en sau i systemet og lagrer og validerer generell
@@ -171,12 +172,12 @@ public class Sheep implements Serializable {
 	/**
 	 * Returnerer de 5 siste posisjonene til sauen, eller så mange den har.
 	 */
-	public ArrayList<SheepLocation> getLastLocations() {
+	public List<SheepLocation> getLastLocations() {
 		int num = 5;
 		if (locations.size() < 5) {
 			num = locations.size()-1;
 		}
-		return  (ArrayList<SheepLocation>) locations.subList(locations.size() - num, locations.size());
+		return locations.subList(locations.size() - num, locations.size());
 	}
 
 	/**
