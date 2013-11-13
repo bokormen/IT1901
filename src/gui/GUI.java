@@ -1985,7 +1985,7 @@ public class GUI extends JFrame {
 							if (b.equals(listSelected)) {
 								b.attackSheep(true);
 								user.attackSheep(listSelected.getSheep()
-										.getId());
+										.getId(), user.getEmail());
 							}
 						}
 					} else {
