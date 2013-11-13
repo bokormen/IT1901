@@ -247,7 +247,7 @@ public class DatabaseConnector {
 	 * @author Oeyvind
 	 * @return Returnerer id'en til den sist innsate sauen i databasen fra maskinen som brukes til aa kalle denne funksjonen
 	 */
-	public static int newSheep(String name, String owner, String shepherd, String gender, String weight, String heartrate, String temperature, String birthyear) {
+	public static int newSheep(String name, String owner, String shepherd, String gender, String weight, String heartrate, String temperature, String birthyear, String location) {
 		int i = -1;
 		try {
 			String linje ="INSERT INTO `Sheep` (`Name`, `Owner`, `Shepherd`, `Gender`, `Weight`,`Heartrate`,`Temperature`,`Age`) VALUES "+
@@ -266,6 +266,8 @@ public class DatabaseConnector {
 			while (rs.next()) {
 				i=rs.getInt(1);
 			}
+			
+			newPosition(Integer.toString(i), getLatetsDate(), location);
 			
 //			Statement st = con.createStatement();
 //			st.executeUpdate(linje);
