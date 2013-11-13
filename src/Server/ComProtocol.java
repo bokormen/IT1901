@@ -486,7 +486,7 @@ public class ComProtocol {
     private String registerSheep(String theInput) {
 
         String[] temp = theInput.split("\\|\\|"); //splitter input ved ||
-        if (temp.length == 8) {
+        if (temp.length == 9) {
             if (!DatabaseConnector.doesSheepExsist(temp[0])) {
                 try {
                     sendObject(DatabaseConnector.newSheep(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5], temp[6], temp[7], temp[8]));
