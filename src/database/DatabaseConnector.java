@@ -88,12 +88,12 @@ public class DatabaseConnector {
 //		deleteTestSheeps();
 //		RandomTestData.fillDatabaseWithUsers(200);
 //		RandomTestData.sheepsForTestUser("bokormen-05@hotmail.com", 1);
-		RandomTestData.maxSheepsForTestUser("bokormen-05@hotmail.com",7);
-		String sheepBoundariesLongitude = "63.4259,63.4341";
-		String sheepBoundariesLatitude = "10.3808,10.3992";
-		for (int i=0;i<10;i++) {
-			RandomTestData.moveSheeps(sheepBoundariesLongitude, sheepBoundariesLatitude);
-		}
+//		RandomTestData.maxSheepsForTestUser("bokormen-05@hotmail.com",7);
+//		String sheepBoundariesLongitude = "63.4259,63.4341";
+//		String sheepBoundariesLatitude = "10.3808,10.3992";
+//		for (int i=0;i<10;i++) {
+//			RandomTestData.moveSheeps(sheepBoundariesLongitude, sheepBoundariesLatitude);
+//		}
 //		setSheepAttacked("1020");
 //		setSheepSafe("1020");
 //		ArrayList<String> Sheep = getAttackedSheep("test100@test.test");
@@ -108,6 +108,8 @@ public class DatabaseConnector {
 //		for (int i = 0; i < test.size(); i++) {
 //			System.out.println(testEmails.get(i) + " har " + test.get(i) + " sauer");
 //		}
+		findSheep("test0@test.test", "495844");
+		
 		
 		close();
 	}
@@ -643,7 +645,9 @@ public class DatabaseConnector {
 		Sheep sheep = null;
 		try {
 			String query = "SELECT S.ID, S.Name, S.Gender, S.Shepherd, S.Weight, S.Heartrate, S.Temperature, S.Age FROM Sheep AS S WHERE S.Owner = '" + user + "' AND S.ID = "+ID;
-
+			
+			System.out.println(query);
+			
 			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			
@@ -660,8 +664,8 @@ public class DatabaseConnector {
 //					Statement st2 = con.createStatement();
 //					ResultSet rs2 = st2.executeQuery(query2);
 					
-					sheep.setHeartrate(rs.getInt(4));
-					sheep.setTemperature(rs.getInt(5));
+					sheep.setHeartrate(rs.getInt(6));
+					sheep.setTemperature(rs.getInt(7));
 					while(rs2.next()) {
 						sheep.newLocation(rs2.getString(0), rs2.getString(1));
 					}
