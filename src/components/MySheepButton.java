@@ -126,6 +126,7 @@ public class MySheepButton extends JButton implements MouseListener {
 	public void mouseClicked(MouseEvent arg0) {
 		this.gui.setLwEditSheep(this.sheep);
 		this.gui.setListSelection(this.sheep);
+		setColor(Color.BLUE);
 	}
 
 	@Override
@@ -149,7 +150,6 @@ public class MySheepButton extends JButton implements MouseListener {
 		timer.start();
 		if (buttonCount == 1) {
 			gui.setLwEditSheep(this.sheep);
-
 			buttonCount = 0;
 		}
 		buttonCount++;
@@ -195,7 +195,6 @@ public class MySheepButton extends JButton implements MouseListener {
 		public void actionPerformed(ActionEvent arg0) {
 			repaint();
 		}
-
 	}
 
 	public String toString() {

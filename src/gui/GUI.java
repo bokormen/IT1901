@@ -889,15 +889,16 @@ public class GUI extends JFrame {
 					cw / 2, ch);
 
 			lwEditHeartrateLabel = new MyLabel(new JLabel(), "", "redtempicon");
-			lwEditHeartrateLabel.setBounds(199 * width / 240,
+			lwEditHeartrateLabel.setBounds(211 * width / 240,
 					85 * height / 100, cw / 2, ch);
 
 			lwEditTemperatureLabel = new MyLabel(new JLabel(), "",
 					"redhearticon");
-			lwEditTemperatureLabel.setBounds(211 * width / 240,
+			lwEditTemperatureLabel.setBounds(199 * width / 240,
 					85 * height / 100, cw / 2, ch);
 
-			lwEditBirthyearLabel = new MyLabel(new JLabel(), "Birthyear:", null);
+			lwEditBirthyearLabel = new MyLabel(new JLabel(), "Birth year:",
+					null);
 			lwEditBirthyearLabel.setBounds(108 * width / 120,
 					85 * height / 100, cw, ch);
 
@@ -1992,7 +1993,8 @@ public class GUI extends JFrame {
 						listInfo.setText("Select a sheep.");
 					}
 				} else if (text.equals("History")) {
-					if (state == LOG) {
+					if (state == LIST) {
+						System.out.println(listSelected);
 						if (listSelected != null) {
 							for (MySheepButton b : mySheepButtons) {
 								if (b.equals(listSelected)) {
