@@ -166,7 +166,6 @@ public class SheepRegistration implements Serializable {
 		return null;
 		
 	}
-
 	/**
 	 * Sender informasjon om angrep mot en sau til server.
 	 */
