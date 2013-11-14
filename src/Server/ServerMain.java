@@ -42,7 +42,7 @@ public class ServerMain {
         //start accepting client connections;
         while (true) {
 
-            ServerClientThread sct = null;
+            ServerClientThread sct;
             Socket clientSocket = null;
             Socket objectSocket = null;
 

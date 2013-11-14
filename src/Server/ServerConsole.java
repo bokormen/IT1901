@@ -4,13 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Eivind
- * Date: 22.09.13
- * Time: 23:03
- * To change this template use File | Settings | File Templates.
- */
 
 //Server consol for å administrere server
 public class ServerConsole extends Thread {

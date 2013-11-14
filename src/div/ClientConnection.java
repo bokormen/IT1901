@@ -2,7 +2,6 @@ package div;
 
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
 
 //opprette ny klient tilkoppling til server. Bruk getDataFromServer() for å sende/hente info fra server
 public class ClientConnection {
@@ -65,7 +64,7 @@ public class ClientConnection {
     private static Object getObject() throws IOException, ClassNotFoundException {
 
         Object o;
-        int length = 0;
+        int length;
 
 
         length = oin.readInt();

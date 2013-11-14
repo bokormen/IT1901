@@ -2,7 +2,6 @@ package Server;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 
@@ -48,9 +47,9 @@ public class ServerLog {
             addEntry("Cleared Log.");
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
 
     }
@@ -82,7 +81,10 @@ public class ServerLog {
             logFile = new File("log.txt");
 
             if (!logFile.exists()) {
-                logFile.createNewFile();
+                if (!logFile.createNewFile()) {
+                    System.err.println("Error opening log file, no logging enabled");
+                    return;
+                }
             }
 
             //out = new PrintWriter(new BufferedWriter(new FileWriter("log.txt", true)));
