@@ -41,10 +41,12 @@ public class MyImagePanel extends JPanel {
 		this.googleImage = getGoogleImage(latitude, longitude);
 		this.googleImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
 		this.drawImage = googleImage;
+		repaint();
 	}
 
 	public void changeToBackgroundImage() {
 		this.drawImage = backgroundImage;
+		repaint();
 	}
 
 	private BufferedImage getGoogleImage(double latitude, double longitude) {

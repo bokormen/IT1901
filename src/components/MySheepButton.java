@@ -26,15 +26,13 @@ public class MySheepButton extends JButton implements MouseListener {
 	private GUI gui;
 	private MyPoint mp;
 	private boolean attackSheep;
-	private boolean draw = true;
 
 	private int buttonCount = 0;
 
 	private Timer timer = new Timer(1000, new TimerListener());
 	private Timer dTimer = new Timer(100, new DrawingTimer());
 
-	public MySheepButton(JButton jb, Sheep sheep, int x, int y, int diameter,
-			GUI gui) {
+	public MySheepButton(JButton jb, Sheep sheep, int x, int y, int diameter, GUI gui) {
 		this.jb = jb;
 		this.diameter = diameter;
 		this.sheep = sheep;
@@ -76,8 +74,6 @@ public class MySheepButton extends JButton implements MouseListener {
 	}
 
 	public void setDraw(boolean bool) {
-		// this.draw = bool;
-		// this.border.setDraw(bool);
 		this.setEnabled(bool);
 		this.setVisible(bool);
 	}
@@ -103,8 +99,8 @@ public class MySheepButton extends JButton implements MouseListener {
 	 */
 
 	public void setColor(Color color) {
-		if (this.color.equals(Color.RED)) {
-			timer.stop();
+		if (this.color.equals(Color.RED) && !color.equals(Color.WHITE)) {
+			attackSheep(false);
 		} else {
 			this.color = color;
 		}
@@ -121,10 +117,10 @@ public class MySheepButton extends JButton implements MouseListener {
 	public void attackSheep(boolean bool) {
 		attackSheep = bool;
 		if (bool) {
-			setColor(Color.RED);
 			dTimer.start();
+			this.color = Color.RED;
 		} else {
-			setColor(Color.WHITE);
+			this.color = Color.WHITE;
 			dTimer.stop();
 		}
 	}
@@ -149,24 +145,19 @@ public class MySheepButton extends JButton implements MouseListener {
 	public void mouseClicked(MouseEvent arg0) {
 		this.gui.setLwEditSheep(this.sheep);
 		this.gui.setListSelection(this.sheep);
-		if (this.color.equals(Color.RED)) {
-			timer.stop();
-		} else {
-			setColor(Color.BLUE);
-		}
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
 		if (!color.equals(Color.RED)) {
-			this.color = Color.BLUE;
+			this.color = Color.BLACK;
 			repaint();
 		}
 	}
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
-		if (!color.equals(Color.RED)) {
+		if (!color.equals(Color.RED) && !color.equals(Color.BLUE)) {
 			this.color = Color.WHITE;
 		}
 		repaint();
@@ -184,8 +175,6 @@ public class MySheepButton extends JButton implements MouseListener {
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/**
@@ -227,10 +216,8 @@ public class MySheepButton extends JButton implements MouseListener {
 	public String toString() {
 		int id = sheep.getId();
 
-		String lat = String.format("%.6g%n",
-				Double.parseDouble(sheep.getLocation().getLatitude()));
-		String lon = String.format("%.6g%n",
-				Double.parseDouble(sheep.getLocation().getLongitude()));
+		String lat = String.format("%.6g%n", Double.parseDouble(sheep.getLocation().getLatitude()));
+		String lon = String.format("%.6g%n", Double.parseDouble(sheep.getLocation().getLongitude()));
 
 		return id + " - " + lat + "," + lon;
 	}

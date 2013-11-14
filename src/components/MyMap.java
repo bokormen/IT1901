@@ -20,8 +20,7 @@ import javax.swing.Timer;
 
 import div.User;
 
-public class MyMap extends JPanel implements MouseListener,
-		MouseMotionListener, MouseWheelListener {
+public class MyMap extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener {
 
 	private int width;
 	private int height;
@@ -47,8 +46,7 @@ public class MyMap extends JPanel implements MouseListener,
 
 	private boolean changesMade = false;
 
-	public MyMap(int width, int height, double latitude, double longitude,
-			GUI gui) {
+	public MyMap(int width, int height, double latitude, double longitude, GUI gui) {
 		images = new ArrayList<MyImage>();
 		this.width = width;
 		this.height = height;
@@ -121,8 +119,7 @@ public class MyMap extends JPanel implements MouseListener,
 		int x = (int) (-(this.longitude - longitude) * imageLength / numw);
 		int y = (int) ((this.latitude - latitude) * imageLength / numh);
 
-		for (int i = 0; i < Math.sqrt(Math.pow(
-				((dx - (x + 250)) % imageLength / 2), 2)); i += imageLength / 2) {
+		for (int i = 0; i < Math.sqrt(Math.pow(((dx - (x + 250)) % imageLength / 2), 2)); i += imageLength / 2) {
 			dx += imageLength / 2;
 			try {
 				updateMap();
@@ -130,8 +127,7 @@ public class MyMap extends JPanel implements MouseListener,
 				e.printStackTrace();
 			}
 		}
-		for (int i = 0; i < Math.sqrt(Math.pow(
-				((dy - (y + 390)) % imageLength / 2), 2)); i += imageLength / 2) {
+		for (int i = 0; i < Math.sqrt(Math.pow(((dy - (y + 390)) % imageLength / 2), 2)); i += imageLength / 2) {
 			dy += imageLength / 2;
 			try {
 				updateMap();
@@ -147,8 +143,8 @@ public class MyMap extends JPanel implements MouseListener,
 	}
 
 	public void bigMap() {
-		this.dx = 0;
-		this.dy = 0;
+		this.dx = 1280 / 3;
+		this.dy = 1280 / 3;
 		zoom(1280 - z);
 		try {
 			updateMap();
@@ -196,14 +192,12 @@ public class MyMap extends JPanel implements MouseListener,
 			for (MyImage i : images) {
 				int width = i.getImage().getWidth(this);
 				int height = i.getImage().getHeight(this);
-				g.drawImage(i.getImage(), i.getX() * width - dx, i.getY()
-						* height - dy, this);
+				g.drawImage(i.getImage(), i.getX() * width - dx, i.getY() * height - dy, this);
 				gui.repaintMySheepButtons();
 			}
 		}
 		if (changesMade) {
-			gui.changeMySheepButtonBounds(latitude, longitude, 15, dx, dy,
-					imageLength);
+			gui.changeMySheepButtonBounds(latitude, longitude, 15, dx, dy, imageLength);
 			changesMade = false;
 		}
 

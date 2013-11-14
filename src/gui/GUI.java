@@ -219,7 +219,6 @@ public class GUI extends JFrame {
 	 */
 
 	private void createLoginInterfaceComponents() {
-		int cw = 4 * width / 30;
 		int ch = 3 * height / 40;
 
 		unField = new MyTextField(new JTextField(), "blueusericon", "Email");
@@ -233,7 +232,7 @@ public class GUI extends JFrame {
 		pwField.setName("pwField");
 
 		loginInfo = new MyLabel(new JLabel(), "", null);
-		loginInfo.setBounds(width / 12, 55 * height / 200, width / 6, ch);
+		loginInfo.setBounds(width / 12, 70 * height / 200, width / 6, ch);
 
 		lp.add(unField);
 		lp.add(pwField);
@@ -356,7 +355,7 @@ public class GUI extends JFrame {
 		homeButton.addActionListener(actionListener);
 
 		mainInfoLabel = new MyLabel(new JLabel(), "", null);
-		mainInfoLabel.setBounds(width / 12, 15 * height / 200, cw, ch);
+		mainInfoLabel.setBounds(width / 24, 15 * height / 200, 3 * cw / 2, ch);
 
 		lp.add(sheepRegButton);
 		lp.add(listButton);
@@ -644,8 +643,16 @@ public class GUI extends JFrame {
 		mySheepButtons.clear();
 		ArrayList<Sheep> list = user.getSheepList();
 		if (!list.isEmpty()) {
-			for (Sheep s : list) {
-				mySheepButtons.add(new MySheepButton(new JButton(), s, 0, 0, 10, this));
+			for (int i = 0; i < 200; i++) {
+				Sheep s;
+				try {
+					s = list.get(i);
+				} catch (Exception e) {
+					s = null;
+				}
+				if (s != null) {
+					mySheepButtons.add(new MySheepButton(new JButton(), s, 0, 0, 10, this));
+				}
 			}
 			for (MySheepButton b : mySheepButtons) {
 				lp.add(b);
@@ -704,7 +711,9 @@ public class GUI extends JFrame {
 				if (state == LOG) {
 					p = b.getMyPoint();
 				} else {
-					p = getLocationPoint(b.getSheep().getLocation().getPosition());
+					if (b.getSheep() != null) {
+						p = getLocationPoint(b.getSheep().getLocation().getPosition());
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -1290,8 +1299,10 @@ public class GUI extends JFrame {
 
 			user.editSheep(Integer.parseInt(id), name, owner, shepherd, gender.charAt(0), Integer.parseInt(weight),
 					Integer.parseInt(birthyear));
+			mainInfoLabel.setText("Sheep " + id + " has been changed");
 		} catch (Exception e) {
 			e.printStackTrace();
+			mainInfoLabel.setText("Failed to update sheep");
 		}
 		return null;
 	}
@@ -1315,7 +1326,8 @@ public class GUI extends JFrame {
 			addMySheepButtons();
 			sheepListModel.clear();
 			updateSheepList();
-			myMap.repaint();
+			createMap();
+			myMap.setUser(user);
 
 			regSheepNameField.setText("");
 			regAgeField.setText("");
@@ -1342,7 +1354,8 @@ public class GUI extends JFrame {
 	private void logout() {
 		myMap.setUser(null);
 		rightPanel.setVisible(true);
-		mySheepButtons.clear();
+		changeMySheepButtonDrawBool(mySheepButtons, false);
+		changeMySheepButtonDrawBool(logSheepButtons, false);
 		logSheepButtons.clear();
 		for (JComponent jc : lwEditComps) {
 			jc.setVisible(false);
@@ -1435,6 +1448,13 @@ public class GUI extends JFrame {
 			lwEditHeartrateField.setText("" + s.getHeartrate());
 			lwEditTemperatureField.setText("" + s.getTemperature());
 			lwEditBirthyearField.setText("" + s.getBirthyear());
+			for (MySheepButton b : mySheepButtons) {
+				if (b.getSheep().equals(s)) {
+					b.setColor(Color.BLUE);
+				} else {
+					b.setColor(Color.WHITE);
+				}
+			}
 		}
 	}
 
@@ -1466,7 +1486,6 @@ public class GUI extends JFrame {
 			// addMySheepLogButtons(sheep);
 			// changeMySheepButtonDrawBool(logSheepButtons, true);
 			for (SheepLocation s : sheepLocs) {
-				int id = sheep.getId();
 				String lat = String.format("%.6g%n", Double.parseDouble(s.getLatitude()));
 				String lon = String.format("%.6g%n", Double.parseDouble(s.getLongitude()));
 				String date = s.getDate();
@@ -1509,6 +1528,8 @@ public class GUI extends JFrame {
 							input = regNameField.getText();
 							if (!input.equals("")) {
 								tUser.setFirstName(input);
+								regNameField.setText(input.substring(0, 1).toUpperCase()
+										+ input.substring(1).toLowerCase());
 								((MyBorder) regNameField.getBorder()).changeColor(valid);
 							}
 						} catch (Exception exc) {
@@ -1519,6 +1540,8 @@ public class GUI extends JFrame {
 							input = regLNameField.getText();
 							if (!input.equals("")) {
 								tUser.setLastName(input);
+								regLNameField.setText(input.substring(0, 1).toUpperCase()
+										+ input.substring(1).toLowerCase());
 								((MyBorder) regLNameField.getBorder()).changeColor(valid);
 							}
 						} catch (Exception exc) {
@@ -1548,11 +1571,14 @@ public class GUI extends JFrame {
 						try {
 							input = regLatitudeField.getText();
 							if (!input.equals("")) {
-								tUser.setLatitude(input);
-								((MyBorder) regLatitudeField.getBorder()).changeColor(valid);
-								if (((MyBorder) regLongitudeField.getBorder()).getColor().equals(valid)) {
-									rightPanel.changeToGoogleImage(tUser.getLatitudeDouble(),
-											tUser.getLongitudeDouble());
+								int lat = Integer.parseInt(input);
+								if (lat >= -90 && lat <= 90) {
+									tUser.setLatitude(input);
+									((MyBorder) regLatitudeField.getBorder()).changeColor(valid);
+									if (((MyBorder) regLongitudeField.getBorder()).getColor().equals(valid)) {
+										rightPanel.changeToGoogleImage(tUser.getLatitudeDouble(),
+												tUser.getLongitudeDouble());
+									}
 								}
 							}
 						} catch (Exception exc) {
@@ -1562,11 +1588,14 @@ public class GUI extends JFrame {
 						try {
 							input = regLongitudeField.getText();
 							if (!input.equals("")) {
-								tUser.setLongitude(input);
-								((MyBorder) regLongitudeField.getBorder()).changeColor(valid);
-								if (((MyBorder) regLatitudeField.getBorder()).getColor().equals(valid)) {
-									rightPanel.changeToGoogleImage(tUser.getLatitudeDouble(),
-											tUser.getLongitudeDouble());
+								int lon = Integer.parseInt(input);
+								if (lon >= -180 && lon <= 180) {
+									tUser.setLongitude(input);
+									((MyBorder) regLongitudeField.getBorder()).changeColor(valid);
+									if (((MyBorder) regLatitudeField.getBorder()).getColor().equals(valid)) {
+										rightPanel.changeToGoogleImage(tUser.getLatitudeDouble(),
+												tUser.getLongitudeDouble());
+									}
 								}
 							}
 						} catch (Exception exc) {
