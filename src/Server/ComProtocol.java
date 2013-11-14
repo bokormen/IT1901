@@ -401,21 +401,15 @@ public class ComProtocol {
 
 
         //venter paa input for aa faa hente log over angrepe sauer
-        //input: "id||mengde"
-        //eksempel: "12345||200"
+        //input: "email"
+        //eksempel: "frodo@hotmail.com"
         } else if (state == GETATTACKEDSHEEP) {
 
             if (theInput != null) {
                 if (isLoggedIn) {
-                    String[] temp = theInput.split("\\|\\|"); //splitter input ved ||
-                    if (temp.length == 2) {
-                        sendObject(DatabaseConnector.addNumberOfHistoricalLocationsToSheep(temp[0], temp[1]));
-                        log.addEntry(ClientIP + "[" + UserName + "] Requested log of sheep: " + temp[0] + ".");
-                        theOutput = "object sending";
-
-                    } else {
-                        theOutput = "getattackedsheep bad input";
-                    }
+                    sendObject(DatabaseConnector.getAttackedSheep(UserName));
+                    log.addEntry(ClientIP + "[" + UserName + "] Requested sheep attack log.");
+                    theOutput = "object sending";
                 } else {
                     theOutput = "getattackedsheep no login";
                 }
@@ -646,12 +640,14 @@ public class ComProtocol {
     }
 
 
+    //sender et objekt til bruker
     private void sendObject(Object o) throws IOException {
 
             byte[] b = Serialize(o);
             sendBytes(b);
     }
 
+    //serielliserer et objekt
     public static byte[] Serialize(Object obj) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         ObjectOutputStream os = new ObjectOutputStream(out);
@@ -659,10 +655,12 @@ public class ComProtocol {
         return out.toByteArray();
     }
 
+    //sender et seriellisert objekt gjennom socket
     public void sendBytes(byte[] myByteArray) throws IOException {
         sendBytes(myByteArray, 0, myByteArray.length);
     }
 
+    //sender en del av et seriellisert objet gjennom socket
     public void sendBytes(byte[] myByteArray, int start, int len) throws IOException {
         if (len < 0)
             throw new IllegalArgumentException("Negative length not allowed");
@@ -691,10 +689,7 @@ public class ComProtocol {
     public boolean emailIsValid(String email) {
         String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                 + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-        if (email.matches(emailPattern)) {
-            return true;
-        }
-        return false;
+        return email.matches(emailPattern);
     }
 
 
