@@ -5,17 +5,16 @@ import gui.GUI;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Ellipse2D;
 
-import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.Timer;
 
+import div.MyPoint;
 import div.Sheep;
 
 public class MySheepButton extends JButton implements MouseListener {
@@ -25,7 +24,9 @@ public class MySheepButton extends JButton implements MouseListener {
 	private Sheep sheep;
 	private Color color = Color.WHITE;
 	private GUI gui;
+	private MyPoint mp;
 	private boolean attackSheep;
+	private boolean draw = true;
 
 	private int buttonCount = 0;
 
@@ -35,14 +36,14 @@ public class MySheepButton extends JButton implements MouseListener {
 	public MySheepButton(JButton jb, Sheep sheep, int x, int y, int diameter,
 			GUI gui) {
 		this.jb = jb;
-		this.setVisible(true);
 		this.diameter = diameter;
 		this.sheep = sheep;
 		this.gui = gui;
 
-		this.setBounds(x - diameter / 2, y - diameter / 2, diameter, diameter);
+		this.setBounds(0, 0, diameter, diameter);
 		this.setOpaque(false);
 		this.setContentAreaFilled(false);
+		this.setVisible(true);
 
 		this.border = new MyBorder(80);
 		border.setColor(Color.BLACK);
@@ -60,6 +61,25 @@ public class MySheepButton extends JButton implements MouseListener {
 
 	public Sheep getSheep() {
 		return sheep;
+	}
+
+	public void setSheep(Sheep sheep) {
+		this.sheep = sheep;
+	}
+
+	public void setMyPoint(MyPoint mp) {
+		this.mp = mp;
+	}
+
+	public MyPoint getMyPoint() {
+		return mp;
+	}
+
+	public void setDraw(boolean bool) {
+		// this.draw = bool;
+		// this.border.setDraw(bool);
+		this.setEnabled(bool);
+		this.setVisible(bool);
 	}
 
 	/**
@@ -83,8 +103,11 @@ public class MySheepButton extends JButton implements MouseListener {
 	 */
 
 	public void setColor(Color color) {
-		this.color = color;
-		// this.border.setColor(color);
+		if (this.color.equals(Color.RED)) {
+			timer.stop();
+		} else {
+			this.color = color;
+		}
 		repaint();
 	}
 
@@ -126,7 +149,11 @@ public class MySheepButton extends JButton implements MouseListener {
 	public void mouseClicked(MouseEvent arg0) {
 		this.gui.setLwEditSheep(this.sheep);
 		this.gui.setListSelection(this.sheep);
-		setColor(Color.BLUE);
+		if (this.color.equals(Color.RED)) {
+			timer.stop();
+		} else {
+			setColor(Color.BLUE);
+		}
 	}
 
 	@Override

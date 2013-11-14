@@ -149,6 +149,7 @@ public class MyMap extends JPanel implements MouseListener,
 	public void bigMap() {
 		this.dx = 0;
 		this.dy = 0;
+		zoom(1280 - z);
 		try {
 			updateMap();
 		} catch (Exception e) {
@@ -185,16 +186,6 @@ public class MyMap extends JPanel implements MouseListener,
 				e.printStackTrace();
 			}
 			repaint();
-		}
-	}
-
-	private void resetZoom() {
-		this.dx = 0;
-		this.dy = 0;
-		if (!images.isEmpty()) {
-			for (MyImage i : images) {
-
-			}
 		}
 	}
 

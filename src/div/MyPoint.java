@@ -25,4 +25,8 @@ public class MyPoint {
 		this.longitude = longitude;
 	}
 
+	public String toString() {
+		return latitude + "," + longitude;
+	}
+
 }

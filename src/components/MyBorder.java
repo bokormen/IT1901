@@ -10,6 +10,7 @@ import javax.swing.border.AbstractBorder;
 public class MyBorder extends AbstractBorder {
 	private Color color = Color.WHITE;
 	private int arc;
+	private boolean draw = true;
 
 	public MyBorder(int arc) {
 		this.arc = arc;
@@ -17,9 +18,15 @@ public class MyBorder extends AbstractBorder {
 
 	public void paintBorder(Component c, Graphics g, int x, int y, int width,
 			int height) {
-		Graphics2D g2 = (Graphics2D) g;
-		g2.setColor(color);
-		g2.drawRoundRect(x, y, width - 1, height - 1, arc, arc);
+		if (draw) {
+			Graphics2D g2 = (Graphics2D) g;
+			g2.setColor(color);
+			g2.drawRoundRect(x, y, width - 1, height - 1, arc, arc);
+		}
+	}
+
+	public void setDraw(Boolean bool) {
+		this.draw = bool;
 	}
 
 	/**
