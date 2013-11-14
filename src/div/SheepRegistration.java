@@ -58,7 +58,7 @@ public class SheepRegistration implements Serializable {
 	}
 
 	/**
-	 * Endrer en sau sine data. Kan endre navn, gjeter, kjønn og fødselsår.
+	 * Endrer en sau sine data. Kan endre navn, gjeter, kjï¿½nn og fï¿½dselsï¿½r.
 	 */
 	public void editSheep(int id, String name, String owner, String shepherd,
 			char gender, int weight, int birthyear) throws Exception {
@@ -110,7 +110,7 @@ public class SheepRegistration implements Serializable {
 	}
 
 	/**
-	 * Finner en sau i databasen med en gitt eier og id på sau.
+	 * Finner en sau i databasen med en gitt eier og id pï¿½ sau.
 	 */
 	public Sheep findSheep(String user, String id) throws Exception {
 		String query = user + "||" + id;
@@ -171,7 +171,7 @@ public class SheepRegistration implements Serializable {
 	 * Sender informasjon om angrep mot en sau til server.
 	 */
 	public void attackSheep(int id, String user) {
-		String query = "" + id + "||" + user;
+		String query = Integer.toString(id);
 		String serverRespons = ClientConnection.sendServerQuery("attacksheep",
 				query);
 		if (!serverRespons.equals("attacksheep success")) {
@@ -181,7 +181,7 @@ public class SheepRegistration implements Serializable {
 
 	public ArrayList<SheepLocation> getLastLocations(int id) throws Exception {
 		String query = "" + id + "||" + 5;
-		// Får tilbake et Sheep-objekt
+		// Fï¿½r tilbake et Sheep-objekt
 		Object serverRespons = ClientConnection.sendObjectQuery("getsheeplog",
 				query);
 		if (serverRespons instanceof Sheep) {
