@@ -2,6 +2,7 @@ package div;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -81,8 +82,8 @@ public class Sheep implements Serializable {
 	 * @throws Exception
 	 */
 	public void setBirthyear(int birthyear) throws Exception {
-		System.out.println(birthyear);
-		if (birthyear >= 1980) {
+		Calendar cal = Calendar.getInstance();
+		if (birthyear >= 1980 && birthyear <= cal.get(Calendar.YEAR)) {
 			this.birthyear = birthyear;
 		} else {
 			throw new Exception("Age is not valid");
