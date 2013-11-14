@@ -38,7 +38,8 @@ public class ComProtocol {
     private static final int GETOWNEDSHEEP = 3004;
     private static final int CHANGESHEEP = 3005;
     private static final int ATTACKSHEEP = 3006;
-    private static final int GETSHEEPLOG = 3007;
+    private static final int SAVESHEEP = 3007;
+    private static final int GETSHEEPLOG = 3008;
 
     private static final int TESTING = 9999;
 
@@ -113,6 +114,10 @@ public class ComProtocol {
 
             } else if (theInput.equals("attacksheep")) { //bruker vil forandre paa en sau
                 state = ATTACKSHEEP;
+                theOutput = "done";
+
+            } else if (theInput.equals("savesheep")) { //bruker vil forandre paa en sau
+                state = SAVESHEEP;
                 theOutput = "done";
 
             } else if (theInput.equals("getsheeplog")) { //bruker vil ha log over posisjonene til en sau
@@ -339,6 +344,26 @@ public class ComProtocol {
                 }
             } else {
                 theOutput = "attacksheep null input";
+            }
+
+            state = WAIT;
+
+        //venter paa input for aa redde sau
+        //input: "id"
+        //exempel: "1337"
+        } else if (state == SAVESHEEP) {
+
+            if (theInput != null) {
+
+                if (isLoggedIn) {
+                    DatabaseConnector.setSheepSafe(theInput);
+                    log.addEntry(ClientIP + "[" + UserName + "] Sheep: " + theInput + " saved.");
+                    theOutput = "savesheep success";
+                } else {
+                    theOutput = "savesheep no login";
+                }
+            } else {
+                theOutput = "savesheep null input";
             }
 
             state = WAIT;

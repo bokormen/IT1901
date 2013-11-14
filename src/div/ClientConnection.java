@@ -141,14 +141,14 @@ public class ClientConnection {
             if (ip == null) {
                 ClientSocket = new Socket(InetAddress.getLocalHost(), 58339);
                 ObjectSocket = new Socket(InetAddress.getLocalHost(), 58339);
-                ClientSocket.setSendBufferSize(10485760);
-                ObjectSocket.setSendBufferSize(10485760);
+                ClientSocket.setSendBufferSize(1048576);
+                ObjectSocket.setSendBufferSize(1048576);
 
             } else {
                 ClientSocket = new Socket(ip, 58339);
                 ObjectSocket = new Socket(ip, 58339);
-                ClientSocket.setSendBufferSize(10485760);
-                ObjectSocket.setSendBufferSize(10485760);
+                ClientSocket.setSendBufferSize(1048576);
+                ObjectSocket.setSendBufferSize(1048576);
             }
 
             out = new PrintWriter(ClientSocket.getOutputStream(), true);

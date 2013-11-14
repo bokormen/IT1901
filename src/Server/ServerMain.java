@@ -15,6 +15,7 @@ public class ServerMain {
     public static final int USERS = 256;
     public static final ServerLog sLog = new ServerLog();
     private static final ServerConsole sConsole = new ServerConsole();
+    private static final SheepPositionSimulator sSimulator = new SheepPositionSimulator();
     private static ServerSocket serverSocket = null;
     //private static ServerClientThread[] user = new ServerClientThread[USERS];
     public static ArrayList<ServerClientThread> user = new ArrayList<ServerClientThread>();
@@ -32,6 +33,7 @@ public class ServerMain {
             sLog.addEntry("Server Start-Up");
             serverSocket = new ServerSocket(58339);
             sConsole.start();
+            sSimulator.start();
         } catch (IOException e) {
             System.err.println("Could not listen on port: 58339.");
             System.exit(-1);
@@ -49,8 +51,8 @@ public class ServerMain {
                 clientSocket = serverSocket.accept();
                 objectSocket = serverSocket.accept();
 
-                clientSocket.setSendBufferSize(10485760);
-                objectSocket.setSendBufferSize(10485760);
+                clientSocket.setSendBufferSize(1048576);
+                objectSocket.setSendBufferSize(1048576);
 
 
 
