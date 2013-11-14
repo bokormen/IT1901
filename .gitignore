@@ -3,6 +3,7 @@
 *.classpath
 /nbproject/private/
 /build/
+/src/resources/googlestaticmap*.png
 
 # Package Files #
 *.jar
