@@ -94,10 +94,6 @@ public class GUI extends JFrame {
 
 	public GUI() {
 		super("Sheepy");
-		// Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		System.out.println(System.getProperty("os.name"));
-		System.out.println(System.getProperty("os.version"));
-		System.out.println(System.getProperty("os.arch"));
 		width = 1200;
 		height = 600;
 		setBounds(0, 0, width, height + 20); // +20 for tittel bar'en
@@ -635,7 +631,6 @@ public class GUI extends JFrame {
 		try {
 			return new MyPoint(Double.parseDouble(list[0]), Double.parseDouble(list[1]));
 		} catch (Exception e) {
-			System.err.println("Fikk ikke gjort om string til Point location.");
 		}
 		return null;
 	}
@@ -720,9 +715,6 @@ public class GUI extends JFrame {
 				b.setLocation(width / 3 + dx + imageLength / 2, dy + imageLength / 2);
 				b.repaint();
 			}
-			// System.out.println((width / 3 + dx + imageLength / 2) + "  "
-			// + (dy + imageLength / 2));
-
 		}
 	}
 
@@ -1194,7 +1186,7 @@ public class GUI extends JFrame {
 				// Registrer bruker
 				UserRegistration.registerUser(firstName, lastName, email, password2, phoneNr, latitude + ","
 						+ longitude);
-				System.out.println("User registered.");
+				loginInfo.setText("User registered!");
 				return true;
 			} catch (Exception e) {
 				return false;
@@ -1218,7 +1210,6 @@ public class GUI extends JFrame {
 		if (email.equals("")) {
 			try {
 				this.user = UserRegistration.login("test0@test.test", "passord");
-				System.out.println(user);
 				try {
 					user.updateSheepList();
 				} catch (Exception e) {
@@ -1226,7 +1217,6 @@ public class GUI extends JFrame {
 				}
 				changeToLoginInterface(false);
 				changeToMainInterface(true);
-				System.out.println("Logged in: " + user.getFirstName());
 				rightPanel.setVisible(false);
 
 				addMySheepButtons();
@@ -1240,8 +1230,6 @@ public class GUI extends JFrame {
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				System.out.println(e.getLocalizedMessage());
-				System.out.println("Noe galt med admin bruker");
 			}
 			return true;
 		}
@@ -1255,7 +1243,6 @@ public class GUI extends JFrame {
 			}
 			changeToLoginInterface(false);
 			changeToMainInterface(true);
-			System.out.println("Logged in: " + user.getEmail());
 			rightPanel.setVisible(false);
 
 			addMySheepButtons();
@@ -1304,7 +1291,6 @@ public class GUI extends JFrame {
 			user.editSheep(Integer.parseInt(id), name, owner, shepherd, gender.charAt(0), Integer.parseInt(weight),
 					Integer.parseInt(birthyear));
 		} catch (Exception e) {
-			System.out.println("something wrong!");
 			e.printStackTrace();
 		}
 		return null;
@@ -1343,10 +1329,8 @@ public class GUI extends JFrame {
 			changeToMainInterface(true);
 			return true;
 		} catch (NumberFormatException e) {
-			System.out.println("hey wrong");
 			return false;
 		} catch (Exception e) {
-			System.out.println("Hey wrong." + e.getLocalizedMessage());
 			e.printStackTrace();
 			return false;
 		}
@@ -1356,7 +1340,6 @@ public class GUI extends JFrame {
 	 * Metode som logger ut ifra bruker
 	 */
 	private void logout() {
-		System.out.println("Logged out from: " + user.getEmail());
 		myMap.setUser(null);
 		rightPanel.setVisible(true);
 		mySheepButtons.clear();
@@ -1383,6 +1366,7 @@ public class GUI extends JFrame {
 				if (id == b.getSheep().getId()) {
 					sheep = b.getSheep();
 					editSheepButton = b;
+					listSelected = b;
 					b.setColor(Color.BLUE);
 					// ((MyBorder) b.getBorder()).setColor(Color.BLUE);
 				}
@@ -1523,7 +1507,6 @@ public class GUI extends JFrame {
 					if (name.equals("regNameField")) {
 						try {
 							input = regNameField.getText();
-							System.out.println(input);
 							if (!input.equals("")) {
 								tUser.setFirstName(input);
 								((MyBorder) regNameField.getBorder()).changeColor(valid);
@@ -1565,7 +1548,6 @@ public class GUI extends JFrame {
 						try {
 							input = regLatitudeField.getText();
 							if (!input.equals("")) {
-								System.out.println(input);
 								tUser.setLatitude(input);
 								((MyBorder) regLatitudeField.getBorder()).changeColor(valid);
 								if (((MyBorder) regLongitudeField.getBorder()).getColor().equals(valid)) {
@@ -1624,8 +1606,6 @@ public class GUI extends JFrame {
 								((MyBorder) regPwField2.getBorder()).changeColor(valid);
 							} else {
 								((MyBorder) regPwField2.getBorder()).changeColor(invalid);
-								System.out.println("Password does not match!");
-								// TODO
 								return;
 							}
 						} catch (Exception exc) {
@@ -1699,8 +1679,6 @@ public class GUI extends JFrame {
 			if (arg.getSource() instanceof JButton) {
 				JButton pressed = (JButton) arg.getSource();
 				String text = pressed.getText();
-				System.out.println(text);
-
 				if (text.equals("Register")) {
 					if (state == 2) {
 						if (registerUser()) {
@@ -1774,7 +1752,6 @@ public class GUI extends JFrame {
 						}
 					}
 				} else if (text.equals("Register sheep")) {
-					System.out.println("sheep reg");
 					if (state == SHEEPREG) {
 						registerSheep();
 					} else {
@@ -1782,11 +1759,9 @@ public class GUI extends JFrame {
 						changeToRegSheepInterface(true);
 					}
 				} else if (text.equals("List over sheeps")) {
-					System.out.println("sheep list");
 					changeToMainInterface(false);
 					changeToListInterface(true);
 				} else if (text.equals("Search for sheep")) {
-					System.out.println("sheep search");
 					if (state == SEARCH) {
 						searchSheep();
 					} else {
@@ -1882,13 +1857,15 @@ public class GUI extends JFrame {
 						updateLogList(editSheep);
 						changeToSearchInterface(false);
 						changeToLogInterface(true);
+						changeMySheepButtonDrawBool(mySheepButtons, false);
+						changeMySheepButtonDrawBool(logSheepButtons, true);
+						sheepyLog.setVisible(false);
+
 					}
 				}
 			} else if (arg.getSource() instanceof JTextField) {
 				JTextField pressed = (JTextField) arg.getSource();
 				String text = pressed.getName();
-				// Register user
-				System.out.println(text);
 				if (state == 1) {
 					if (text.equals("unField")) {
 						pwField.requestFocus();
