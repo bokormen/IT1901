@@ -195,7 +195,7 @@ public class DatabaseConnector {
 	}
 	
 	/**
-	 * Setter sauen i status angrepen
+	 * Setter sauen i status trygg
 	 * @param id
 	 */
 	public static void setSheepSafe(String id) {
