@@ -40,6 +40,7 @@ public class ComProtocol {
     private static final int ATTACKSHEEP = 3006;
     private static final int SAVESHEEP = 3007;
     private static final int GETSHEEPLOG = 3008;
+    private static final int GETATTACKEDSHEEP = 3009;
 
     private static final int TESTING = 9999;
 
@@ -121,6 +122,10 @@ public class ComProtocol {
                 theOutput = "done";
 
             } else if (theInput.equals("getsheeplog")) { //bruker vil ha log over posisjonene til en sau
+                state = GETSHEEPLOG;
+                theOutput = "done";
+
+            } else if (theInput.equals("getattackedsheep")) { //bruker vil ha log over posisjonene til en sau
                 state = GETSHEEPLOG;
                 theOutput = "done";
                 
@@ -390,6 +395,32 @@ public class ComProtocol {
                 }
             } else {
                 theOutput = "getsheeplog null input";
+            }
+
+            state = WAIT;
+
+
+        //venter paa input for aa faa hente log over angrepe sauer
+        //input: "id||mengde"
+        //eksempel: "12345||200"
+        } else if (state == GETATTACKEDSHEEP) {
+
+            if (theInput != null) {
+                if (isLoggedIn) {
+                    String[] temp = theInput.split("\\|\\|"); //splitter input ved ||
+                    if (temp.length == 2) {
+                        sendObject(DatabaseConnector.addNumberOfHistoricalLocationsToSheep(temp[0], temp[1]));
+                        log.addEntry(ClientIP + "[" + UserName + "] Requested log of sheep: " + temp[0] + ".");
+                        theOutput = "object sending";
+
+                    } else {
+                        theOutput = "getattackedsheep bad input";
+                    }
+                } else {
+                    theOutput = "getattackedsheep no login";
+                }
+            } else {
+                theOutput = "getattackedsheep null input";
             }
 
             state = WAIT;
