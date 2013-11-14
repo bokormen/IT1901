@@ -331,6 +331,7 @@ public class ComProtocol {
                         SheepAttackMail.sendMail(shepherd, s.getId(), s.getLocation().getPosition());
                     }
                     SheepAttackMail.sendMail(s.getOwner(), s.getId(), s.getLocation().getPosition());
+                    DatabaseConnector.setSheepAttacked(Integer.toString(s.getId()));
                     log.addEntry(ClientIP + "[" + UserName + "] Sheep: " + theInput + " under attack.");
                     theOutput = "attacksheep success";
                 } else {
@@ -497,7 +498,7 @@ public class ComProtocol {
                 } catch (IOException e) {
                     return "regsheep database error";
                 }
-                log.addEntry(ClientIP + "[" + UserName + "] registered new sheep (" + temp[0] + ").");
+                log.addEntry(ClientIP + "[" + UserName + "] registered new sheep (" + temp[1] + ").");
                 return "object sending";
             } else {
                 return "regsheep exists";
