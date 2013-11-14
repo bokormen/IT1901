@@ -326,6 +326,10 @@ public class ComProtocol {
 
                 if (isLoggedIn) {
                     Sheep s = DatabaseConnector.findSheep(UserName, theInput);
+                    String shepherd = s.getShepherd();
+                    if (emailIsValid(shepherd)) {
+                        SheepAttackMail.sendMail(shepherd, s.getId(), s.getLocation().getPosition());
+                    }
                     SheepAttackMail.sendMail(s.getOwner(), s.getId(), s.getLocation().getPosition());
                     log.addEntry(ClientIP + "[" + UserName + "] Sheep: " + theInput + " under attack.");
                     theOutput = "attacksheep success";
@@ -624,6 +628,17 @@ public class ComProtocol {
         }
     }
 
+    /**
+     * Sjekker om parameteren email er en valid email.
+     */
+    public boolean emailIsValid(String email) {
+        String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        if (email.matches(emailPattern)) {
+            return true;
+        }
+        return false;
+    }
 
 
 
