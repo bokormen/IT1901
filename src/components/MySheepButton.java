@@ -132,7 +132,7 @@ public class MySheepButton extends JButton implements MouseListener {
 		g2d.setColor(color);
 		g2d.fill(circle);
 
-		if (attackSheep) {
+		if (attackSheep && color.equals(Color.RED)) {
 			if (border.getColor().equals(Color.BLACK)) {
 				border.setColor(Color.YELLOW);
 			} else {
@@ -144,7 +144,6 @@ public class MySheepButton extends JButton implements MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		this.gui.setLwEditSheep(this.sheep);
-		this.gui.setListSelection(this.sheep);
 	}
 
 	@Override
@@ -214,8 +213,10 @@ public class MySheepButton extends JButton implements MouseListener {
 	}
 
 	public String toString() {
+		if (sheep == null) {
+			return "";
+		}
 		int id = sheep.getId();
-
 		String lat = String.format("%.6g%n", Double.parseDouble(sheep.getLocation().getLatitude()));
 		String lon = String.format("%.6g%n", Double.parseDouble(sheep.getLocation().getLongitude()));
 

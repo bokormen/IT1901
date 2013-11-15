@@ -68,18 +68,16 @@ public class GUI extends JFrame {
 		f.setVisible(true);
 	}
 
-	// Plassere alt bedre.
-
 	private int width;
 	private int height;
 
 	private User user; // gitt bruker etter en har logget paa
 	private User tUser = new User(); // test bruker
-	private Sheep tSheep = new Sheep();
-	private Sheep editSheep;
-	private MySheepButton listSelected;
-	private MySheepButton editSheepButton;
-	private ArrayList<SheepLocation> sheepLocs;
+	private Sheep tSheep = new Sheep(); // test sau
+	private Sheep editSheep; // gitt sau som skal endres
+	private MySheepButton listSelected; // sau blitt trykket paa i listen
+	private MySheepButton editSheepButton; // gitt saueknapp som skal endres
+	private ArrayList<SheepLocation> sheepLocs; // historie lokasjonen til sau
 
 	public static int START = 0, LOGIN = 1, REG = 2, FORGOT = 3, MAIN = 4, SEARCH = 5, EDIT = 6, LIST = 7,
 			SHEEPREG = 8, LOG = 9;
@@ -136,23 +134,6 @@ public class GUI extends JFrame {
 	public void repaintPanel() {
 		repaint();
 		validate();
-	}
-
-	/**
-	 * Tegner alle knapper paa nytt
-	 */
-
-	public void repaintMySheepButtons() {
-		if (state == LOG) {
-			for (MySheepButton b : logSheepButtons) {
-				b.repaint();
-			}
-		} else {
-
-			for (MySheepButton b : mySheepButtons) {
-				b.repaint();
-			}
-		}
 	}
 
 	/**
@@ -217,7 +198,6 @@ public class GUI extends JFrame {
 	/**
 	 * Lager alle komponeneter til login interfacet
 	 */
-
 	private void createLoginInterfaceComponents() {
 		int ch = 3 * height / 40;
 
@@ -242,7 +222,6 @@ public class GUI extends JFrame {
 	/**
 	 * Lager alle komponeneter til registrering interfacet
 	 */
-
 	private void createRegisterInterfaceComponents() {
 		int cw = width / 9 /* 4 * width / 30 */;
 		int ch = 3 * height / 40;
@@ -308,7 +287,6 @@ public class GUI extends JFrame {
 	/**
 	 * Lager alle komponeneter til glemt passord interfacet
 	 */
-
 	private void createForgotInterfaceComponents() {
 		int cw = width / 6/* 4 * width / 30 */;
 		int ch = 3 * height / 40;
@@ -325,7 +303,6 @@ public class GUI extends JFrame {
 	/**
 	 * Lager alle komponeneter til hovedmeny interfacet
 	 */
-
 	private void createMainInterfaceComponents() {
 		int cw = width / 6;
 		int ch = 3 * height / 40;
@@ -369,7 +346,6 @@ public class GUI extends JFrame {
 	/**
 	 * Lager alle komponeneter til søk etter sau interfacet
 	 */
-
 	private void createSearchInterfaceComponents() {
 		int cw = width / 6;
 		int ch = 3 * height / 40;
@@ -396,7 +372,6 @@ public class GUI extends JFrame {
 	/**
 	 * Lager alle komponeneter til forandre saue informasjon interfacet
 	 */
-
 	private void createEditInterfaceComponents() {
 		int cw = width / 6;
 		int ch = 3 * height / 40;
@@ -454,22 +429,25 @@ public class GUI extends JFrame {
 	/**
 	 * Lager alle komponeneter til forandre saue informasjon interfacet
 	 */
-
 	private void createListInterfaceComponents() {
 		int cw = width / 6;
 		int ch = 3 * height / 40;
 
 		sheepy = new MyButton(new JButton(), "Sort by color", null);
-		sheepy.setBounds(width / 24, 20 * height / 200, cw / 2, ch);
+		sheepy.setBounds(width / 6 - 7 * cw / 12, 12 * height / 200, cw / 2, ch);
 		sheepy.addActionListener(actionListener);
 
 		sheepyAttack = new MyButton(new JButton(), "Attack sheep", null);
-		sheepyAttack.setBounds(width / 24 + cw / 2, 20 * height / 200, cw / 2, ch);
+		sheepyAttack.setBounds(width / 6, 12 * height / 200, cw / 2, ch);
 		sheepyAttack.addActionListener(actionListener);
 
 		sheepyLog = new MyButton(new JButton(), "History", null);
-		sheepyLog.setBounds(width / 24 + cw, 20 * height / 200, cw / 2, ch);
+		sheepyLog.setBounds(width / 6, 30 * height / 200, cw / 2, ch);
 		sheepyLog.addActionListener(actionListener);
+
+		sheepyDel = new MyButton(new JButton(), "Delete", null);
+		sheepyDel.setBounds(width / 6 - 7 * cw / 12, 30 * height / 200, cw / 2, ch);
+		sheepyDel.addActionListener(actionListener);
 
 		sheepListModel = new DefaultListModel();
 
@@ -519,13 +497,13 @@ public class GUI extends JFrame {
 		lp.add(sheepy);
 		lp.add(sheepyAttack);
 		lp.add(sheepyLog);
+		lp.add(sheepyDel);
 		lp.add(listInfo);
 	}
 
 	/**
 	 * Lager alle komponeneter til registrere sau interfacet
 	 */
-
 	private void createRegSheepInterfaceComponents() {
 		int cw = width / 6;
 		int ch = 3 * height / 40;
@@ -564,7 +542,6 @@ public class GUI extends JFrame {
 	/**
 	 * Lager alle komponeneter til log interfacet
 	 */
-
 	private void createLogInterfaceComponents() {
 		int cw = width / 6;
 		int ch = 3 * height / 40;
@@ -616,28 +593,9 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Prover å gjore om en gitt string til et objekt MyPoint
-	 * 
-	 * @param arg
-	 *            String
-	 * @return myPoint
-	 * @throws Exception
-	 *             mislykket omgjoring fra String til double
+	 * Lager 200 saueknapper der et gitt antall får posisjon, utifra listen av
+	 * sauer fra brukeren.
 	 */
-
-	private MyPoint getLocationPoint(String arg) throws Exception {
-		String[] list = arg.split(",");
-		try {
-			return new MyPoint(Double.parseDouble(list[0]), Double.parseDouble(list[1]));
-		} catch (Exception e) {
-		}
-		return null;
-	}
-
-	/**
-	 * Legger til alle knappene over kartet, utifra brukerens liste over sauer.
-	 */
-
 	private void addMySheepButtons() {
 		mySheepButtons = new ArrayList<MySheepButton>();
 		mySheepButtons.clear();
@@ -660,14 +618,10 @@ public class GUI extends JFrame {
 		}
 	}
 
-	private void changeMySheepButtonDrawBool(ArrayList<MySheepButton> list, Boolean bool) {
-		for (MySheepButton b : list) {
-			b.setDraw(bool);
-			b.repaint();
-		}
-		myMap.repaint();
-	}
-
+	/**
+	 * Legger til et antall saueknapper til aa vise til historien til saue
+	 * posisjonene
+	 */
 	private void addMySheepLogButtons() {
 		logSheepButtons = new ArrayList<MySheepButton>();
 		logSheepButtons.clear();
@@ -682,55 +636,19 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Endrer posisjonen til saueknappene på kartet
+	 * Metode som setter gitt liste av sauer synlige/usynlige.
 	 * 
-	 * @param lat
-	 *            hoydegraden til senter av kartet
-	 * @param lon
-	 *            breddegraden til senter av kartet
-	 * @param zoom
-	 *            verdien av zoom
-	 * @param x
-	 *            antall pixler alt skal flyttes i x retning
-	 * @param y
-	 *            antall pixler alt skal flyttes i y retning
+	 * @param list
+	 *            listen av MySheepButton som skal settes synlige/usynlige
+	 * @param bool
+	 *            true for synlig
 	 */
-	public void changeMySheepButtonBounds(double lat, double lon, int zoom, int x, int y, int imageLength) {
-		double numw = 0.0275;
-		double numh = 0.0123;
-
-		ArrayList<MySheepButton> list;
-		if (state == LOG) {
-			list = logSheepButtons;
-		} else {
-			list = mySheepButtons;
-		}
+	private void changeMySheepButtonDrawBool(ArrayList<MySheepButton> list, Boolean bool) {
 		for (MySheepButton b : list) {
-			MyPoint p = null;
-			try {
-				if (state == LOG) {
-					p = b.getMyPoint();
-				} else {
-					if (b.getSheep() != null) {
-						p = getLocationPoint(b.getSheep().getLocation().getPosition());
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			if (p != null) {
-				int dx = (int) (-(lon - p.getLongitude()) * imageLength / numw) - x;
-				int dy = (int) ((lat - p.getLatitude()) * imageLength / numh) - y;
-				b.setLocation(width / 3 + dx + imageLength / 2, dy + imageLength / 2);
-				b.repaint();
-			}
+			b.setDraw(bool);
+			b.repaint();
 		}
-	}
-
-	public void changeMySheepButtonColor(Color color) {
-		for (MySheepButton b : mySheepButtons) {
-			b.setColor(color);
-		}
+		myMap.repaint();
 	}
 
 	/**
@@ -928,6 +846,7 @@ public class GUI extends JFrame {
 		listComps.add(sheepy);
 		listComps.add(sheepyAttack);
 		listComps.add(sheepyLog);
+		listComps.add(sheepyDel);
 		listComps.add(sheepScrollPane);
 		listComps.add(listInfo);
 		listComps.add(backButton);
@@ -1232,6 +1151,7 @@ public class GUI extends JFrame {
 				addMySheepLogButtons();
 				createMap();
 				myMap.setUser(user);
+				myMap.home();
 				updateSheepList();
 
 				for (JComponent jc : lwEditComps) {
@@ -1322,12 +1242,7 @@ public class GUI extends JFrame {
 		try {
 			user.registerSheep(id, age, weight, gender, user.getEmail(), shepherd);
 
-			mySheepButtons.clear();
-			addMySheepButtons();
-			sheepListModel.clear();
-			updateSheepList();
-			createMap();
-			myMap.setUser(user);
+			resetMap();
 
 			regSheepNameField.setText("");
 			regAgeField.setText("");
@@ -1335,8 +1250,6 @@ public class GUI extends JFrame {
 			regSexField.setText("");
 			regShepherdField.setText("");
 
-			mainInfoLabel.setText("Sheep registred with ID: "
-					+ user.getSheepList().get(user.getSheepList().size() - 1).getId());
 			changeToRegSheepInterface(false);
 			changeToMainInterface(true);
 			return true;
@@ -1406,6 +1319,66 @@ public class GUI extends JFrame {
 	}
 
 	/**
+	 * Endrer posisjonen til saueknappene på kartet
+	 * 
+	 * @param lat
+	 *            hoydegraden til senter av kartet
+	 * @param lon
+	 *            breddegraden til senter av kartet
+	 * @param zoom
+	 *            verdien av zoom
+	 * @param x
+	 *            antall pixler alt skal flyttes i x retning
+	 * @param y
+	 *            antall pixler alt skal flyttes i y retning
+	 */
+	public void changeMySheepButtonBounds(double lat, double lon, int zoom, int x, int y, int imageLength) {
+		double numw = 0.0275;
+		double numh = 0.0123;
+
+		ArrayList<MySheepButton> list;
+		if (state == LOG) {
+			list = logSheepButtons;
+		} else {
+			list = mySheepButtons;
+		}
+		for (MySheepButton b : list) {
+			MyPoint p = null;
+			try {
+				if (state == LOG) {
+					p = b.getMyPoint();
+				} else {
+					if (b.getSheep() != null) {
+						p = getLocationPoint(b.getSheep().getLocation().getPosition());
+					} else {
+						continue;
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			if (p != null) {
+				int dx = (int) (-(lon - p.getLongitude()) * imageLength / numw) - x;
+				int dy = (int) ((lat - p.getLatitude()) * imageLength / numh) - y;
+				b.setLocation(width / 3 + dx + imageLength / 2, dy + imageLength / 2);
+				b.repaint();
+			}
+		}
+	}
+
+	/**
+	 * Metode som setter alle mySheepButtons til en gitt farge
+	 * 
+	 * @param color
+	 *            ny farge til knappene
+	 */
+	public void changeMySheepButtonColor(Color color) {
+		for (MySheepButton b : mySheepButtons) {
+			b.setColor(color);
+		}
+	}
+
+	/**
 	 * Endre fargen paa saue knappene
 	 * 
 	 * @param num
@@ -1429,7 +1402,9 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Setter inn informasjon fra en sau inn i lwEdit feltene.
+	 * Setter inn informasjon fra en sau inn i lwEdit feltene. Setter fargen til
+	 * gitt sau lik blaa og de andre hvite, og setter gitt sau trykket paa i
+	 * sauelisten.
 	 * 
 	 * @param s
 	 *            Sheep
@@ -1455,9 +1430,20 @@ public class GUI extends JFrame {
 					b.setColor(Color.WHITE);
 				}
 			}
+			for (int i = 0; i < sheepListModel.size(); i++) {
+				if (Integer.parseInt(((String) sheepListModel.getElementAt(i)).split(" ")[0]) == s.getId()) {
+					sheepList.setSelectedIndex(i);
+					break;
+				}
+			}
 		}
 	}
 
+	/**
+	 * Setter et objekt i sheepList
+	 * 
+	 * @param sheep
+	 */
 	public void setListSelection(Sheep sheep) {
 		for (int i = 0; i < sheepListModel.size(); i++) {
 			if (Integer.parseInt(((String) sheepListModel.getElementAt(i)).split(" ")[0]) == sheep.getId()) {
@@ -1467,12 +1453,21 @@ public class GUI extends JFrame {
 		}
 	}
 
+	/**
+	 * Oppdaterer listen over sauer
+	 */
 	private void updateSheepList() {
+		sheepListModel.clear();
 		for (MySheepButton s : mySheepButtons) {
 			sheepListModel.addElement(s.toString());
 		}
 	}
 
+	/**
+	 * Oppdaterer log listen fra en sau
+	 * 
+	 * @param sheep
+	 */
 	private void updateLogList(Sheep sheep) {
 		try {
 			logListModel.clear();
@@ -1499,10 +1494,59 @@ public class GUI extends JFrame {
 	}
 
 	/**
+	 * Prover å gjore om en gitt string til et objekt MyPoint
+	 * 
+	 * @param arg
+	 *            String
+	 * @return myPoint
+	 * @throws Exception
+	 *             mislykket omgjoring fra String til double
+	 */
+	private MyPoint getLocationPoint(String arg) throws Exception {
+		String[] list = arg.split(",");
+		try {
+			return new MyPoint(Double.parseDouble(list[0]), Double.parseDouble(list[1]));
+		} catch (Exception e) {
+		}
+		return null;
+	}
+
+	/**
+	 * Tegner alle sauene paa nytt
+	 */
+	public void repaintMySheepButtons() {
+		if (state == LOG) {
+			for (MySheepButton b : logSheepButtons) {
+				b.repaint();
+			}
+		} else {
+			for (MySheepButton b : mySheepButtons) {
+				b.repaint();
+			}
+		}
+	}
+
+	/**
+	 * Resetter kartet og lager nye sauer utifra nye lister
+	 */
+
+	private void resetMap() {
+		myMap.setUser(null);
+		changeMySheepButtonDrawBool(mySheepButtons, false);
+		changeMySheepButtonDrawBool(logSheepButtons, false);
+
+		addMySheepButtons();
+		addMySheepLogButtons();
+		createMap();
+		myMap.setUser(user);
+		myMap.home();
+		updateSheepList();
+	}
+
+	/**
 	 * Lager en FocusListener som lytter til naar en bruker trykker aa
 	 * tekstbokser og forlater dem
 	 */
-
 	private void createFocusListener() {
 		focusListener = new FocusListener() {
 
@@ -1708,6 +1752,7 @@ public class GUI extends JFrame {
 			if (arg.getSource() instanceof JButton) {
 				JButton pressed = (JButton) arg.getSource();
 				String text = pressed.getText();
+				System.out.println(text);
 				if (text.equals("Register")) {
 					if (state == 2) {
 						if (registerUser()) {
@@ -1782,7 +1827,14 @@ public class GUI extends JFrame {
 					}
 				} else if (text.equals("Register sheep")) {
 					if (state == SHEEPREG) {
-						registerSheep();
+						if (registerSheep()) {
+							mainInfoLabel.setForeground(Color.GREEN);
+							mainInfoLabel.setText("Sheep registred with ID: "
+									+ user.getSheepList().get(user.getSheepList().size() - 1).getId());
+						} else {
+							mainInfoLabel.setForeground(Color.RED);
+							mainInfoLabel.setText("Something went wrong with registering sheep.");
+						}
 					} else {
 						changeToMainInterface(false);
 						changeToRegSheepInterface(true);
@@ -1797,19 +1849,16 @@ public class GUI extends JFrame {
 						changeToMainInterface(false);
 						changeToSearchInterface(true);
 					}
-
 				} else if (text.equals("Edit sheep")) {
 					changeToSearchInterface(false);
 					editButton.setVisible(false);
 					changeToEditInterface(true);
-
 					editSheep();
-
 				} else if (text.equals("Logs")) {
 					changeToMainInterface(false);
 					changeToLogInterface(true);
 				} else if (text.equals("Home")) {
-					myMap.bigMap();
+					myMap.home();
 				} else if (text.equals("Log out")) {
 					changeToMainInterface(false);
 					changeToStartInterface(true);
@@ -1827,7 +1876,7 @@ public class GUI extends JFrame {
 					for (JComponent c : editComps) {
 						if (c instanceof JTextField) {
 							if (((MyBorder) ((JTextField) c).getBorder()).getColor().equals(invalid)) {
-								return; // return hvis et felt er rÔøΩdt
+								return;
 							}
 						}
 					}
@@ -1891,6 +1940,9 @@ public class GUI extends JFrame {
 						sheepyLog.setVisible(false);
 
 					}
+				} else if (text.equals("Delete")) {
+					user.deleteSheep(listSelected.getSheep());
+					resetMap();
 				}
 			} else if (arg.getSource() instanceof JTextField) {
 				JTextField pressed = (JTextField) arg.getSource();
@@ -1899,7 +1951,6 @@ public class GUI extends JFrame {
 					if (text.equals("unField")) {
 						pwField.requestFocus();
 					} else if (text.equals("pwField")) {
-						// LOG IN!
 						login();
 					}
 				} else if (state == 2) {
@@ -1923,7 +1974,6 @@ public class GUI extends JFrame {
 
 				} else if (state == 3) {
 					if (text.equals("emailField")) {
-						// SEND EMAIL!
 						if (sendEmail()) {
 							changeToForgotInterface(false);
 							changeToLoginInterface(true);
@@ -1993,6 +2043,7 @@ public class GUI extends JFrame {
 	private JButton sheepy;
 	private JButton sheepyAttack;
 	private JButton sheepyLog;
+	private JButton sheepyDel;
 	private JList sheepList;
 	private JScrollPane sheepScrollPane;
 	private DefaultListModel sheepListModel;
@@ -2041,7 +2092,7 @@ public class GUI extends JFrame {
 	private JLabel lwEditTemperatureLabel;
 	private JLabel lwEditBirthyearLabel;
 
-	// List over the different components
+	// Liste over de ulike komponentene
 	private ArrayList<JComponent> startComps;
 	private ArrayList<JComponent> loginComps;
 	private ArrayList<JComponent> registerComps;

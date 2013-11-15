@@ -142,7 +142,7 @@ public class MyMap extends JPanel implements MouseListener, MouseMotionListener,
 		repaint();
 	}
 
-	public void bigMap() {
+	public void home() {
 		this.dx = 1280 / 3;
 		this.dy = 1280 / 3;
 		zoom(1280 - z);
@@ -195,6 +195,9 @@ public class MyMap extends JPanel implements MouseListener, MouseMotionListener,
 				g.drawImage(i.getImage(), i.getX() * width - dx, i.getY() * height - dy, this);
 				gui.repaintMySheepButtons();
 			}
+		}
+		if (gui.getState() == gui.LOG) {
+
 		}
 		if (changesMade) {
 			gui.changeMySheepButtonBounds(latitude, longitude, 15, dx, dy, imageLength);
