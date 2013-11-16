@@ -3,7 +3,6 @@ package components;
 import gui.GoogleStaticMap;
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -17,6 +16,7 @@ import javax.swing.JPanel;
  * @author andreas
  * 
  */
+@SuppressWarnings("serial")
 public class MyImagePanel extends JPanel {
 	private Image drawImage;
 	private Image backgroundImage;
@@ -37,6 +37,15 @@ public class MyImagePanel extends JPanel {
 
 	}
 
+	/**
+	 * Henter et bildet fra maps.google gitt hoyde- og breddegrad og setter
+	 * bildet som skal bli tegnet lik dette.
+	 * 
+	 * @param latitude
+	 *            double hoydegrad
+	 * @param longitude
+	 *            double breddegrad
+	 */
 	public void changeToGoogleImage(double latitude, double longitude) {
 		this.googleImage = getGoogleImage(latitude, longitude);
 		this.googleImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
@@ -44,11 +53,21 @@ public class MyImagePanel extends JPanel {
 		repaint();
 	}
 
+	/**
+	 * Endrer tilbake til start bakgrunnsbildet.
+	 */
 	public void changeToBackgroundImage() {
 		this.drawImage = backgroundImage;
 		repaint();
 	}
 
+	/**
+	 * Henter bilde fra maps.google
+	 * 
+	 * @param latitude
+	 * @param longitude
+	 * @return image BufferedImage
+	 */
 	private BufferedImage getGoogleImage(double latitude, double longitude) {
 		try {
 			return (BufferedImage) (GoogleStaticMap.getImage(latitude, longitude, 14, 640, 640, 2));
@@ -58,6 +77,9 @@ public class MyImagePanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Tegner enten google bilde eller bakgrunnsbildet paa panelet
+	 */
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);

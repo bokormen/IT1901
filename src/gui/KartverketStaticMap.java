@@ -1,5 +1,5 @@
 package gui;
-import java.awt.Graphics2D;
+
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -19,7 +19,6 @@ public class KartverketStaticMap {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println(img.getHeight() + "  " + img.getWidth());
 		return img;
 	}
 
@@ -29,8 +28,6 @@ public class KartverketStaticMap {
 		url += "&zoom=" + zoom;
 		url += "&x=" + x;
 		url += "&y=" + y;
-		// url += "&request=getmap";
-		System.out.println(url);
 		return url;
 	}
 

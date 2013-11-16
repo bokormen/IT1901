@@ -9,17 +9,21 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JTextField;
 
+/**
+ * En CellRenderer klasse som tegner et bildet inn i JList.
+ * 
+ * @author andreas
+ * 
+ */
+@SuppressWarnings("serial")
 public class MyListRenderer extends DefaultListCellRenderer {
 
 	public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
 			boolean hasFocus) {
 		JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, hasFocus);
-		JTextField field = new JTextField("asd");
-		label.add(field);
 		Icon icon = null;
-		
+
 		try {
 			icon = new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResource("images/bluesheepicon.png")));
 		} catch (IOException e) {
@@ -28,6 +32,5 @@ public class MyListRenderer extends DefaultListCellRenderer {
 		label.setIcon(icon);
 
 		return label;
-
 	}
 }

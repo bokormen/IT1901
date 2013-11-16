@@ -5,7 +5,6 @@ import gui.GUI;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -16,40 +15,34 @@ import java.util.ArrayList;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
-import javax.swing.Timer;
 
 import div.User;
 
+/**
+ * Klasse som tegner kartet paa skjermen og holder styr paa hvor brukeren
+ * navigerer seg. Den inneholder musdrag, mustrykk, knappe trykk til zoom.
+ * Sentrering paa kartet av sau og dynamisk oppdatering av kartet. Klassen
+ * bruker metoder i GUI til aa forandre paa posisjone til saueknappene.
+ * 
+ * @author andreas
+ * @see GUI.changeMySheepButtonBounds()
+ */
+@SuppressWarnings("serial")
 public class MyMap extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener {
-
-	private int width;
-	private int height;
-
+	private boolean changesMade = false;
 	private int imageLength;
-
 	private double latitude;
 	private double longitude;
-
-	private int z;
-
-	private User user;
-
-	private ArrayList<MyImage> images;
-
-	private GUI gui;
-
 	private int dx;
 	private int dy;
+	private int z;
 
-	private TimerListener tl;
-	private Timer timer;
-
-	private boolean changesMade = false;
+	private ArrayList<MyImage> images;
+	private User user;
+	private GUI gui;
 
 	public MyMap(int width, int height, double latitude, double longitude, GUI gui) {
-		images = new ArrayList<MyImage>();
-		this.width = width;
-		this.height = height;
+		this.images = new ArrayList<MyImage>();
 		this.imageLength = 1280;
 		this.latitude = latitude;
 		this.longitude = longitude;
@@ -58,24 +51,20 @@ public class MyMap extends JPanel implements MouseListener, MouseMotionListener,
 
 		this.dx = 0;
 		this.dy = 0;
-
 		this.z = 1280;
 
-		this.tl = new TimerListener();
-		this.timer = new Timer(1, tl);
-
 		setFocusable(true);
+		addMouseListener(this);
+		addMouseMotionListener(this);
+		addMouseWheelListener(this);
+		setFocusable(true);
+
 		getInputMap().put(KeyStroke.getKeyStroke('+'), "zoomin");
 		getActionMap().put("zoomin", new ZoomInAction());
 
 		getInputMap().put(KeyStroke.getKeyStroke('-'), "zoomout");
 		getActionMap().put("zoomout", new ZoomOutAction());
 
-		this.addMouseListener(this);
-		this.addMouseMotionListener(this);
-		this.addMouseWheelListener(this);
-		this.setFocusable(true);
-		// this.setOpaque(true);
 	}
 
 	private class ZoomInAction extends AbstractAction {
@@ -90,6 +79,13 @@ public class MyMap extends JPanel implements MouseListener, MouseMotionListener,
 		}
 	}
 
+	/**
+	 * Setter igang kartet med aa legge til de sentrale bildene rundt brukerens
+	 * beliggenhet
+	 * 
+	 * @param u
+	 *            User brukeren
+	 */
 	public void setUser(User u) {
 		this.user = u;
 		if (user == null) {
@@ -111,6 +107,14 @@ public class MyMap extends JPanel implements MouseListener, MouseMotionListener,
 		}
 	}
 
+	/**
+	 * Metode som sentrerer kartet rundt en gitt sau med hoyde og breddegrad
+	 * 
+	 * @param latitude
+	 *            hoydegrad
+	 * @param longitude
+	 *            breddegrad
+	 */
 	public void centerInOnSheep(double latitude, double longitude) {
 		double numw = 0.0275;
 		double numh = 0.0123;
@@ -185,27 +189,26 @@ public class MyMap extends JPanel implements MouseListener, MouseMotionListener,
 		}
 	}
 
-	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
-
-		if (!images.isEmpty()) {
-			for (MyImage i : images) {
-				int width = i.getImage().getWidth(this);
-				int height = i.getImage().getHeight(this);
-				g.drawImage(i.getImage(), i.getX() * width - dx, i.getY() * height - dy, this);
-				gui.repaintMySheepButtons();
+	/**
+	 * Metode som sjekker om bildet finnes allerede i bilde-kordinatsystemet.
+	 * 
+	 * @param x
+	 *            Integer x-kordinaten
+	 * @param y
+	 *            Integer y-kordinaten
+	 * @return boolean sann hvis den ikke er der
+	 */
+	private boolean isImageInList(int x, int y) {
+		for (MyImage img : images) {
+			if (img.getX() == x && img.getY() == y) {
+				return false;
 			}
 		}
-		if (gui.getState() == gui.LOG) {
-
-		}
-		if (changesMade) {
-			gui.changeMySheepButtonBounds(latitude, longitude, 15, dx, dy, imageLength);
-			changesMade = false;
-		}
-
+		return true;
 	}
 
+	// Ulike variabler som trengs i updateMap(), som trengs for aa hente riktig
+	// kart en gang.
 	int wi = 0;
 	int wj = 0;
 
@@ -223,15 +226,12 @@ public class MyMap extends JPanel implements MouseListener, MouseMotionListener,
 	int ec = 0;
 	int nc = 0;
 
-	private boolean isImageInList(int x, int y) {
-		for (MyImage img : images) {
-			if (img.getX() == x && img.getY() == y) {
-				return false;
-			}
-		}
-		return true;
-	}
-
+	/**
+	 * Metode som legger til flere kart-bilder til kartet hvis nodvendig.
+	 * 
+	 * @throws Exception
+	 *             hvis ingen internett og ikke faar hentet bildet fra nett
+	 */
 	private void updateMap() throws Exception {
 		double percent = 1280 / -imageLength;
 		if (dx < wi * -imageLength) {
@@ -292,6 +292,23 @@ public class MyMap extends JPanel implements MouseListener, MouseMotionListener,
 	}
 
 	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		if (!images.isEmpty()) {
+			for (MyImage i : images) {
+				int width = i.getImage().getWidth(this);
+				int height = i.getImage().getHeight(this);
+				g.drawImage(i.getImage(), i.getX() * width - dx, i.getY() * height - dy, this);
+				gui.repaintMySheepButtons();
+			}
+		}
+		if (changesMade) {
+			gui.changeMySheepButtonBounds(latitude, longitude, 15, dx, dy, imageLength);
+			changesMade = false;
+		}
+	}
+
+	@Override
 	public void mouseClicked(MouseEvent arg0) {
 	}
 
@@ -312,7 +329,6 @@ public class MyMap extends JPanel implements MouseListener, MouseMotionListener,
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
 		skip = 0;
-
 	}
 
 	int skip = 0;
@@ -342,19 +358,5 @@ public class MyMap extends JPanel implements MouseListener, MouseMotionListener,
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		zoom(e.getWheelRotation());
-	}
-
-	/**
-	 * A class that handles time. Can be used for animations.
-	 * 
-	 * @author andreas
-	 * 
-	 */
-
-	private class TimerListener implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-		}
 	}
 }

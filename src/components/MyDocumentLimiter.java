@@ -4,10 +4,11 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
-public class DocumentLimiter extends PlainDocument {
+@SuppressWarnings("serial")
+public class MyDocumentLimiter extends PlainDocument {
 	private int limit;
 
-	public DocumentLimiter(int limit) {
+	public MyDocumentLimiter(int limit) {
 		super();
 		this.limit = limit;
 	}
@@ -15,8 +16,7 @@ public class DocumentLimiter extends PlainDocument {
 	/**
 	 * Metode som ordner opp i strengen hvis den er for lang
 	 */
-	public void insertString(int offset, String str, AttributeSet attr)
-			throws BadLocationException {
+	public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
 		if (str == null)
 			return;
 

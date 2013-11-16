@@ -17,8 +17,14 @@ import javax.swing.Timer;
 import div.MyPoint;
 import div.Sheep;
 
+/**
+ * Klassse som tegner sauene grafisk riktig paa kartet. Den inneholder musedrag
+ * og musetrykk for aa haandtere brukerens onske om aa trykke paa knappen.
+ * 
+ * @author andreas
+ */
+@SuppressWarnings("serial")
 public class MySheepButton extends JButton implements MouseListener {
-	private JButton jb;
 	private MyBorder border;
 	private int diameter;
 	private Sheep sheep;
@@ -33,22 +39,19 @@ public class MySheepButton extends JButton implements MouseListener {
 	private Timer dTimer = new Timer(100, new DrawingTimer());
 
 	public MySheepButton(JButton jb, Sheep sheep, int x, int y, int diameter, GUI gui) {
-		this.jb = jb;
 		this.diameter = diameter;
 		this.sheep = sheep;
 		this.gui = gui;
 
-		this.setBounds(0, 0, diameter, diameter);
-		this.setOpaque(false);
-		this.setContentAreaFilled(false);
-		this.setVisible(true);
-
+		setBounds(0, 0, diameter, diameter);
+		setOpaque(false);
+		setContentAreaFilled(false);
+		setVisible(true);
 		this.border = new MyBorder(80);
-		border.setColor(Color.BLACK);
-		this.setBorder(border);
-
-		this.addMouseListener(this);
-		this.addActionListener(new TimerListener());
+		this.border.setColor(Color.BLACK);
+		setBorder(border);
+		addMouseListener(this);
+		addActionListener(new TimerListener());
 	}
 
 	/**
@@ -56,23 +59,45 @@ public class MySheepButton extends JButton implements MouseListener {
 	 * 
 	 * @return sheep Sheep
 	 */
-
 	public Sheep getSheep() {
 		return sheep;
 	}
 
+	/**
+	 * Setter saueknappens tilhorende sau lik gitt sau
+	 * 
+	 * @param sheep
+	 *            Sheep
+	 */
 	public void setSheep(Sheep sheep) {
 		this.sheep = sheep;
 	}
 
+	/**
+	 * Setter objektes MyPoint lik input
+	 * 
+	 * @param mp
+	 *            MyPoint
+	 */
 	public void setMyPoint(MyPoint mp) {
 		this.mp = mp;
 	}
 
+	/**
+	 * Returnerer saueknappens MyPoint objekt
+	 * 
+	 * @return mp MyPoint
+	 */
 	public MyPoint getMyPoint() {
 		return mp;
 	}
 
+	/**
+	 * Setter om knappen skal tegnes eller ikke
+	 * 
+	 * @param bool
+	 *            boolean
+	 */
 	public void setDraw(boolean bool) {
 		this.setEnabled(bool);
 		this.setVisible(bool);
@@ -125,6 +150,7 @@ public class MySheepButton extends JButton implements MouseListener {
 		}
 	}
 
+	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
@@ -177,7 +203,7 @@ public class MySheepButton extends JButton implements MouseListener {
 	}
 
 	/**
-	 * Klasse som haandterer dobbel tastetrykk på saue
+	 * Klasse som haandterer dobbel tastetrykk på saueknappene
 	 * 
 	 * @author andreas
 	 * 
@@ -205,13 +231,13 @@ public class MySheepButton extends JButton implements MouseListener {
 	 */
 
 	private class DrawingTimer implements ActionListener {
-
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			repaint();
 		}
 	}
 
+	@Override
 	public String toString() {
 		if (sheep == null) {
 			return "";

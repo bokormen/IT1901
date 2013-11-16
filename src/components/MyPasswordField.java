@@ -16,28 +16,34 @@ import javax.swing.ImageIcon;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
-import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 
+/**
+ * Klasse som tegner en noe ulik verson av JPasswordField, som blant annet et
+ * bilde
+ * 
+ * @author andreas
+ * 
+ */
+@SuppressWarnings("serial")
 public class MyPasswordField extends JPasswordField implements FocusListener, DocumentListener {
-	private JTextField jpf;
+
 	private Icon icon;
 	private Icon iconStored;
 	private String hint;
 	private Insets dummyInsets;
 	private MyBorder border;
 
-	public MyPasswordField(JPasswordField jpf, String icon, String hint) {
-		this.jpf = jpf;
+	public MyPasswordField(String icon, String hint) {
 		this.hint = hint;
-		this.setVisible(false);
-		this.setHorizontalAlignment(JTextField.CENTER);
-		this.setDocument(new DocumentLimiter(24)); // bokstav begrensning
-		this.setOpaque(false);
-		this.setForeground(Color.WHITE);
-		this.setCaretColor(Color.WHITE);
+		setVisible(false);
+		setHorizontalAlignment(JTextField.CENTER);
+		setDocument(new MyDocumentLimiter(24)); // bokstav begrensning
+		setOpaque(false);
+		setForeground(Color.WHITE);
+		setCaretColor(Color.WHITE);
 
 		try {
 			this.iconStored = new ImageIcon(ImageIO.read(this.getClass().getClassLoader()
@@ -48,13 +54,13 @@ public class MyPasswordField extends JPasswordField implements FocusListener, Do
 		}
 
 		this.border = new MyBorder(20);
-		this.setBorder(border);
-		// JTextField dummy = new JTextField();
-		this.dummyInsets = border.getBorderInsets(jpf);
+		setBorder(border);
+		this.dummyInsets = border.getBorderInsets(this);
 		addFocusListener(this);
-		this.getDocument().addDocumentListener(this);
+		getDocument().addDocumentListener(this);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -82,7 +88,6 @@ public class MyPasswordField extends JPasswordField implements FocusListener, Do
 			g.setColor(UIManager.getColor("textInactiveText"));
 			int h = g.getFontMetrics().getHeight();
 			int textBottom = (height - h) / 2 + h - 4;
-			// int x = this.getInsets().left + icon.getIconWidth() * 2;
 			int x = (width - icon.getIconWidth()) / 2;
 			Graphics2D g2d = (Graphics2D) g;
 			RenderingHints hints = g2d.getRenderingHints();
@@ -92,7 +97,21 @@ public class MyPasswordField extends JPasswordField implements FocusListener, Do
 			g.setFont(prev);
 			g.setColor(prevColor);
 		}
+	}
 
+	/**
+	 * Metode som sjekker lengden paa teksten satt inn
+	 * 
+	 * @param documentEvent
+	 */
+	private void checkLength(DocumentEvent documentEvent) {
+		Document source = documentEvent.getDocument();
+		int length = source.getLength();
+		if (length >= 15) {
+			this.icon = null;
+		} else {
+			this.icon = iconStored;
+		}
 	}
 
 	@Override
@@ -120,15 +139,5 @@ public class MyPasswordField extends JPasswordField implements FocusListener, Do
 	@Override
 	public void removeUpdate(DocumentEvent e) {
 		checkLength(e);
-	}
-
-	private void checkLength(DocumentEvent documentEvent) {
-		Document source = documentEvent.getDocument();
-		int length = source.getLength();
-		if (length >= 15) {
-			this.icon = null;
-		} else {
-			this.icon = iconStored;
-		}
 	}
 }

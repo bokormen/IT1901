@@ -16,10 +16,6 @@ public class MyImage {
 	protected int y;
 
 	public MyImage(int x, int y, double lat, double lon) throws Exception {
-		// 63.43,10.39 0.0123, 0.0275
-		// 58.43,15.39 0.0143, 0.0275
-		// 53.43,15.39 0.0163
-		// System.out.println(x + "  " + y);
 		double numh = 0.0123;
 		double numw = 0.0275;
 		this.image = getStartImage(lat - (numh) * y, lon + (numw) * x);
@@ -43,26 +39,21 @@ public class MyImage {
 	 * @throws Exception
 	 */
 
-	private BufferedImage getStartImage(double latitude, double longitude)
-			throws Exception {
-		String file = "googlestaticmap_" + latitude + "_" + longitude + "_"
-				+ 15 + ".png";
+	private BufferedImage getStartImage(double latitude, double longitude) throws Exception {
+		String file = "googlestaticmap_" + latitude + "_" + longitude + "_" + 15 + ".png";
 
 		BufferedImage img = null;
 		try {
 			img = ImageIO.read(new File("src/resources/" + file));
 		} catch (IOException e) {
-			// System.out.println("Kunne ikke finne lagret bildet");
 		}
 
 		if (img == null) {
-			img = (BufferedImage) (GoogleStaticMap.getImage(latitude,
-					longitude, 15, 640, 640, 2));
+			img = (BufferedImage) (GoogleStaticMap.getImage(latitude, longitude, 15, 640, 640, 2));
 			try {
 				File outputfile = new File("src/resources/" + file);
 				ImageIO.write(img, "png", outputfile);
 			} catch (IOException e) {
-				// System.out.println("kunne ikke lagre bildet");
 			}
 		}
 		return img;
@@ -109,8 +100,7 @@ public class MyImage {
 	 */
 
 	public void scaleImage(int width, int height) {
-		this.image = savedImage.getScaledInstance(width, height,
-				Image.SCALE_FAST);
+		this.image = savedImage.getScaledInstance(width, height, Image.SCALE_FAST);
 	}
 
 	/**

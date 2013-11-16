@@ -1,10 +1,7 @@
 package gui;
 
-import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
@@ -12,7 +9,7 @@ import javax.imageio.ImageIO;
 public class GoogleStaticMap {
 
 	/**
-	 * Tries to create an image out of the given url link
+	 * Prover aa lage et bilde utifra url linken gitt
 	 * 
 	 * @param url
 	 *            String
@@ -25,8 +22,19 @@ public class GoogleStaticMap {
 		return img;
 	}
 
-	private static String createURL(double latitude, double longitude,
-			int zoom, int width, int height, int scale) {
+	/**
+	 * Setter sammen alle variablene til en url string klar til aa hente et
+	 * statisk kart fra google.
+	 * 
+	 * @param latitude
+	 * @param longitude
+	 * @param zoom
+	 * @param width
+	 * @param height
+	 * @param scale
+	 * @return url String
+	 */
+	private static String createURL(double latitude, double longitude, int zoom, int width, int height, int scale) {
 		String url = "http://maps.googleapis.com/maps/api/staticmap?";
 		url += "center=" + latitude + "," + longitude;
 		url += "&zoom=" + zoom;
@@ -34,33 +42,31 @@ public class GoogleStaticMap {
 		url += "&scale=" + scale;
 		url += "&sensor=false";
 		url += "&style=feature:all|element:labels|visibility:off";
-		// System.out.println(url);
 		return url;
 	}
 
 	/**
 	 * 
 	 * @param latitude
-	 *            defines the latitude for the center of the map
+	 *            definerer hoydegraden for senter av kartet
 	 * @param longitude
-	 *            defines the longitude for the center of the map
+	 *            definerer breddegraden for senter av kartet
 	 * @param zoom
-	 *            determines the magnification level of the map
+	 *            definerer forstorrelse nivaa av kartet
 	 * @param width
-	 *            defines the width of the map Image
+	 *            definerer bredden paa kartet, max 640
 	 * @param height
-	 *            defines the height of the map Image
+	 *            defines hoyden paa kartet, max 640
 	 * @param scale
-	 *            defines the rectangular dimensions of the map image.
-	 * @return the image at the specified URL
+	 *            definerer om kartet skal skaleres x1 eller x2
+	 * @return bildet som hentes utifra variablene gitt
 	 * @see readURL
 	 * @see createUrl
 	 */
 
-	public static Image getImage(double latitude, double longitude, int zoom,
-			int width, int height, int scale) throws Exception {
-		Image img = readURL(createURL(latitude, longitude, zoom, width, height,
-				scale));
+	public static Image getImage(double latitude, double longitude, int zoom, int width, int height, int scale)
+			throws Exception {
+		Image img = readURL(createURL(latitude, longitude, zoom, width, height, scale));
 		return img;
 	}
 }

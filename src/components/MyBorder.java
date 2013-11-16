@@ -7,6 +7,14 @@ import java.awt.Graphics2D;
 
 import javax.swing.border.AbstractBorder;
 
+/**
+ * Egen version av AbstractBorder som tegner kantene paa knapper paa en annen
+ * maate enn standard.
+ * 
+ * @author andreas
+ * 
+ */
+@SuppressWarnings("serial")
 public class MyBorder extends AbstractBorder {
 	private Color color = Color.WHITE;
 	private int arc;
@@ -16,8 +24,12 @@ public class MyBorder extends AbstractBorder {
 		this.arc = arc;
 	}
 
-	public void paintBorder(Component c, Graphics g, int x, int y, int width,
-			int height) {
+	/**
+	 * Skriver over en metode fra AbstractBorder som tegner kanten slik satt i
+	 * metoden.
+	 */
+	@Override
+	public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
 		if (draw) {
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setColor(color);
@@ -25,6 +37,13 @@ public class MyBorder extends AbstractBorder {
 		}
 	}
 
+	/**
+	 * Setter variablen draw til true eller false som bestemmer om kantene skal
+	 * tegnes eller ikke.
+	 * 
+	 * @param bool
+	 *            Boolean
+	 */
 	public void setDraw(Boolean bool) {
 		this.draw = bool;
 	}
@@ -41,6 +60,8 @@ public class MyBorder extends AbstractBorder {
 	}
 
 	/**
+	 * Endrer fargen til kantene til gitt farge hvis den ikke er gronn eller rod
+	 * fra for.
 	 * 
 	 * @param color
 	 */
@@ -51,6 +72,7 @@ public class MyBorder extends AbstractBorder {
 	}
 
 	/**
+	 * Endrer fargen til kantene til gitt farge.
 	 * 
 	 * @param color
 	 */
@@ -58,6 +80,11 @@ public class MyBorder extends AbstractBorder {
 		this.color = color;
 	}
 
+	/**
+	 * Returnerer fargen kantene har.
+	 * 
+	 * @return color Color
+	 */
 	public Color getColor() {
 		return this.color;
 	}

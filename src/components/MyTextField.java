@@ -15,25 +15,28 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
-import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 
+/**
+ * 
+ * @author andreas
+ * 
+ */
+@SuppressWarnings("serial")
 public class MyTextField extends JTextField implements FocusListener, DocumentListener {
-	private JTextField jtf;
 	private Icon icon;
 	private Icon iconStored;
 	private String hint;
 	private Insets dummyInsets;
 	private MyBorder border;
 
-	public MyTextField(JTextField jtf, String icon, String hint) {
-		this.jtf = jtf;
+	public MyTextField(String icon, String hint) {
 		this.hint = hint;
 		this.setVisible(false);
 		this.setHorizontalAlignment(JTextField.CENTER);
-		this.setDocument(new DocumentLimiter(64)); // bokstav begrensning
+		this.setDocument(new MyDocumentLimiter(64)); // bokstav begrensning
 		this.setOpaque(false);
 		this.setForeground(Color.WHITE);
 		this.setCaretColor(Color.WHITE);
@@ -49,7 +52,7 @@ public class MyTextField extends JTextField implements FocusListener, DocumentLi
 
 		this.border = new MyBorder(20);
 		this.setBorder(border);
-		this.dummyInsets = border.getBorderInsets(jtf);
+		this.dummyInsets = border.getBorderInsets(this);
 		addFocusListener(this);
 		this.getDocument().addDocumentListener(this);
 	}
