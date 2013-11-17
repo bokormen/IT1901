@@ -13,7 +13,7 @@ public class SheepLocation implements Serializable {
 	private final String date;
 	
 	/**
-	 * 
+	 * Lager et SheepLocation-objekt med en posisjon og en dato. 
 	 * @param position Posisjon på formen <latitude>,<longitude>
 	 * @param date
 	 */
@@ -31,6 +31,9 @@ public class SheepLocation implements Serializable {
 		return position;
 	}
 	
+	/**
+	 * Returnerer en string på formen latitude,longitude-dato.
+	 */
 	public String toString() {
 		return position + "-" + date;
 	}

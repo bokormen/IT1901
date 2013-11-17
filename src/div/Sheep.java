@@ -25,22 +25,20 @@ public class Sheep implements Serializable {
 	private String owner;
 	private String shepherd;
 	private ArrayList<SheepLocation> locations;
-	private boolean attackStatus;
 
-	public Sheep(String name, int birthyear, int weight, char gender,
-			String owner, String shepherd) throws Exception {
-		this.name = name;
-		setBirthyear(birthyear);
-		setWeight(weight);
-		setOwner(owner);
-		setShepherd(shepherd);
-		locations = new ArrayList<SheepLocation>();
-		setGender(gender);
-		setAttackStatus(false);
-	}
 
-	public Sheep(int id, String name, int birthyear, int weight, char gender,
-			String owner, String shepherd) throws Exception {
+	/**
+	 * 
+	 * @param id Id til sau
+	 * @param name Navn til sau
+	 * @param birthyear Fodselsaret til sau ma vaere minst 1980.
+	 * @param weight Vekten til sau ma vaere positiv. 
+	 * @param gender Kjonn til sau. Ma vaere 'f' eller 'm'.
+	 * @param owner Epostaddressen til eieren av sauen. 
+	 * @param shepherd Epostaddressen til gjeteren. 
+	 * @throws Exception
+	 */
+	public Sheep(int id, String name, int birthyear, int weight, char gender, String owner, String shepherd) throws Exception {
 		this.id = id;
 		this.name = name;
 		setBirthyear(birthyear);
@@ -49,7 +47,6 @@ public class Sheep implements Serializable {
 		setShepherd(shepherd);
 		locations = new ArrayList<SheepLocation>();
 		setGender(gender);
-		setAttackStatus(false);
 	}
 
 	public Sheep() {
@@ -77,8 +74,8 @@ public class Sheep implements Serializable {
 	}
 
 	/**
-	 * Setter fodselsaret til en sau. Må være over 1900.
-	 * 
+	 * Setter fodselsaret til en sau. Ma være minst 1980, men ikke storren enn natid. .
+	 * @param birthyear Fodselsaret til sau.
 	 * @throws Exception
 	 */
 	public void setBirthyear(int birthyear) throws Exception {
@@ -94,6 +91,11 @@ public class Sheep implements Serializable {
 		return weight;
 	}
 
+	/**
+	 * Setter vekten til en sau.
+	 * @param weight Vekten må vaere positiv. 
+	 * @throws Exception
+	 */
 	public void setWeight(int weight) throws Exception {
 		if (weight >= 0) {
 			this.weight = weight;
@@ -111,10 +113,8 @@ public class Sheep implements Serializable {
 	}
 
 	/**
-	 * Setter temperaturen. Dersom temperaturen ikke er mellom 35 og 40, så blir
-	 * melding om angrep sendt.
-	 * 
-	 * @param temperature
+	 * Setter temperaturen
+	 * @param temperature Temperatur til sau.
 	 */
 	public void setTemperature(double temperature) {
 		this.temperature = temperature;
@@ -125,13 +125,11 @@ public class Sheep implements Serializable {
 	}
 
 	/**
-	 * Setter pulsen til en sau. Dersom den er ikke er mellom 50 og 100, så blir
-	 * melding om angrep sendt.
-	 * 
+	 * Setter pulsen til en sau. Ma vaere positiv.
 	 * @throws Exception
 	 */
 	public void setHeartrate(int heartrate) throws Exception {
-		if (heartrate > 0) {
+		if (heartrate >= 0) {
 			this.heartrate = heartrate;
 		} else {
 			throw new Exception("Heartrate not valid");
@@ -143,6 +141,11 @@ public class Sheep implements Serializable {
 		return shepherd;
 	}
 
+	/**
+	 * Setter gjeteren til sauen dersom epostaddressen er valid. 
+	 * @param shepherd Epostaddressen til gjeteren. Ma vaere på forme eksempel@eksempel.eks
+	 * @throws Exception
+	 */
 	public void setShepherd(String shepherd) throws Exception {
 		if (shepherd.equals("")) {
 			this.shepherd = "";
@@ -157,6 +160,11 @@ public class Sheep implements Serializable {
 		return owner;
 	}
 
+	/**
+	 * Setter eieren av sauen. 
+	 * @param owner Epostaddressen til eieren av sauen. Ma vaere pa formen eksempel@eksempel.eks
+	 * @throws Exception
+	 */
 	public void setOwner(String owner) throws Exception {
 		if (emailIsValid(owner)) {
 			this.owner = owner;
@@ -166,20 +174,19 @@ public class Sheep implements Serializable {
 	}
 
 	/**
-	 * Returnerer den siste posisjonen til sauen.
+	 * 
+	 * @return Den siste posisjonen til sauen. 
 	 */
 	public SheepLocation getLocation() {
-		try {
-			return locations.get(locations.size() - 1);
-		} catch (ArrayIndexOutOfBoundsException e) {
-			// throw new Exception("No location");
-			System.err.println("No location available on sheep");
-			return new SheepLocation("0,0", "00/00/0000");
-		}
+		if(locations.size() != 0) {
+			return locations.get(locations.size()-1);
+		} 
+		return null;
 	}
 
 	/**
-	 * Returnerer de 5 siste posisjonene til sauen, eller så mange den har.
+	 * 
+	 * @return Returnerer de 5 siste posisjonene til sauen, eller sa mange den har. 
 	 */
 	public List<SheepLocation> getLastLocations() {
 		int num = 5;
@@ -190,19 +197,28 @@ public class Sheep implements Serializable {
 	}
 
 	/**
-	 * Legger til ny posisjon til sau.
+	 * Legger til en ny posisjon til sauen. 
+	 * @param position Den nye posisjonen
+	 * @param date Datoen den blir lagt til
+	 * @throws Exception
 	 */
 	public void newLocation(String position, String date) throws Exception {
 		SheepLocation sl = new SheepLocation(position, date);
 		locations.add(sl);
 	}
 
+	/**
+	 * 
+	 * @return Hele loggen over posisjonene til sauen. 
+	 */
 	public ArrayList<SheepLocation> getLocationLog() {
 		return locations;
 	}
 
 	/**
-	 * Sjekker om parameteren email er en valid email.
+	 * Validerer epostaddresser. 
+	 * @param email Epostaddressen som skal valideres
+	 * @return Om addressen er valid eller ikke. 
 	 */
 	public boolean emailIsValid(String email) {
 		String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
@@ -213,6 +229,11 @@ public class Sheep implements Serializable {
 		return false;
 	}
 
+	/**
+	 * Setter sauens kjonn. 
+	 * @param gender Kjonnet ma vaere 'f' eller 'm'
+	 * @throws Exception 
+	 */
 	public void setGender(char gender) throws Exception {
 		if (gender == 'f' || gender == 'm') {
 			this.gender = gender;
@@ -222,12 +243,5 @@ public class Sheep implements Serializable {
 
 	}
 
-	public boolean getAttackStatus() {
-		return attackStatus;
-	}
-
-	public void setAttackStatus(boolean attackStatus) {
-		this.attackStatus = attackStatus;
-	}
 
 }

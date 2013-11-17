@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 
 /**
- * Klassen handterer registrering, sletting og innlogging av brukere. 
+ * Klassen handterer registrering, sletting, endring og innlogging av brukere. 
  * @author Ragnhild
  *
  */
@@ -12,12 +12,12 @@ public class UserRegistration {
 
 	/**
      * Registrerer en bruker i databasen. 
-     * @param firstName
-     * @param lastName
-     * @param email
-     * @param password
-     * @param phoneNr
-     * @param location Posisjonen til garden til bonden. 
+     * @param firstName Fornavnet til brukeren
+     * @param lastName Etternavnet til brukeren
+     * @param email Epostaddressen til brukeren
+     * @param password Passordet til brukeren. Kan bare inneholde bokstaver og tall. 
+     * @param phoneNr Telefonnummeret til brukeren. Kan bare inneholde tall, og ma være minst 8 tegn. 
+     * @param location Posisjonen til garden til bonden, på formen latitude,longitude
      * @return True dersom registreringen gikk bra, false ellers. 
      */
 	public static boolean registerUser(String firstName, String lastName, String email, String password, String phoneNr, String location)  {
@@ -39,10 +39,10 @@ public class UserRegistration {
         }
 	}
 	/**
-     * Sjekker om brukeren eksisterer og om passordet matcher. 
+     * Logger inn brukeren dersom brukeren eksisterer og om passordet matcher. Brukerobjektet blir returnert. 
      * @param email
      * @param password
-     * @return Brukeren som er logget inn. 
+     * @return Brukeren som er logget inn. Null dersom brukeren ikke blir funnet. 
      */
 	public static User login(String email, String password) {
 
@@ -57,6 +57,7 @@ public class UserRegistration {
             ClientConnection.handleError(serverResponse);
         }
 
+        //Henter User-objektet til brukeren som logges inn. 
         query = email;
 
         Object retobject = ClientConnection.sendObjectQuery("getuser", query);
@@ -64,18 +65,14 @@ public class UserRegistration {
         if (retobject instanceof User) {
             return (User) retobject;
         } else {
-            return null;
+            return null; //retObject er en feilmelding. 
         }
     }
 	
-	public ArrayList<User> getUsers() {
-        ArrayList<User> users = new ArrayList<User>();
-		return users;
-	}
 
 	/**
-	 * Slett bruker fra databasen. 
-	 * @param user
+	 * Sletter en bruker. 
+	 * @param user Epostaddressen til brukeren som skal slettes.
 	 */
     public static void deleteUser(String user) {
     	String query = user;
@@ -88,12 +85,12 @@ public class UserRegistration {
     }
     
     /**
-     * Endre en bruker. 
-     * @param email
-     * @param firstName
-     * @param lastName
-     * @param phoneNumber
-     * @param location
+     * Endrer informasjonene til en bruker
+     * @param email Epostadressen til brukeren på formen eksempel@eksempel.com
+     * @param firstName Fornavnet til brukeren
+     * @param lastName Etternavnet til brukeren
+     * @param phoneNumber Telefonnummeret til brukeren. Ma være minst 8 tall. 
+     * @param location Posisjonen til garden til bonden på formen latitude,longitude
      */
     public static void editUser(String email, String firstName, String lastName, String phoneNumber, String location ) {
     	
@@ -108,9 +105,9 @@ public class UserRegistration {
     }
 	
 	/**
-     * Endre passord. 
-     * @param user
-     * @param password
+     * Endrer passordet til en bruker. 
+     * @param user Epostadressen til brukeren. 
+     * @param password Det nye passordet til brukeren. 
      */
 	public static void changePassword(String user, String password) {
 		String query = user + "||" + password;
@@ -122,6 +119,10 @@ public class UserRegistration {
         }
 	}
 	
+	/**
+	 * Sender en mail til brukeren med et nytt passord. 
+	 * @param user Epostadressen til brukeren. 
+	 */
 	public static void mailPassword(String user) {
 		String query = user;
 

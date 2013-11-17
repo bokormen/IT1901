@@ -21,12 +21,19 @@ public class SheepRegistration implements Serializable {
 	}
 
 	/**
-	 * Registrerer en sau i databasen med navn, fodselsar, vekt, kjonn, eier og
-	 * gjeter.
+	 * Registrerer en sau. 
+	 * @param name Navnet til sauen
+	 * @param birthyear Aret sauen er fodt. Ma vaere over 1980.
+	 * @param weight Vekten til sauen. Ma vaere positiv.
+	 * @param gender Kjonnet til sauen. Ma vaere 'f' eller 'm' 
+	 * @param owner Epostaddressen til eieren til sauen. 
+	 * @param shepherd Epostaddressen til gjeteren til sauen.  
+	 * @param latitude Latitude til garden
+	 * @param longitude Longitude til garden
+	 * @throws Exception Feil under registrering. 
 	 */
-	public int registerSheep(String name, int birthyear, int weight,
-			char gender, String owner, String shepherd, String latitude,
-			String longitude) throws Exception {
+	public int registerSheep(String name, int birthyear, int weight, char gender, String owner, String shepherd, 
+			String latitude, String longitude) throws Exception {
 
 		// Lager en foresp0rsel til server.
 		// retiningslinjer for kommunikasjon med server vil til en hver tid
@@ -58,16 +65,27 @@ public class SheepRegistration implements Serializable {
 	}
 
 	/**
-	 * Endrer en sau sine data. Kan endre navn, gjeter, kj�nn og f�dsels�r.
+	 * Endrer informasjonen til en sau. 
+	 * @param id Id til sau. 
+	 * @param name Navn sauen skal ha. 
+	 * @param owner Epostaddressen til eieren av sauen
+	 * @param shepherd Endret epostaddresse til gjeter
+	 * @param gender Endret kjonn til sau. 'm' eller 'f'. 
+	 * @param weight Endret vekt til sau
+	 * @param birthyear Endret fodselsar til sau.
+	 * @throws Exception Sau kan ikke endres.
 	 */
-	public void editSheep(int id, String name, String owner, String shepherd,
-			char gender, int weight, int birthyear) throws Exception {
+	public void editSheep(int id, String name, String owner, String shepherd, char gender, int weight, int birthyear)
+			throws Exception {
+		//validerer data
 		Sheep s = sheepSearch(id);
 		s.setName(name);
 		s.setShepherd(shepherd);
 		s.setGender(gender);
 		s.setWeight(weight);
 		s.setBirthyear(birthyear);
+		
+		//Sender data til server.
 		String query = id + "||" + name + "||" + owner + "||" + shepherd + "||"
 				+ gender + "||" + weight + "||" + birthyear;
 		String serverRespons = ClientConnection.sendServerQuery("changesheep",
@@ -80,25 +98,28 @@ public class SheepRegistration implements Serializable {
 	}
 
 	/**
-	 * Seltter en sau fra databasen. Returnerer true dersom alt gikk bra, false
-	 * ellers.
+	 * Slett sau. 
+	 * @param sheep Sheep-objektet som skal slettes.
+	 * @return Om sauen kunne slettes eller ikke. 
 	 */
-	public boolean deleteSheep(Sheep s) {
-		String query = "" + s.getId();
+	public boolean deleteSheep(Sheep sheep) {
+		String query = "" + sheep.getId();
 
 		String serverRespons = ClientConnection.sendServerQuery("delsheep",
 				query);
 
-		if (serverRespons.equals("err")) {
+		if (!serverRespons.equals("changesheep success")) {
 			System.out.println("Error. Can't delete sheep");
 			return false;
 		}
 
-		return sheepList.remove(s);
+		return sheepList.remove(sheep);
 	}
 
 	/**
-	 * Soker og returnerer sauen med en viss id.
+	 * Soker lokalt etter en sau med en viss id. 
+	 * @param id Id til sau
+	 * @return Sheep-objektet som blir lett etter. Null dersom den ikke finnes i listen. 
 	 */
 	public Sheep sheepSearch(int id) {
 		for (Sheep s : sheepList) {
@@ -110,7 +131,11 @@ public class SheepRegistration implements Serializable {
 	}
 
 	/**
-	 * Finner en sau i databasen med en gitt eier og id p� sau.
+	 * Finner en sau i databasen med en gitt eier og id til sau. 
+	 * @param user Epostaddressen til brukeren. 
+	 * @param id Id til sau
+	 * @return Sheep-objektet dersom en sau med denne iden blir funnet, null ellers. 
+	 * @throws Exception 
 	 */
 	public Sheep findSheep(String user, String id) throws Exception {
 		String query = user + "||" + id;
@@ -131,7 +156,9 @@ public class SheepRegistration implements Serializable {
 	}
 
 	/**
-	 * Fyller opp sheepList med sauer fra databasen.
+	 * Fyller opp sheepList med sauer fra databasen. 
+	 * @param user Epostaddressen til brukeren. 
+	 * @throws Exception
 	 */
 	public void updateSheepList(String user) throws Exception {
 		String query = user;
@@ -150,10 +177,19 @@ public class SheepRegistration implements Serializable {
 		}
 	}
 
+	/**
+	 * 
+	 * @return Listen over sauer. 
+	 */
 	public ArrayList<Sheep> getSheepList() {
 		return sheepList;
 	}
 
+	/**
+	 * Far tak i listen over sauer som er angrepet fra databasen. 
+	 * @param user Epostaddressen til brukeren. 
+	 * @return listen over sauer som blir angrepet. Null om noe gar galt. 
+	 */
 	public ArrayList<String> getAttackedSheepList(String user) {
 		String query = user;
 		Object serverRespons = ClientConnection.sendObjectQuery("getattackedsheep", query);
@@ -167,7 +203,9 @@ public class SheepRegistration implements Serializable {
 	}
 
 	/**
-	 * Sender informasjon om angrep mot en sau til server.
+	 * Sender informasjon om en angrepet sau til server. 
+	 * @param id Id til sau
+	 * @param user Epostaddressen til bruker. 
 	 */
 	public void attackSheep(int id, String user) {
 		String query = Integer.toString(id);
@@ -178,6 +216,12 @@ public class SheepRegistration implements Serializable {
 		}
 	}
 
+	/**
+	 * Returnerer de 5 siste posisjonene til en sau. 
+	 * @param id Id til sau. 
+	 * @return En liste med 5 eller mindre posisjoner. 
+	 * @throws Exception
+	 */
 	public ArrayList<SheepLocation> getLastLocations(int id) throws Exception {
 		String query = "" + id + "||" + 5;
 		// F�r tilbake et Sheep-objekt

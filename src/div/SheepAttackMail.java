@@ -15,7 +15,10 @@ public class SheepAttackMail {
 	
 
 	/**
-	 * Sender mail om angrep av sau på en viss posisjon. 
+	 * Sender mail om angrep på en sau til eieren. 
+	 * @param email Epostaddressen til eieren
+	 * @param id Id til sau
+	 * @param position Posisjon til sau under angrep.
 	 */
 	public static void sendMail(String email, int id, String position)    {
 		final String username = "sheepcontrolit1901@gmail.com";
