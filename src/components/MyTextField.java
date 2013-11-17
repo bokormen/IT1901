@@ -6,6 +6,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.IOException;
@@ -14,6 +16,7 @@ import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -31,15 +34,19 @@ public class MyTextField extends JTextField implements FocusListener, DocumentLi
 	private String hint;
 	private Insets dummyInsets;
 	private MyBorder border;
+	private Timer timer;
+	private int speed;
 
-	public MyTextField(String icon, String hint) {
+	public MyTextField(String icon, String hint, int speed) {
 		this.hint = hint;
-		this.setVisible(false);
-		this.setHorizontalAlignment(JTextField.CENTER);
-		this.setDocument(new MyDocumentLimiter(64)); // bokstav begrensning
-		this.setOpaque(false);
-		this.setForeground(Color.WHITE);
-		this.setCaretColor(Color.WHITE);
+		this.speed = speed;
+		this.timer = new Timer(speed, new DrawingTimer());
+		setVisible(false);
+		setHorizontalAlignment(JTextField.CENTER);
+		setDocument(new MyDocumentLimiter(64)); // bokstav begrensning
+		setOpaque(false);
+		setForeground(Color.WHITE);
+		setCaretColor(Color.WHITE);
 		try {
 			if (icon != null) {
 				this.iconStored = new ImageIcon(ImageIO.read(this.getClass().getClassLoader()
@@ -50,11 +57,11 @@ public class MyTextField extends JTextField implements FocusListener, DocumentLi
 			e.printStackTrace();
 		}
 
-		this.border = new MyBorder(20);
-		this.setBorder(border);
+		this.border = new MyBorder(20, speed);
+		setBorder(border);
 		this.dummyInsets = border.getBorderInsets(this);
 		addFocusListener(this);
-		this.getDocument().addDocumentListener(this);
+		getDocument().addDocumentListener(this);
 	}
 
 	public MyBorder getMyBorder() {
@@ -64,9 +71,7 @@ public class MyTextField extends JTextField implements FocusListener, DocumentLi
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-
 		int textX = 2;
-
 		if (this.icon != null) {
 			int iconWidth = icon.getIconWidth();
 			int iconHeight = icon.getIconHeight();
@@ -75,9 +80,7 @@ public class MyTextField extends JTextField implements FocusListener, DocumentLi
 			int y = (this.getHeight() - iconHeight) / 2;
 			icon.paintIcon(this, g, x, y);
 		}
-
 		setMargin(new Insets(2, textX, 2, 2));
-
 		if (this.getText().equals("")) {
 			int width = this.getWidth();
 			int height = this.getHeight();
@@ -88,7 +91,6 @@ public class MyTextField extends JTextField implements FocusListener, DocumentLi
 			g.setColor(UIManager.getColor("textInactiveText"));
 			int h = g.getFontMetrics().getHeight();
 			int textBottom = (height - h) / 2 + h - 4;
-			// int x = this.getInsets().left + icon.getIconWidth() * 2;
 			int x;
 			if (icon != null) {
 				x = (width - icon.getIconWidth()) / 2;
@@ -107,14 +109,20 @@ public class MyTextField extends JTextField implements FocusListener, DocumentLi
 
 	@Override
 	public void focusGained(FocusEvent arg0) {
-		this.repaint();
 		border.changeColor(Color.BLUE);
+		if (speed != -1) {
+			border.setPaintAnimationVar();
+			timer.start();
+		}
 	}
 
 	@Override
 	public void focusLost(FocusEvent arg0) {
-		this.repaint();
 		border.changeColor(Color.WHITE);
+		if (speed != -1) {
+			timer.stop();
+		}
+		this.repaint();
 	}
 
 	@Override
@@ -132,6 +140,12 @@ public class MyTextField extends JTextField implements FocusListener, DocumentLi
 		checkLength(e);
 	}
 
+	/**
+	 * Sjekker lengden paa teksten og fjerner iconet hvis teksten gaar over
+	 * 
+	 * @param documentEvent
+	 *            DocumentEvent
+	 */
 	private void checkLength(DocumentEvent documentEvent) {
 		Document source = documentEvent.getDocument();
 		int length = source.getLength();
@@ -139,6 +153,21 @@ public class MyTextField extends JTextField implements FocusListener, DocumentLi
 			this.icon = null;
 		} else {
 			this.icon = iconStored;
+		}
+	}
+
+	/**
+	 * Klasse som tegner en paa nytt knapp hver gang den blir tilkalt.
+	 * 
+	 * @author andreas
+	 * 
+	 */
+
+	private class DrawingTimer implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			border.setUpdateTrue();
+			repaint();
 		}
 	}
 }

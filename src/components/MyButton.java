@@ -30,7 +30,7 @@ public class MyButton extends JButton implements MouseListener {
 		setForeground(Color.WHITE);
 		setOpaque(false);
 		setContentAreaFilled(false);
-		this.border = new MyBorder(20);
+		this.border = new MyBorder(20, -1);
 
 		try {
 			if (icon != null) {
@@ -77,11 +77,9 @@ public class MyButton extends JButton implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
-
 	}
 }

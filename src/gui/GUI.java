@@ -10,6 +10,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -92,6 +93,10 @@ public class GUI extends JFrame {
 		setBounds(0, 0, width, height + 20); // +20 for tittel bar'en
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
+		try {
+			setIconImage(ImageIO.read(new File("src/resources/bluesheepicon2.png")));
+		} catch (IOException e) {
+		}
 
 		actionListener = new MyListener();
 		createFocusListener();
@@ -196,12 +201,12 @@ public class GUI extends JFrame {
 	private void createLoginInterfaceComponents() {
 		int ch = 3 * height / 40;
 
-		unField = new MyTextField("blueusericon", "Email");
+		unField = new MyTextField("blueusericon", "Email", 8);
 		unField.setBounds(width / 12, 35 * height / 200, width / 6, ch);
 		unField.addActionListener(actionListener);
 		unField.setName("unField");
 
-		pwField = new MyPasswordField("bluekeyicon", "Password");
+		pwField = new MyPasswordField("bluekeyicon", "Password", 8);
 		pwField.setBounds(width / 12, 55 * height / 200, width / 6, ch);
 		pwField.addActionListener(actionListener);
 		pwField.setName("pwField");
@@ -221,49 +226,49 @@ public class GUI extends JFrame {
 		int cw = width / 9 /* 4 * width / 30 */;
 		int ch = 3 * height / 40;
 
-		regNameField = new MyTextField("bluesheepicon", "Firstname");
+		regNameField = new MyTextField("bluesheepicon", "Firstname", 8);
 		regNameField.setBounds(width / 12, 20 * height / 200, 3 * cw / 2, ch);
 		regNameField.addActionListener(actionListener);
 		regNameField.addFocusListener(focusListener);
 		regNameField.setName("regNameField");
 
-		regLNameField = new MyTextField("bluesheepicon", "Lastname");
+		regLNameField = new MyTextField("bluesheepicon", "Lastname", 8);
 		regLNameField.setBounds(width / 12, 35 * height / 200, 3 * cw / 2, ch);
 		regLNameField.addActionListener(actionListener);
 		regLNameField.addFocusListener(focusListener);
 		regLNameField.setName("regLNameField");
 
-		regEmailField = new MyTextField("bluemailicon", "Email");
+		regEmailField = new MyTextField("bluemailicon", "Email", 8);
 		regEmailField.setBounds(width / 12, 50 * height / 200, 3 * cw / 2, ch);
 		regEmailField.addActionListener(actionListener);
 		regEmailField.addFocusListener(focusListener);
 		regEmailField.setName("regEmailField");
 
-		regPhoneField = new MyTextField("bluephoneicon", "Phone");
+		regPhoneField = new MyTextField("bluephoneicon", "Phone", 8);
 		regPhoneField.setBounds(width / 12, 65 * height / 200, 3 * cw / 2, ch);
 		regPhoneField.addActionListener(actionListener);
 		regPhoneField.addFocusListener(focusListener);
 		regPhoneField.setName("regPhoneField");
 
-		regLongitudeField = new MyTextField(null, "Longitude");
+		regLongitudeField = new MyTextField(null, "Longitude", 8);
 		regLongitudeField.setBounds(width / 12 + 3 * cw / 4, 80 * height / 200, 3 * cw / 4, ch);
 		regLongitudeField.addActionListener(actionListener);
 		regLongitudeField.addFocusListener(focusListener);
 		regLongitudeField.setName("regLongitudeField");
 
-		regLatitudeField = new MyTextField(null, "Latitude");
+		regLatitudeField = new MyTextField(null, "Latitude", 8);
 		regLatitudeField.setBounds(width / 12, 80 * height / 200, 3 * cw / 4, ch);
 		regLatitudeField.addActionListener(actionListener);
 		regLatitudeField.addFocusListener(focusListener);
 		regLatitudeField.setName("regLatitudeField");
 
-		regPwField = new MyPasswordField("bluekeyicon", "Password");
+		regPwField = new MyPasswordField("bluekeyicon", "Password", 8);
 		regPwField.setBounds(width / 12, 95 * height / 200, 3 * cw / 2, ch);
 		regPwField.addActionListener(actionListener);
 		regPwField.addFocusListener(focusListener);
 		regPwField.setName("regPwField");
 
-		regPwField2 = new MyPasswordField("bluekeyicon", "Password");
+		regPwField2 = new MyPasswordField("bluekeyicon", "Password", 8);
 		regPwField2.setBounds(width / 12, 110 * height / 200, 3 * cw / 2, ch);
 		regPwField2.setName("regPwField2");
 		regPwField2.addFocusListener(focusListener);
@@ -286,7 +291,7 @@ public class GUI extends JFrame {
 		int cw = width / 6/* 4 * width / 30 */;
 		int ch = 3 * height / 40;
 
-		emailField = new MyTextField("bluemailicon", "Email");
+		emailField = new MyTextField("bluemailicon", "Email", 8);
 		emailField.setBounds(width / 12, 6 * height / 20, cw, ch);
 		emailField.addActionListener(actionListener);
 		emailField.setName("emailField");
@@ -346,7 +351,7 @@ public class GUI extends JFrame {
 		searchLabel.setHorizontalAlignment(JLabel.CENTER);
 		searchLabel.setVisible(false);
 
-		searchField = new MyTextField("bluesheepicon", "ID");
+		searchField = new MyTextField("bluesheepicon", "ID", 8);
 		searchField.setBounds(width / 12, 65 * height / 200, cw, ch);
 		searchField.addFocusListener(focusListener);
 		searchField.setName("searchField");
@@ -366,17 +371,17 @@ public class GUI extends JFrame {
 		int cw = width / 6;
 		int ch = 3 * height / 40;
 
-		editPasswordField = new MyTextField("bluesheepicon", "");
+		editPasswordField = new MyTextField("bluesheepicon", "New password", 8);
 		editPasswordField.setBounds(width / 12, 25 * height / 200, cw, ch);
 		editPasswordField.addFocusListener(focusListener);
 		editPasswordField.setName("editPasswordField");
 
-		editEmailField = new MyTextField("bluesheepicon", "");
+		editEmailField = new MyTextField("bluesheepicon", "new email", 8);
 		editEmailField.setBounds(width / 12, 40 * height / 200, cw, ch);
 		editEmailField.addFocusListener(focusListener);
 		editEmailField.setName("editEmailField");
 
-		editPhoneField = new MyTextField("bluesheepicon", "");
+		editPhoneField = new MyTextField("bluesheepicon", "new number", 8);
 		editPhoneField.setBounds(width / 12, 55 * height / 200, cw, ch);
 		editPhoneField.addFocusListener(focusListener);
 		editPhoneField.setName("editPhoneField");
@@ -473,27 +478,27 @@ public class GUI extends JFrame {
 	private void createRegSheepInterfaceComponents() {
 		int cw = width / 6;
 		int ch = 3 * height / 40;
-		regSheepNameField = new MyTextField("bluesheepicon", "Name");
+		regSheepNameField = new MyTextField("bluesheepicon", "Name", 8);
 		regSheepNameField.setBounds(width / 12, 25 * height / 200, cw, ch);
 		regSheepNameField.addFocusListener(focusListener);
 		regSheepNameField.setName("regSheepNameField");
 
-		regAgeField = new MyTextField("bluesheepicon", "Birthyear");
+		regAgeField = new MyTextField("bluesheepicon", "Birthyear", 8);
 		regAgeField.setBounds(width / 12, 45 * height / 200, cw, ch);
 		regAgeField.addFocusListener(focusListener);
 		regAgeField.setName("regAgeField");
 
-		regWeightField = new MyTextField("bluesheepicon", "Weight");
+		regWeightField = new MyTextField("bluesheepicon", "Weight", 8);
 		regWeightField.setBounds(width / 12, 65 * height / 200, cw, ch);
 		regWeightField.addFocusListener(focusListener);
 		regWeightField.setName("regWeightField");
 
-		regSexField = new MyTextField("bluesheepicon", "Sex");
+		regSexField = new MyTextField("bluesheepicon", "Sex", 8);
 		regSexField.setBounds(width / 12, 85 * height / 200, cw, ch);
 		regSexField.addFocusListener(focusListener);
 		regSexField.setName("regSexField");
 
-		regShepherdField = new MyTextField("bluesheepicon", "Shepard");
+		regShepherdField = new MyTextField("bluesheepicon", "Shepard", 8);
 		regShepherdField.setBounds(width / 12, 105 * height / 200, cw, ch);
 		regShepherdField.addFocusListener(focusListener);
 		regShepherdField.setName("regShepherdField");
@@ -602,22 +607,6 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Metode som setter gitt liste av sauer synlige/usynlige.
-	 * 
-	 * @param list
-	 *            listen av MySheepButton som skal settes synlige/usynlige
-	 * @param bool
-	 *            true for synlig
-	 */
-	private void changeMySheepButtonDrawBool(ArrayList<MySheepButton> list, Boolean bool) {
-		for (MySheepButton b : list) {
-			b.setDraw(bool);
-			b.repaint();
-		}
-		myMap.repaint();
-	}
-
-	/**
 	 * Lager et objekt av kartet
 	 */
 	private void createMap() {
@@ -647,34 +636,34 @@ public class GUI extends JFrame {
 			lwEditLabel.setBounds(width / 3, 85 * height / 100, 2 * width / 3, 15 * height / 100);
 			lwEditLabel.setVisible(false);
 
-			lwEditIdField = new MyTextField(null, "");
+			lwEditIdField = new MyTextField(null, "", -1);
 			lwEditIdField.setBounds(41 * width / 120, 9 * height / 10, 5 * cw / 8, ch);
 			lwEditIdField.setEditable(false);
 
-			lwEditNameField = new MyTextField(null, "");
+			lwEditNameField = new MyTextField(null, "", -1);
 			lwEditNameField.setBounds(48 * width / 120, 9 * height / 10, 4 * cw / 5, ch);
 
-			lwEditOwnerField = new MyTextField(null, "");
+			lwEditOwnerField = new MyTextField(null, "", -1);
 			lwEditOwnerField.setBounds(57 * width / 120, 9 * height / 10, 23 * cw / 16, ch);
 
-			lwEditShepherdField = new MyTextField(null, "");
+			lwEditShepherdField = new MyTextField(null, "", -1);
 			lwEditShepherdField.setBounds(72 * width / 120, 9 * height / 10, 23 * cw / 16, ch);
 
-			lwEditGenderField = new MyTextField(null, "");
+			lwEditGenderField = new MyTextField(null, "", -1);
 			lwEditGenderField.setBounds(87 * width / 120, 9 * height / 10, cw / 2, ch);
 
-			lwEditWeightField = new MyTextField(null, "");
+			lwEditWeightField = new MyTextField(null, "", -1);
 			lwEditWeightField.setBounds(93 * width / 120, 9 * height / 10, cw / 2, ch);
 
-			lwEditHeartrateField = new MyTextField(null, "");
+			lwEditHeartrateField = new MyTextField(null, "", -1);
 			lwEditHeartrateField.setBounds(99 * width / 120, 9 * height / 10, cw / 2, ch);
 			lwEditHeartrateField.setEditable(false);
 
-			lwEditTemperatureField = new MyTextField(null, "");
+			lwEditTemperatureField = new MyTextField(null, "", -1);
 			lwEditTemperatureField.setBounds(105 * width / 120, 9 * height / 10, cw / 2, ch);
 			lwEditTemperatureField.setEditable(false);
 
-			lwEditBirthyearField = new MyTextField(null, "");
+			lwEditBirthyearField = new MyTextField(null, "", -1);
 			lwEditBirthyearField.setBounds(111 * width / 120, 9 * height / 10, cw / 2, ch);
 
 			lwEditIdLabel = new MyLabel("ID:", null);
@@ -1054,6 +1043,7 @@ public class GUI extends JFrame {
 	 * Metode som prover aa registrere bruker naar brukeren ber om det
 	 */
 	private boolean registerUser() {
+
 		String firstName = regNameField.getText();
 		String lastName = regLNameField.getText();
 		String email = regEmailField.getText();
@@ -1072,12 +1062,11 @@ public class GUI extends JFrame {
 			password2 += pw2[i];
 		}
 		// Sjekker om passordene stemmer oversens
-		if (password.equals(password2)) {
+		if (password.equals(password2) && !password.equals("")) {
 			try {
 				// Registrer bruker
 				UserRegistration.registerUser(firstName, lastName, email, password2, phoneNr, latitude + ","
 						+ longitude);
-				loginInfo.setText("User registered!");
 				return true;
 			} catch (Exception e) {
 				return false;
@@ -1097,7 +1086,7 @@ public class GUI extends JFrame {
 			password += c[i];
 		}
 
-		// FOR TESTING
+		// for testing, lett innlogging
 		if (email.equals("")) {
 			try {
 				this.user = UserRegistration.login("test0@test.test", "passord");
@@ -1148,6 +1137,7 @@ public class GUI extends JFrame {
 
 			return true;
 		}
+		loginInfo.setForeground(Color.GREEN);
 		loginInfo.setText("Password does not match!");
 		return false;
 	}
@@ -1206,12 +1196,12 @@ public class GUI extends JFrame {
 			user.registerSheep(id, age, weight, gender, user.getEmail(), shepherd);
 
 			resetMap();
-
-			regSheepNameField.setText("");
-			regAgeField.setText("");
-			regWeightField.setText("");
-			regSexField.setText("");
-			regShepherdField.setText("");
+			for (JComponent c : regSheepComps) {
+				if (c instanceof MyTextField) {
+					((MyTextField) c).setText("");
+					((MyBorder) ((MyTextField) c).getBorder()).setColor(Color.WHITE);
+				}
+			}
 
 			changeToRegSheepInterface(false);
 			changeToMainInterface(true);
@@ -1327,6 +1317,22 @@ public class GUI extends JFrame {
 	}
 
 	/**
+	 * Metode som setter gitt liste av sauer synlige/usynlige.
+	 * 
+	 * @param list
+	 *            listen av MySheepButton som skal settes synlige/usynlige
+	 * @param bool
+	 *            true for synlig
+	 */
+	private void changeMySheepButtonDrawBool(ArrayList<MySheepButton> list, Boolean bool) {
+		for (MySheepButton b : list) {
+			b.setDraw(bool);
+			b.repaint();
+		}
+		myMap.repaint();
+	}
+
+	/**
 	 * Metode som setter alle mySheepButtons til en gitt farge
 	 * 
 	 * @param color
@@ -1402,9 +1408,11 @@ public class GUI extends JFrame {
 	 * Setter inn informasjon fra brukeren inn i editUser feltene.
 	 */
 	private void setEditUser() {
-		editPasswordField.setText("*****");
 		editPhoneField.setText(user.getPhoneNr());
 		editEmailField.setText(user.getEmail());
+		((MyBorder) editPasswordField.getBorder()).changeColor(valid);
+		((MyBorder) editPhoneField.getBorder()).changeColor(valid);
+		((MyBorder) editEmailField.getBorder()).changeColor(valid);
 	}
 
 	/**
@@ -1513,11 +1521,19 @@ public class GUI extends JFrame {
 	/**
 	 * Metode som prover aa endre infoen til brukeren
 	 */
-	private void editUser() {
-		editPasswordField.getText();
-		editPhoneField.getText();
-		editEmailField.getText();
-		// user.updateUser();
+	private boolean editUser() {
+		try {
+			String pw = editPasswordField.getText();
+			String phone = editPhoneField.getText();
+			String email = editEmailField.getText();
+			tUser.setEmail(email);
+			tUser.setPassword(pw);
+			tUser.setPhoneNr(phone);
+			UserRegistration.editUser(email, user.getFirstName(), user.getLastName(), phone, user.getPosition());
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	/**
@@ -1705,8 +1721,34 @@ public class GUI extends JFrame {
 						} catch (Exception exc) {
 							((MyBorder) regShepherdField.getBorder()).changeColor(invalid);
 						}
-					} else if (name.equals("searchField")) {
-
+					} else if (name.equals("editPasswordField")) {
+						try {
+							input = editPasswordField.getText();
+							if (input.equals("")) {
+								((MyBorder) editPasswordField.getBorder()).changeColor(valid);
+								return;
+							}
+							tUser.setPassword(input);
+							((MyBorder) editPasswordField.getBorder()).changeColor(valid);
+						} catch (Exception exc) {
+							((MyBorder) editPasswordField.getBorder()).changeColor(invalid);
+						}
+					} else if (name.equals("editPhoneField")) {
+						try {
+							input = editPhoneField.getText();
+							tUser.setPhoneNr(input);
+							((MyBorder) editPhoneField.getBorder()).changeColor(valid);
+						} catch (Exception exc) {
+							((MyBorder) editPhoneField.getBorder()).changeColor(invalid);
+						}
+					} else if (name.equals("editEmailField")) {
+						try {
+							input = editEmailField.getText();
+							tUser.setEmail(input);
+							((MyBorder) editEmailField.getBorder()).changeColor(valid);
+						} catch (Exception exc) {
+							((MyBorder) editEmailField.getBorder()).changeColor(invalid);
+						}
 					}
 				}
 			}
@@ -1732,14 +1774,16 @@ public class GUI extends JFrame {
 				System.out.println(text);
 				if (text.equals("Register")) {
 					if (state == 2) {
+						loginInfo.setText("");
 						if (registerUser()) {
-							changeToRegisterInterface(false);
-							changeToLoginInterface(true);
+							loginInfo.setForeground(Color.GREEN);
+							loginInfo.setText("User registered!");
 						} else {
-							// istedenfor boolean fra registerUser() faa tall
-							// for aa finne ut om hvilke verdier som er feil
-							// Noe lignende med login!
+							loginInfo.setForeground(Color.RED);
+							loginInfo.setText("Failed to register user!");
 						}
+						changeToRegisterInterface(false);
+						changeToLoginInterface(true);
 					} else {
 						changeToLoginInterface(false);
 						changeToRegisterInterface(true);
@@ -1747,7 +1791,6 @@ public class GUI extends JFrame {
 				} else if (text.equals("Login")) {
 					// sjekker: hvis man er i login interface og trykker login
 					if (state == 1) {
-						// metode for aa sjekke om brukernavn og passord stemmer
 						login();
 						loginInfo.setText("");
 					} else {
@@ -1793,7 +1836,6 @@ public class GUI extends JFrame {
 				} else if (text.equals("Send")) {
 					// sjekker: er i forgot interface og trykker send ->
 					if (state == 3) {
-						// SEND EMAIL!
 						if (sendEmail()) {
 							changeToForgotInterface(false);
 							changeToLoginInterface(true);
@@ -1838,7 +1880,13 @@ public class GUI extends JFrame {
 					changeToStartInterface(true);
 					logout();
 				} else if (text.equals("Update")) {
-					editUser();
+					if (editUser()) {
+						mainInfoLabel.setForeground(Color.GREEN);
+						mainInfoLabel.setText("User edited successfully");
+					} else {
+						mainInfoLabel.setForeground(Color.RED);
+						mainInfoLabel.setText("Failed to edit user");
+					}
 
 				} else if (text.equals("Sort by color")) {
 					counter++;

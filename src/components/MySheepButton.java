@@ -47,7 +47,7 @@ public class MySheepButton extends JButton implements MouseListener {
 		setOpaque(false);
 		setContentAreaFilled(false);
 		setVisible(true);
-		this.border = new MyBorder(80);
+		this.border = new MyBorder(80, -1);
 		this.border.setColor(Color.BLACK);
 		setBorder(border);
 		addMouseListener(this);
