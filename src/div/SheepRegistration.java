@@ -154,12 +154,11 @@ public class SheepRegistration implements Serializable {
 		return sheepList;
 	}
 
-	public ArrayList<Sheep> getAttackedSheepList(String user) {
+	public ArrayList<String> getAttackedSheepList(String user) {
 		String query = user;
-		Object serverRespons = ClientConnection.sendObjectQuery(
-				"getattackedsheeplist", query);
+		Object serverRespons = ClientConnection.sendObjectQuery("getattackedsheep", query);
 		if (serverRespons instanceof ArrayList) {
-			return (ArrayList<Sheep>) serverRespons;
+			return (ArrayList<String>) serverRespons;
 		} else if (serverRespons instanceof String) {
 			System.out.println("Error. Can't get list of attacked sheep. ");
 		}
