@@ -126,7 +126,7 @@ public class ComProtocol {
                 theOutput = "done";
 
             } else if (theInput.equals("getattackedsheep")) { //bruker vil ha log over posisjonene til en sau
-                state = GETSHEEPLOG;
+                state = GETATTACKEDSHEEP;
                 theOutput = "done";
                 
                 
