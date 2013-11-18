@@ -68,11 +68,7 @@ public class ServerClientThread extends Thread {
     //lukker socket og inputstreams
     public void close() throws IOException {
         log.addEntry(getClientAddress() + " disconnected.");
-        System.out.println(ServerMain.user.contains(this));
-        System.out.println(ServerMain.user.size());
         ServerMain.user.remove(this);
-        System.out.println(ServerMain.user.contains(this));
-        System.out.println(ServerMain.user.size());
         ServerMain.currentUsers -= 1;
         out.close();
         in.close();
