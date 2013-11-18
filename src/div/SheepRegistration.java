@@ -108,7 +108,7 @@ public class SheepRegistration implements Serializable {
 		String serverRespons = ClientConnection.sendServerQuery("delsheep",
 				query);
 
-		if (!serverRespons.equals("changesheep success")) {
+		if (!serverRespons.equals("delsheep success")) {
 			System.out.println("Error. Can't delete sheep");
 			return false;
 		}
