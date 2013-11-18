@@ -64,6 +64,15 @@ public class MySheepButton extends JButton implements MouseListener {
 	}
 
 	/**
+	 * Metode som returnerer true om sauen er angrepet
+	 * 
+	 * @return attackSheep boolean
+	 */
+	public boolean isAttacked() {
+		return attackSheep;
+	}
+
+	/**
 	 * Setter saueknappens tilhorende sau lik gitt sau
 	 * 
 	 * @param sheep
@@ -125,10 +134,10 @@ public class MySheepButton extends JButton implements MouseListener {
 
 	public void setColor(Color color) {
 		if (this.color.equals(Color.RED) && !color.equals(Color.WHITE)) {
-			attackSheep(false);
-		} else {
-			this.color = color;
+			dTimer.stop();
+			border.setColor(Color.BLACK);
 		}
+		this.color = color;
 		repaint();
 	}
 
@@ -155,7 +164,11 @@ public class MySheepButton extends JButton implements MouseListener {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		Ellipse2D.Double circle = new Ellipse2D.Double(0, 0, diameter, diameter);
-		g2d.setColor(color);
+		if (attackSheep) {
+			g2d.setColor(Color.RED);
+		} else {
+			g2d.setColor(color);
+		}
 		g2d.fill(circle);
 
 		if (attackSheep && color.equals(Color.RED)) {

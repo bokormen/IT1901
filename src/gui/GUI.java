@@ -1397,7 +1397,9 @@ public class GUI extends JFrame {
 				if (b.getSheep().equals(s)) {
 					b.setColor(Color.BLUE);
 				} else {
-					b.setColor(Color.WHITE);
+					if (!b.isAttacked()) {
+						b.setColor(Color.WHITE);
+					}
 				}
 			}
 			for (int i = 0; i < sheepListModel.size(); i++) {
