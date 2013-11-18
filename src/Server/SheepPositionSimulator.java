@@ -16,7 +16,7 @@ public class SheepPositionSimulator extends Thread {
 
     public void run() {
         while (running) {
-            System.out.println("Updating Sheeps");
+            System.out.println("Updating Database: Sheep Positions");
             RandomTestData.moveSheeps(sheepBoundariesLongitude, sheepBoundariesLatitude);
             try {
                 Thread.sleep(3600000); //vent en time
