@@ -93,6 +93,7 @@ public class GUI extends JFrame {
 		setBounds(0, 0, width, height + 20); // +20 for tittel bar'en
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
+		this.setLocationByPlatform(true);
 		try {
 			setIconImage(ImageIO.read(new File("src/resources/bluesheepicon2.png")));
 		} catch (IOException e) {
