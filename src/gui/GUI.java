@@ -105,7 +105,6 @@ public class GUI extends JFrame {
 
 		createLowerPanel();
 
-		createButtons();
 		createLoginInterfaceComponents();
 		createRegisterInterfaceComponents();
 		createForgotInterfaceComponents();
@@ -120,7 +119,6 @@ public class GUI extends JFrame {
 		createPanels();
 
 		createComponentArrays();
-		// cListCreate();
 
 		// Setter alle start komponentene synlige
 		changeToStartInterface(true);
@@ -157,49 +155,27 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Lager start knappene og plasserer dem i riktige posisjonenr.
-	 */
-	private void createButtons() {
-		int bw = width / 6;
-		int bh = height / 10;
-
-		loginButton = new MyButton("Login", "bluesheepicon2");
-		loginButton.setBounds(width / 12, 7 * height / 20, bw, bh);
-		loginButton.addActionListener(actionListener);
-
-		registerButton = new MyButton("Register", "blueformicon");
-		registerButton.setBounds(width / 12, 9 * height / 20, bw, bh);
-		registerButton.addActionListener(actionListener);
-
-		forgotButton = new MyButton("Forgot", "bluequestionicon");
-		forgotButton.setBounds(width / 12, 125 * height / 200, bw, 3 * bh / 4);
-		forgotButton.addActionListener(actionListener);
-
-		sendButton = new MyButton("Send", null);
-		sendButton.setBounds(width / 12, 9 * height / 20, bw, 3 * bh / 4);
-		sendButton.addActionListener(actionListener);
-
-		backButton = new MyButton("Back", null);
-		backButton.setBounds(11 * width / 48, 21 * height / 25, bw / 2, bh);
-		backButton.addActionListener(actionListener);
-
-		exitButton = new MyButton("Exit", null);
-		exitButton.setBounds(width / 48, 21 * height / 25, bw / 2, bh);
-		exitButton.addActionListener(actionListener);
-
-		lp.add(loginButton);
-		lp.add(registerButton);
-		lp.add(forgotButton);
-		lp.add(sendButton);
-		lp.add(backButton);
-		lp.add(exitButton);
-	}
-
-	/**
 	 * Lager alle komponeneter til login interfacet
 	 */
 	private void createLoginInterfaceComponents() {
+		int cw = width / 6;
 		int ch = 3 * height / 40;
+
+		backButton = new MyButton("Back", null);
+		backButton.setBounds(11 * width / 48, 21 * height / 25, cw / 2, ch);
+		backButton.addActionListener(actionListener);
+
+		exitButton = new MyButton("Exit", null);
+		exitButton.setBounds(width / 48, 21 * height / 25, cw / 2, ch);
+		exitButton.addActionListener(actionListener);
+
+		loginButton = new MyButton("Login", "bluesheepicon2");
+		loginButton.setBounds(width / 12, 7 * height / 20, cw, ch);
+		loginButton.addActionListener(actionListener);
+
+		registerButton = new MyButton("Register", "blueformicon");
+		registerButton.setBounds(width / 12, 9 * height / 20, cw, ch);
+		registerButton.addActionListener(actionListener);
 
 		unField = new MyTextField("blueusericon", "Email", 8);
 		unField.setBounds(width / 12, 35 * height / 200, width / 6, ch);
@@ -214,6 +190,10 @@ public class GUI extends JFrame {
 		loginInfo = new MyLabel("", null);
 		loginInfo.setBounds(width / 12, 70 * height / 200, width / 6, ch);
 
+		lp.add(backButton);
+		lp.add(exitButton);
+		lp.add(loginButton);
+		lp.add(registerButton);
 		lp.add(unField);
 		lp.add(pwField);
 		lp.add(loginInfo);
@@ -288,15 +268,24 @@ public class GUI extends JFrame {
 	 * Lager alle komponeneter til glemt passord interfacet
 	 */
 	private void createForgotInterfaceComponents() {
-		int cw = width / 6/* 4 * width / 30 */;
+		int cw = width / 6;
 		int ch = 3 * height / 40;
+
+		forgotButton = new MyButton("Forgot", "bluequestionicon");
+		forgotButton.setBounds(width / 12, 125 * height / 200, cw, ch);
+		forgotButton.addActionListener(actionListener);
+
+		sendButton = new MyButton("Send", null);
+		sendButton.setBounds(width / 12, 9 * height / 20, cw, ch);
+		sendButton.addActionListener(actionListener);
 
 		emailField = new MyTextField("bluemailicon", "Email", 8);
 		emailField.setBounds(width / 12, 6 * height / 20, cw, ch);
 		emailField.addActionListener(actionListener);
 		emailField.setName("emailField");
 
-		// lp.add(emailLabel);
+		lp.add(forgotButton);
+		lp.add(sendButton);
 		lp.add(emailField);
 	}
 
@@ -311,7 +300,7 @@ public class GUI extends JFrame {
 		sheepRegButton.setBounds(width / 12, 30 * height / 200, cw, ch);
 		sheepRegButton.addActionListener(actionListener);
 
-		listButton = new MyButton("List over sheeps", "bluelisticon");
+		listButton = new MyButton("Sheeplist", "bluelisticon");
 		listButton.setBounds(width / 12, 50 * height / 200, cw, ch);
 		listButton.addActionListener(actionListener);
 
@@ -356,12 +345,8 @@ public class GUI extends JFrame {
 		searchField.addFocusListener(focusListener);
 		searchField.setName("searchField");
 
-		// searchButton = new MyButton(new JButton(), "Search");
-		// searchButton.setBounds(width / 12, 80 * height / 200, cw, ch);
-
 		lp.add(searchLabel);
 		lp.add(searchField);
-		// lp.add(searchButton);
 	}
 
 	/**
@@ -1105,6 +1090,7 @@ public class GUI extends JFrame {
 				myMap.setUser(user);
 				myMap.home();
 				updateSheepList();
+				setAttackedSheeps();
 
 				for (JComponent jc : lwEditComps) {
 					jc.setVisible(true);
@@ -1130,6 +1116,7 @@ public class GUI extends JFrame {
 			createMap();
 			myMap.setUser(user);
 			updateSheepList();
+			setAttackedSheeps();
 
 			for (JComponent jc : lwEditComps) {
 				jc.setVisible(true);
@@ -1166,8 +1153,6 @@ public class GUI extends JFrame {
 			String owner = lwEditOwnerField.getText();
 			String shepherd = lwEditShepherdField.getText();
 			String gender = lwEditGenderField.getText();
-			// String heartrate = lwEditHeartrateField.getText();
-			// String temperature = lwEditTemperatureField.getText();
 			String birthyear = lwEditBirthyearField.getText();
 
 			user.editSheep(Integer.parseInt(id), name, owner, shepherd, gender.charAt(0), Integer.parseInt(weight),
@@ -1239,14 +1224,13 @@ public class GUI extends JFrame {
 			id = Integer.parseInt(input);
 			searchButton.setBounds(width / 12, 85 * height / 200, width / 6, 3 * height / 40);
 			searchLabel.setText("");
-			Sheep sheep = null; // getSheep(ID);
+			Sheep sheep = null;
 			for (MySheepButton b : mySheepButtons) {
 				if (id == b.getSheep().getId()) {
 					sheep = b.getSheep();
 					editSheepButton = b;
 					listSelected = b;
 					b.setColor(Color.BLUE);
-					// ((MyBorder) b.getBorder()).setColor(Color.BLUE);
 				}
 			}
 			if (sheep != null) {
@@ -1265,6 +1249,27 @@ public class GUI extends JFrame {
 			// feil verdier for input
 			searchButton.setBounds(width / 12, 95 * height / 200, width / 6, 3 * height / 40);
 			searchLabel.setText("ID input is not a valid number.");
+		}
+	}
+
+	/**
+	 * Metode som prover aa endre infoen til brukeren
+	 */
+	private boolean editUser() {
+		try {
+			String pw = editPasswordField.getText();
+			String phone = editPhoneField.getText();
+			String email = editEmailField.getText();
+			tUser.setEmail(email);
+			tUser.setPassword(pw);
+			tUser.setPhoneNr(phone);
+			this.user.setEmail(email);
+			this.user.setPhoneNr(phone);
+			this.user.setPassword(pw);
+			UserRegistration.editUser(email, user.getFirstName(), user.getLastName(), phone, user.getPosition());
+			return true;
+		} catch (Exception e) {
+			return false;
 		}
 	}
 
@@ -1454,8 +1459,7 @@ public class GUI extends JFrame {
 				logSheepButtons.get(counter).setMyPoint(getLocationPoint(s.getPosition()));
 				counter++;
 			}
-			// addMySheepLogButtons(sheep);
-			// changeMySheepButtonDrawBool(logSheepButtons, true);
+
 			for (SheepLocation s : sheepLocs) {
 				String lat = String.format("%.6g%n", Double.parseDouble(s.getLatitude()));
 				String lon = String.format("%.6g%n", Double.parseDouble(s.getLongitude()));
@@ -1516,23 +1520,26 @@ public class GUI extends JFrame {
 		myMap.setUser(user);
 		myMap.home();
 		updateSheepList();
+		setAttackedSheeps();
 	}
 
 	/**
-	 * Metode som prover aa endre infoen til brukeren
+	 * Setter alle saueknappene angrepet hvis de er det fra f¿r av.
 	 */
-	private boolean editUser() {
+	private void setAttackedSheeps() {
 		try {
-			String pw = editPasswordField.getText();
-			String phone = editPhoneField.getText();
-			String email = editEmailField.getText();
-			tUser.setEmail(email);
-			tUser.setPassword(pw);
-			tUser.setPhoneNr(phone);
-			UserRegistration.editUser(email, user.getFirstName(), user.getLastName(), phone, user.getPosition());
-			return true;
+			ArrayList<String> list = user.getAttackedSheep();
+			if (!list.isEmpty()) {
+				for (MySheepButton s : mySheepButtons) {
+					for (String t : list) {
+						if (s.getSheep().getId() == Integer.parseInt(t)) {
+							s.attackSheep(true);
+						}
+					}
+				}
+			}
 		} catch (Exception e) {
-			return false;
+
 		}
 	}
 
@@ -1771,8 +1778,9 @@ public class GUI extends JFrame {
 			if (arg.getSource() instanceof JButton) {
 				JButton pressed = (JButton) arg.getSource();
 				String text = pressed.getText();
-				System.out.println(text);
+				// finner handling til hver knapp
 				if (text.equals("Register")) {
+					// sjekker om en er i register menyen og skal registrere seg
 					if (state == 2) {
 						loginInfo.setText("");
 						if (registerUser()) {
@@ -1789,7 +1797,7 @@ public class GUI extends JFrame {
 						changeToRegisterInterface(true);
 					}
 				} else if (text.equals("Login")) {
-					// sjekker: hvis man er i login interface og trykker login
+					// sjekker hvis man er i login interface og trykker login
 					if (state == 1) {
 						login();
 						loginInfo.setText("");
@@ -1834,7 +1842,7 @@ public class GUI extends JFrame {
 					changeToLoginInterface(false);
 					changeToForgotInterface(true);
 				} else if (text.equals("Send")) {
-					// sjekker: er i forgot interface og trykker send ->
+					// sjekker om en er i forgot interface og trykker send ->
 					if (state == 3) {
 						if (sendEmail()) {
 							changeToForgotInterface(false);
@@ -1856,7 +1864,7 @@ public class GUI extends JFrame {
 						changeToMainInterface(false);
 						changeToRegSheepInterface(true);
 					}
-				} else if (text.equals("List over sheeps")) {
+				} else if (text.equals("Sheeplist")) {
 					changeToMainInterface(false);
 					changeToListInterface(true);
 				} else if (text.equals("Search for sheep")) {
@@ -1887,7 +1895,8 @@ public class GUI extends JFrame {
 						mainInfoLabel.setForeground(Color.RED);
 						mainInfoLabel.setText("Failed to edit user");
 					}
-
+					changeToEditInterface(false);
+					changeToMainInterface(true);
 				} else if (text.equals("Sort by color")) {
 					counter++;
 					if (counter % 2 == 1) {
