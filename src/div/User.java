@@ -335,5 +335,9 @@ public class User implements Serializable {
 	public ArrayList<SheepLocation> getLastLocations(int id) throws Exception {
 		return sheepReg.getLastLocations(id);
 	}
+	
+	public ArrayList<String> getAttackedSheep() {
+		return sheepReg.getAttackedSheepList(email);
+	}
 
 }

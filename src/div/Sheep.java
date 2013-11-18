@@ -74,7 +74,7 @@ public class Sheep implements Serializable {
 	}
 
 	/**
-	 * Setter fodselsaret til en sau. Ma være minst 1980, men ikke storren enn natid. .
+	 * Setter fodselsaret til en sau. Ma være minst 1980, men ikke storren enn natid.
 	 * @param birthyear Fodselsaret til sau.
 	 * @throws Exception
 	 */
