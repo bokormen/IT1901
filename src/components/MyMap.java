@@ -29,7 +29,7 @@ import div.User;
  */
 @SuppressWarnings("serial")
 public class MyMap extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener {
-	private boolean changesMade = false;
+	private boolean changesMade = true;
 	private int imageLength;
 	private double latitude;
 	private double longitude;
@@ -69,13 +69,13 @@ public class MyMap extends JPanel implements MouseListener, MouseMotionListener,
 
 	private class ZoomInAction extends AbstractAction {
 		public void actionPerformed(ActionEvent tf) {
-			zoom(30);
+			zoom(50);
 		}
 	}
 
 	private class ZoomOutAction extends AbstractAction {
 		public void actionPerformed(ActionEvent tf) {
-			zoom(-30);
+			zoom(-50);
 		}
 	}
 
@@ -98,6 +98,10 @@ public class MyMap extends JPanel implements MouseListener, MouseMotionListener,
 				images.add(new MyImage(0, 1, latitude, longitude));
 				images.add(new MyImage(1, 0, latitude, longitude));
 				images.add(new MyImage(0, -1, latitude, longitude));
+				images.add(new MyImage(1, -1, latitude, longitude));
+				images.add(new MyImage(1, 1, latitude, longitude));
+				images.add(new MyImage(-1, 1, latitude, longitude));
+				images.add(new MyImage(-1, -1, latitude, longitude));
 			} catch (Exception e) {
 				System.err.println("Kunne ikke laste inn google bilder");
 				this.setVisible(false);
@@ -146,6 +150,9 @@ public class MyMap extends JPanel implements MouseListener, MouseMotionListener,
 		repaint();
 	}
 
+	/**
+	 * Sentrerer bildet til et satt startpunkt i metoden
+	 */
 	public void home() {
 		this.dx = 1280 / 3;
 		this.dy = 1280 / 3;
@@ -158,10 +165,22 @@ public class MyMap extends JPanel implements MouseListener, MouseMotionListener,
 		repaint();
 	}
 
+	/**
+	 * Oppdaterer bildets lengde
+	 * 
+	 * @param length
+	 *            Integer
+	 */
 	private void updateImageLength(int length) {
 		this.imageLength = length;
 	}
 
+	/**
+	 * Metode som endrer størrelsen på kartet
+	 * 
+	 * @param dnum
+	 *            Integer hvor mye zoom
+	 */
 	private void zoom(int dnum) {
 		int max = 1280 * 2;
 		int min = 1280 / 2;
@@ -172,14 +191,14 @@ public class MyMap extends JPanel implements MouseListener, MouseMotionListener,
 			} else if (z < min) {
 				this.z = 1280 / 2;
 			}
-
 			changesMade = true;
 			if (!images.isEmpty()) {
 				for (MyImage i : images) {
 					i.scaleImage(z, z);
 				}
-				updateImageLength(images.get(0).getImage().getHeight(this));
+				updateImageLength(z);
 			}
+			System.out.println(z);
 			try {
 				updateMap();
 			} catch (Exception e) {
@@ -294,11 +313,12 @@ public class MyMap extends JPanel implements MouseListener, MouseMotionListener,
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		System.out.println("repaint map " + changesMade);
 		if (!images.isEmpty()) {
 			for (MyImage i : images) {
-				int width = i.getImage().getWidth(this);
-				int height = i.getImage().getHeight(this);
-				g.drawImage(i.getImage(), i.getX() * width - dx, i.getY() * height - dy, this);
+				g.drawImage(i.getImage(), i.getX() * z - dx, i.getY() * z - dy, this);
+			}
+			if (changesMade) {
 				gui.repaintMySheepButtons();
 			}
 		}

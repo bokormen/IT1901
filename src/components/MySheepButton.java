@@ -47,7 +47,7 @@ public class MySheepButton extends JButton implements MouseListener {
 		setOpaque(false);
 		setContentAreaFilled(false);
 		setVisible(true);
-		this.border = new MyBorder(80, -1);
+		this.border = new MyBorder(80);
 		this.border.setColor(Color.BLACK);
 		setBorder(border);
 		addMouseListener(this);
@@ -161,7 +161,7 @@ public class MySheepButton extends JButton implements MouseListener {
 
 	@Override
 	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
+		// super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		Ellipse2D.Double circle = new Ellipse2D.Double(0, 0, diameter, diameter);
 		if (attackSheep) {
@@ -182,7 +182,7 @@ public class MySheepButton extends JButton implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-		this.gui.setLwEditSheep(this.sheep);
+		this.gui.setLwEditSheep(this);
 	}
 
 	@Override
@@ -205,7 +205,6 @@ public class MySheepButton extends JButton implements MouseListener {
 	public void mousePressed(MouseEvent arg0) {
 		timer.start();
 		if (buttonCount == 1) {
-			gui.setLwEditSheep(this.sheep);
 			buttonCount = 0;
 		}
 		buttonCount++;

@@ -16,8 +16,8 @@ public class MyImage {
 	protected int y;
 
 	public MyImage(int x, int y, double lat, double lon) throws Exception {
-		double numh = 0.0123;
-		double numw = 0.0275;
+		double numh = 0.0123; // 63.43
+		double numw = 0.0275; // 10.39
 		this.image = getStartImage(lat - (numh) * y, lon + (numw) * x);
 		this.savedImage = image;
 		this.x = x;
