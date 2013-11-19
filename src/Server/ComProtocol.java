@@ -13,7 +13,12 @@ import database.DatabaseConnector;
 import div.Sheep;
 import div.SheepAttackMail;
 
-//handles the input from clients
+/**
+ * Denne klassen håndterer forespørsler til server av klient programmet.
+ * Den tar en melding fra klient tilkoblet gjennom en socket, vurderer meldingen
+ * og sender tilbake noe basert på vurderingen.
+ * @author Eivind
+ */
 public class ComProtocol {
 
     SecureRandom random = new SecureRandom();
@@ -46,7 +51,13 @@ public class ComProtocol {
 
     private int state = WAIT;
 
-    //constructor
+    /**
+     * Konstruktør for klassen
+     * @param IP IP til klienten
+     * @param osocket Objekt socket tilkoblet til klient
+     * @param login Klient login status
+     * @param clientlog referanse til server log klasse
+     */
     public ComProtocol(String IP, Socket osocket, boolean login, ServerLog clientlog) {
 
         try {
@@ -60,8 +71,12 @@ public class ComProtocol {
     }
 
 
-
-    //Haandterer input fra bruker
+    /**
+     * Haandterer input fra bruker
+     * @param theInput Melding som skal vurderes
+     * @return svar på melding
+     * @throws IOException
+     */
     public String processInput(String theInput) throws IOException {
         String theOutput;
 
@@ -465,10 +480,13 @@ public class ComProtocol {
     // =============================================
 
 
-    //registrere en bruker i databasen
-    //typisk input string er: "email||firstName||lastName||phoneNumber||password||location"
-    //eksempel "frodo@hotmail.com||frodo||baggins||12345678||gandalf||19.2,19.3"
-
+    /**
+     * registrere en bruker i databasen
+     * typisk input string er: "email||firstName||lastName||phoneNumber||password||location"
+     * eksempel "frodo@hotmail.com||frodo||baggins||12345678||gandalf||19.2,19.3"
+     * @param theInput Melding fra klient
+     * @return output til klient
+     */
     private String registerUser(String theInput) {
 
         String[] temp = theInput.split("\\|\\|"); //splitter input ved ||
@@ -486,10 +504,13 @@ public class ComProtocol {
 
     }
 
-    //Redigere info om bruker i database
-    //typisk input string er: "email||firstName||lastName||phoneNumber||location"
-    //eksempel "frodo@hotmail.com||frodo||baggins||12345678||19.2,19.3"
-
+    /**
+     * Redigere info om bruker i database
+     * typisk input string er: "email||firstName||lastName||phoneNumber||location"
+     * eksempel "frodo@hotmail.com||frodo||baggins||12345678||19.2,19.3"
+     * @param theInput Melding fra klient
+     * @return output til klient
+     */
     private String changeUser(String theInput) {
 
         String[] temp = theInput.split("\\|\\|"); //splitter input ved ||
@@ -508,10 +529,13 @@ public class ComProtocol {
     }
 
 
-    //Forandre passord
-    //typisk input string er: "email||newpassword"
-    //eksempel "frodo@hotmail.com||mittpassord2"
-
+    /**
+     * Forandre passord
+     * typisk input string er: "email||newpassword"
+     * eksempel "frodo@hotmail.com||mittpassord2"
+     * @param theInput Melding fra klient
+     * @return output til klient
+     */
     private String changePassword(String theInput) {
 
         String[] temp = theInput.split("\\|\\|"); //splitter input ved ||
@@ -532,12 +556,13 @@ public class ComProtocol {
 
 
 
-
-
-    //registrere en sau i databasen
-    //typisk input string er: "id||Eiernavn||shepherd||weight||75||39||age"
-    //eksempel "id||Eiernavn||shepherd||weight||75||39||age"
-
+    /**
+     * registrere en sau i databasen
+     * typisk input string er: "id||Eiernavn||shepherd||weight||75||39||age"
+     * eksempel "id||Eiernavn||shepherd||weight||75||39||age"
+     * @param theInput Melding fra klient
+     * @return output til klient
+     */
     private String registerSheep(String theInput) {
 
         String[] temp = theInput.split("\\|\\|"); //splitter input ved ||
@@ -559,10 +584,14 @@ public class ComProtocol {
 
     }
 
-    //sletter en sau i databaen
-    //typisk input er: "id"
-    //eksempel "3"
 
+    /**
+     * sletter en sau i databaen
+     * typisk input er: "id"
+     * eksempel "3"
+     * @param theInput Melding fra klient
+     * @return output til klient
+     */
     private String delSheep(String theInput) {
         if (DatabaseConnector.doesSheepExsist(theInput)) {
             DatabaseConnector.deleteSheep(theInput);
@@ -573,10 +602,13 @@ public class ComProtocol {
     }
 
 
-    //Redigere info om bruker i database
-    //typisk input string er: "id||name||owner||shepherd||gender||weight||birthyear"
-    //eksempel "101||Ole||frodo@hotmail.com||gandalf@hotmail.com||f||10||2003"
-
+    /**
+     * Redigere info om bruker i database
+     * typisk input string er: "id||name||owner||shepherd||gender||weight||birthyear"
+     * eksempel "101||Ole||frodo@hotmail.com||gandalf@hotmail.com||f||10||2003"
+     * @param theInput Melding fra klient
+     * @return output til klient
+     */
     private String changeSheep(String theInput) {
 
         String[] temp = theInput.split("\\|\\|"); //splitter input ved ||
@@ -590,9 +622,14 @@ public class ComProtocol {
 
     }
 
-    //logger inn en bruker
-    //typisk input string er: "email||passord"
-    //eksempel "frodo@hotmail.com||gandalf"
+
+    /**
+     * logger inn en bruker
+     * typisk input string er: "email||passord"
+     * eksempel "frodo@hotmail.com||gandalf"
+     * @param theInput Melding fra klient
+     * @return output til klient
+     */
     private String userLogin(String theInput) {
         String[] temp = theInput.split("\\|\\|"); //split the input string on ||
         if (temp.length == 2) {
@@ -614,9 +651,13 @@ public class ComProtocol {
     }
 
 
-    //Auto-genererer et nytt passord og sender paa mail
-    //typisk input string er: "email"
-    //eksempel "frodo@hotmail.com"
+    /**
+     * Auto-genererer et nytt passord og sender paa mail
+     * typisk input string er: "email"
+     * eksempel "frodo@hotmail.com"
+     * @param theInput Melding fra klient
+     * @return output til klient
+     */
     private String mailPassword(String theInput) {
 
         if (DatabaseConnector.doesUserExsist(theInput)) {
@@ -640,14 +681,23 @@ public class ComProtocol {
     }
 
 
-    //sender et objekt til bruker
+    /**
+     * sender et objekt til bruker
+     * @param o Objekt som skal sendes
+     * @throws IOException
+     */
     private void sendObject(Object o) throws IOException {
 
             byte[] b = Serialize(o);
             sendBytes(b);
     }
 
-    //serielliserer et objekt
+    /**
+     * Serielliserer et objet til en byte-array
+     * @param obj Objektet som skal serielliseres
+     * @return seriellisert objekt
+     * @throws IOException
+     */
     public static byte[] Serialize(Object obj) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         ObjectOutputStream os = new ObjectOutputStream(out);
@@ -655,18 +705,27 @@ public class ComProtocol {
         return out.toByteArray();
     }
 
-    //sender et seriellisert objekt gjennom socket
+    /**
+     * sender et seriellisert objekt gjennom socket
+     * @param myByteArray seriellisert objekt som skal sendes
+     * @throws IOException
+     */
     public void sendBytes(byte[] myByteArray) throws IOException {
         sendBytes(myByteArray, 0, myByteArray.length);
     }
 
-    //sender en del av et seriellisert objet gjennom socket
+    /**
+     * sender en del av en bytearray gjennom socket stream
+     * @param myByteArray seriellisert objekt som skal sendes
+     * @param start start posisjon
+     * @param len antal byte som skal sendes
+     * @throws IOException
+     */
     public void sendBytes(byte[] myByteArray, int start, int len) throws IOException {
         if (len < 0)
             throw new IllegalArgumentException("Negative length not allowed");
         if (start < 0 || start >= myByteArray.length)
             throw new IndexOutOfBoundsException("Out of bounds: " + start);
-        // Other checks if needed.
 
         oout.writeInt(len);
         if (len > 0) {
@@ -674,7 +733,9 @@ public class ComProtocol {
         }
     }
 
-    //lukker streams
+    /**
+     * lukker objekt ut stream
+     */
     public void close() {
         try {
             oout.close();
@@ -686,13 +747,16 @@ public class ComProtocol {
     /**
      * Sjekker om parameteren email er en valid email.
      */
+    /**
+     * Sjekker om parameteren email er en valid email.
+     * @param email Email
+     * @return sann/usann
+     */
     public boolean emailIsValid(String email) {
         String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                 + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
         return email.matches(emailPattern);
     }
-
-
 
 
 }

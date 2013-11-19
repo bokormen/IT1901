@@ -5,12 +5,17 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 
-//Server consol for å administrere server
+/**
+ * Server konsoll for å administrere server program
+ * @author Eivind
+ */
 public class ServerConsole extends Thread {
 
     BufferedReader stdIn = null;
 
-    //start en ny tråd
+    /**
+     * Starter en ny tråd som kjører kode for konsoll i bakgrunnen
+     */
     public void run() {
         String fromConsole;
 
@@ -28,6 +33,10 @@ public class ServerConsole extends Thread {
         }
     }
 
+    /**
+     * prosessere input fra konsoll
+     * @param fromConsole Melding fra konsoll
+     */
     private void processCommand(String fromConsole) {
         if (fromConsole.equalsIgnoreCase("quit")) {
             try {
@@ -49,6 +58,9 @@ public class ServerConsole extends Thread {
         }
     }
 
+    /**
+     * Konstruktør for klassen
+     */
     public ServerConsole() {
         stdIn = new BufferedReader(new InputStreamReader(System.in));
     }

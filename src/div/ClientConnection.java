@@ -3,7 +3,11 @@ package div;
 import java.io.*;
 import java.net.*;
 
-//opprette ny klient tilkoppling til server. Bruk getDataFromServer() for å sende/hente info fra server
+
+/**
+ * opprette ny klient tilkoppling til server. Bruk sendServerQuery() eller sendObjectQuery for å sende/hente info fra server
+ * @author Eivind
+ */
 public class ClientConnection {
 
 
@@ -15,10 +19,13 @@ public class ClientConnection {
     public static boolean ConnectedToServer;
 
 
-
-    //sender en foresp0rsel til database
-    //retningslinjer for komunikasjon ligger i Server.ComProtocol klassen
-
+    /**
+     * sender en foresp0rsel til database
+     * retningslinjer for komunikasjon ligger i Server.ComProtocol klassen
+     * @param command Hva som skal gjøres
+     * @param query Parametre som trengs
+     * @return svar streng
+     */
     public static String sendServerQuery(String command, String query) {
 
         String response;
@@ -33,9 +40,14 @@ public class ClientConnection {
 
     }
 
-    //Henter et objekt fra Serveren/databasen
-    //retningslinjer for komunikasjon ligger i Server.ComProtocol klassen
 
+    /**
+     * Henter et objekt fra Serveren/databasen
+     * retningslinjer for komunikasjon ligger i Server.ComProtocol klassen
+     * @param command Hva som skal gjøres
+     * @param query Parametre som trengs
+     * @return svar objekt
+     */
     public static Object sendObjectQuery(String command, String query) {
 
         String response;
@@ -61,6 +73,12 @@ public class ClientConnection {
 
     }
 
+    /**
+     *
+     * @return Object
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     private static Object getObject() throws IOException, ClassNotFoundException {
 
         Object o;
@@ -75,16 +93,25 @@ public class ClientConnection {
         return o;
     }
 
+    /**
+     *
+     * @param data seriellisert objekt
+     * @return deserielisert objekt
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public static Object deSerialize(byte[] data) throws IOException, ClassNotFoundException {
         ByteArrayInputStream in = new ByteArrayInputStream(data);
         ObjectInputStream is = new ObjectInputStream(in);
         return is.readObject();
     }
 
-    //send en melding til server og få respons
-    //bruk denne funksjonen til aa komunisere med server og database
-    //retningslinjer for komunikasjon ligger i Server.ComProtocol klassen
 
+    /**
+     * send en melding til server og få respons
+     * @param msg Melding til server
+     * @return Respons fra server
+     */
     public static String sendServerMsg(String msg) {
 
         try {
@@ -96,7 +123,10 @@ public class ClientConnection {
         }
     }
 
-    //haandterer feilmeldinger fra server her.
+    /**
+     * haandterer feilmeldinger fra server her.
+     * @param err Error streng
+     */
     public static void handleError(String err) {
 
         //exception error
@@ -134,7 +164,11 @@ public class ClientConnection {
     }
 
 
-    //aapner en socket til server med gitt ip adresse
+    /**
+     * aapner en socket til server med gitt ip adresse
+     * @param ip Koble til server på denn ip'en
+     * @throws Exception
+     */
     public static void open(InetAddress ip) throws Exception {
         try {
             if (ip == null) {
@@ -173,8 +207,9 @@ public class ClientConnection {
     }
 
 
-
-    //husk å lukke input og output streams når du er ferdig
+    /**
+     * husk å lukke input og output streams når du er ferdig
+     */
     public static void close() {
         try {
             out.close();

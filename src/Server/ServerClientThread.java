@@ -5,7 +5,11 @@ import java.io.*;
 import java.net.Socket;
 
 
-//Traad som haandterer komunikasjon med klient
+/**
+ * Klasse som håndterer en klient tilkoblet til server, kjøres en egen tråd for hver bruker
+ *
+ * @author Eivind
+ */
 public class ServerClientThread extends Thread {
 
     //some variables
@@ -16,8 +20,9 @@ public class ServerClientThread extends Thread {
     private boolean sendserverfullmessage = false;
     protected ServerLog log = null;
 
-
-    //Starter en ny traad
+    /**
+     * Starter en ny klient tråd
+     */
     public void run() {
 
         try {
@@ -60,12 +65,18 @@ public class ServerClientThread extends Thread {
         }
     }
 
-    //finner klient ip
+    /**
+     * Finner klient'ens IP
+     * @return IP
+     */
     public String getClientAddress() {
         return socket.getInetAddress().toString();
     }
 
-    //lukker socket og inputstreams
+    /**
+     * Lukker socket, streams og fjerner bruker fra liste over tilkoblede brukere
+     * @throws IOException
+     */
     public void close() throws IOException {
         log.addEntry(getClientAddress() + " disconnected.");
         ServerMain.user.remove(this);
@@ -75,7 +86,10 @@ public class ServerClientThread extends Thread {
         socket.close();
     }
 
-    //lukker input strems uten logf0ring, fikser dobbel logf0ring i enkelte tilfeller
+    /**
+     * lukker input strems uten logf0ring, fikser dobbel logf0ring i enkelte tilfeller
+     * @throws IOException
+     */
     public void closeNoLog() throws IOException {
         out.close();
         in.close();
@@ -83,19 +97,31 @@ public class ServerClientThread extends Thread {
     }
 
 
-    //konstrukt0r
-    public ServerClientThread(Socket clientSocket, Socket objectSocket, ServerLog log) {
-        super("MultiServerThread"); //invokes the thread constructor
-        socket = clientSocket;
-        osocket = objectSocket;
-        this.log = log;
-    }
-
-    public ServerClientThread(Socket clientSocket, Socket objectSocket, ServerLog sLog, boolean b) {
+    /**
+     * Konstruktør
+     * @param clientSocket Klient socket for normal komunikasjon
+     * @param objectSocket Klient socket for sending av objekt
+     * @param sLog referanse til server log objekt
+     */
+    public ServerClientThread(Socket clientSocket, Socket objectSocket, ServerLog sLog) {
         super("MultiServerThread"); //invokes the thread constructor
         socket = clientSocket;
         osocket = objectSocket;
         log = sLog;
-        sendserverfullmessage = b;
+    }
+
+    /**
+     * Konstruktør
+     * @param clientSocket Klient socket for normal komunikasjon
+     * @param objectSocket Klient socket for sending av objekt
+     * @param sLog referanse til server log objekt
+     * @param serverfull om server er full
+     */
+    public ServerClientThread(Socket clientSocket, Socket objectSocket, ServerLog sLog, boolean serverfull) {
+        super("MultiServerThread"); //invokes the thread constructor
+        socket = clientSocket;
+        osocket = objectSocket;
+        log = sLog;
+        sendserverfullmessage = serverfull;
     }
 }

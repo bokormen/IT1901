@@ -4,7 +4,10 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
+/**
+ * Klasse for logføring av alle forespørsler fra klienter
+ * @author Eivind
+ */
 public class ServerLog {
 
     private PrintWriter out = null;
@@ -13,7 +16,10 @@ public class ServerLog {
     private File logFile = null;
 
 
-    //Prints a log entry to file
+    /**
+     * Legger til en ny log melding og dato stempler denne
+     * @param entry log melding
+     */
     public void addEntry(String entry) {
 
         Date d = new Date(); //gets time
@@ -36,6 +42,9 @@ public class ServerLog {
     }
 
 
+    /**
+     * sletter log filen
+     */
     public void clearLog() {
 
         try {
@@ -53,6 +62,10 @@ public class ServerLog {
         }
 
     }
+
+    /**
+     * printer innhold av logfilen i konsoll
+     */
     public void printLog() {
         try {
             out.close();
@@ -71,11 +84,16 @@ public class ServerLog {
     }
 
 
+    /**
+     * lukker ut strøm
+     */
     public void close() {
         out.close();
     }
 
-    // constructor
+    /**
+     * konstruktør for klassen
+     */
     public ServerLog() {
         try {
             logFile = new File("log.txt");

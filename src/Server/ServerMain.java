@@ -9,7 +9,10 @@ import java.util.ArrayList;
 import database.DatabaseConnector;
 
 
-//server applikasjon
+/**
+ * Server Main klasse, her starter server programmet
+ * @author Eivind
+ */
 public class ServerMain {
 
     public static final int USERS = 256;
@@ -23,7 +26,10 @@ public class ServerMain {
     private static boolean listening = true;
 
 
-    // Start Server
+    /**
+     * main funksjon
+     * @param args argument(ikke brukt)
+     */
     public static void main(String[] args) {
 
         //open a server socket
@@ -82,6 +88,10 @@ public class ServerMain {
         System.exit(0);
     }
 
+    /**
+     * Avslutt program
+     * @throws IOException
+     */
     public static void quit() throws IOException {
         listening = false;
         int i = 0;
@@ -97,6 +107,9 @@ public class ServerMain {
         sLog.addEntry("Server Shut-Down");
     }
 
+    /**
+     * Sørger for at alt lukkes riktig.
+     */
     public static void close() {
 
         try {
